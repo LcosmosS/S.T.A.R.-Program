@@ -1,3 +1,4 @@
+# Use the Debian-based Sage image (this one supports apt-get)
 FROM sagemath/sagemath:9.8-debian
 
 USER root
