@@ -1,12 +1,9 @@
-FROM sagemath/sagemath:latest
+FROM sagemath/sagemath:9.8-debian
 
 USER root
-
-RUN mkdir -p /var/lib/apt/lists/partial && chmod -R 755 /var/lib/apt/lists
-
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install system deps for Python wheels if needed
+# Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential cmake git wget libgomp1 python3-pip \
     && rm -rf /var/lib/apt/lists/*
