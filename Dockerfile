@@ -5,8 +5,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential cmake git wget libgomp1 python3-dev \
+    build-essential cmake git wget libgomp1 python3-dev python3-pip \
     && rm -rf /var/lib/apt/lists/*
+
 
 # Install Python packages
 RUN pip3 install --no-cache-dir \
