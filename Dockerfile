@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential cmake git wget libgomp1 python3-pip \
+    build-essential cmake git wget libgomp1 python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python packages
