@@ -1,38 +1,54 @@
-# Dockerfile — sagemath base, copy ecdata cremona files into Sage DB
+# Dockerfile — sagemath base, clone ecdata/eclib/lmfdb, copy cremona DB if present
 FROM sagemath/sagemath:latest
 
 USER root
 
-# install tools needed for cloning and copying
+# Install tools needed for cloning, extracting, and building small Python pieces
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    git wget ca-certificates tar && rm -rf /var/lib/apt/lists/*
+    git wget ca-certificates tar build-essential pkg-config python3-venv \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt
 
-# clone John Cremona repos
+# Clone John Cremona repos and LMFDB
 RUN git clone https://github.com/JohnCremona/ecdata.git /opt/ecdata || true
 RUN git clone https://github.com/JohnCremona/eclib.git /opt/eclib || true
+RUN git clone https://github.com/LMFDB/lmfdb.git /opt/lmfdb || true
 
-# If ecdata contains a 'cremona' directory or a tarball, copy/extract it into Sage DB
-# Try common possibilities: a directory /opt/ecdata/cremona or a tarball /opt/ecdata/cremona.tar.gz
+# If ecdata contains a cremona DB directory or tarball, copy/extract it into Sage DB dir
 RUN mkdir -p /usr/local/share/sage/databases && \
     if [ -d /opt/ecdata/cremona ]; then \
         cp -a /opt/ecdata/cremona /usr/local/share/sage/databases/cremona; \
     elif [ -f /opt/ecdata/cremona.tar.gz ]; then \
         tar -xzf /opt/ecdata/cremona.tar.gz -C /usr/local/share/sage/databases; \
     else \
-        echo "No cremona dir or tarball found in ecdata; installer fallback may be required"; \
+        echo "No cremona dir/tarball in ecdata; full DB may require sage -i or external tarball"; \
     fi && \
     chmod -R a+rX /usr/local/share/sage/databases/cremona || true
 
-# install eclib into Sage's python if it provides a package (best-effort)
+# Install eclib if it exposes a Python package (best-effort)
 RUN sage -python -m pip install --no-cache-dir /opt/eclib || true
 
-# project Python deps (adjust as needed)
-RUN sage -python -m pip install --no-cache-dir numpy pandas tqdm scikit-learn gudhi ripser || true
+# Install LMFDB Python requirements (best-effort). LMFDB has many optional deps;
+# we install core packages commonly needed for local development.
+RUN sage -python -m pip install --no-cache-dir \
+    numpy pandas tqdm scikit-learn flask pymongo gunicorn \
+    || true
 
+# Optional: install lmfdb as a local package for development (editable)
+# This will not run if lmfdb has no setup.py/pyproject; it's best-effort.
+RUN if [ -f /opt/lmfdb/setup.py ] || [ -f /opt/lmfdb/pyproject.toml ]; then \
+      sage -python -m pip install --no-cache-dir -e /opt/lmfdb || true; \
+    else \
+      echo "LMFDB repo has no installable package metadata; use it as source in /opt/lmfdb"; \
+    fi
+
+# Project workspace
 WORKDIR /workspace
+RUN mkdir -p /workspace && chmod -R a+rX /workspace
+
 VOLUME ["/workspace"]
 EXPOSE 8888
 
+# Start JupyterLab via Sage's Python
 CMD ["bash", "-lc", "sage -python -m jupyterlab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token='acsc2026'"]
