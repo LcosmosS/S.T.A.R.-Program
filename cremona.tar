@@ -1,0 +1,25 @@
+# from your project directory (where Dockerfile lives)
+cd ~/Arithmetic-Cosmic-Structure-Conjecture-ACSC-
+
+# create a temporary folder named 'cremona' and copy ecdata contents into it
+rm -rf /tmp/cremona_pack /tmp/cremona
+mkdir -p /tmp/cremona
+cp -a ecdata/* /tmp/cremona/
+
+# create a tarball whose top-level entry is 'cremona'
+tar -C /tmp -czf cremona_db.tar.gz cremona
+
+# verify the tarball contains 'cremona' at top level
+tar -tzf cremona_db.tar.gz | head -n 5
+
+# now build the image
+docker build -t acsc:sage-full-db .
+
+# run and verify inside container
+docker run --rm -it -p 8888:8888 -v "$(pwd)":/workspace acsc:sage-full-db bash -lc "sage -python - <<'PY'
+from sage.databases.cremona import CremonaDatabase
+db = CremonaDatabase()
+print('database_dir:', getattr(db,'database_dir',lambda:'N/A')())
+print('largest_conductor:', getattr(db,'largest_conductor',lambda:'N/A')())
+PY
+exec bash"
