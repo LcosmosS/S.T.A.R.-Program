@@ -12,11 +12,11 @@ The code, data pipeline, and documentation here implement the preregistered fals
 
 ## **1. Overview**
 
-The ACSC asserts that after applying a stable, rank‑normalized projection  
-\[
-\Phi_{\mathrm{prim}} : E \to \mathbb{R}^3
-\]  
-to elliptic curves \(E/\mathbb{Q}\), and aligning the resulting point cloud to observational cosmic data via a non‑linear quantile transform, the persistent homology of the arithmetic cloud approximates that of the cosmic web with bounded error.
+The ACSC asserts that after applying a stable, rank‑normalized projection 
+
+𝛟_prime : E → ℝ3 
+
+to elliptic curves E/ℚ, and aligning the resulting point cloud to observational cosmic data via a non‑linear quantile transform, the persistent homology of the arithmetic cloud approximates that of the cosmic web with bounded error.
 
 This repository provides:
 
@@ -36,7 +36,7 @@ This repository provides:
 acsc/
 │
 ├── data/
-│   ├── arithmetic/              # Cremona/LMFDB exports or Sage tables
+│   ├── arithmetic/              # Cremona/LMFDB exports & Sage tables
 │   ├── cosmic/                  # SDSS/DESI volume-limited samples
 │   └── derived/                 # Projected clouds, aligned clouds, diagrams
 │
@@ -77,10 +77,10 @@ acsc/
 
 ### **Arithmetic Data**
 - Source: Cremona/LMFDB or SageMath tables  
-- Pre‑registered bound: \(N \leq N_{\max}\)  
+- Pre‑registered bound:  N ≤ N_max  
 - Must include **full isogeny classes**  
 - Required invariants:  
-  \(\Delta, N, r, R, \Omega, T\)
+   Delta (Δ), N, r, R, Omega (𝛀), T
 
 ### **Cosmic Data**
 - Source: SDSS or DESI  
@@ -91,18 +91,20 @@ acsc/
 
 ## **4. Projection Maps**
 
-### **Primary Projection \( \Phi_{\mathrm{prim}} \)**  
+### **Primary Projection (𝛟_prime)**  
 Implements the rank‑normalized spherical projection described in the manuscript, including:
 
 - Radial coordinate  
-  \[
-  V_E = V_0 \cdot T_E \log(\Omega_E/2\pi) R_E^{1/\max(1,r_E)} \exp(\Psi_r(E))
-  \]
+  
+  V_E = V_0 ⋅ T_E log(𝛀_E/2\π) R_E^(1/max(1,r_E)) exp(𝜳_r(E))
+  
+  
 - Angular coordinates  
-  \[
+  
   \theta_E = \mathrm{mod}(\log_{10}|\Delta_E|, 2\pi), \quad
+  
   \phi_E = \mathrm{mod}(\pi \log_{10} N_E, \pi)
-  \]
+  
 
 ### **Alternative Projections**
 - **PTD**: \((\log|\Delta|, \log\Omega, \log(1+|E(\mathbb{Q})_{\mathrm{tors}}|))\)  
