@@ -44,7 +44,8 @@ RUN if [ -f /opt/lmfdb/setup.py ] || [ -f /opt/lmfdb/pyproject.toml ]; then \
     fi
 
 # copy and extract prebuilt cremona DB into Sage DB dir
-COPY cremona_db.tar.gz /tmp/cremona_db.tar.gz
+# (uncomment for local installation) 
+# COPY cremona_db.tar.gz /tmp/cremona_db.tar.gz
 
 # Extract it into Sage’s database directory
 RUN mkdir -p /usr/local/share/sage/databases && \
