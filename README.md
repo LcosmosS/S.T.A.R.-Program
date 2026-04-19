@@ -29,7 +29,7 @@ between the arithmetic class of an elliptic curve E/ℚ (rank (r), regulator (R)
 - **Total curves analyzed**: 102,673 (38,042 Cremona + 64,631 LMFDB)
 - **Complexity-14 pass rate**: **74.28%** (76,270 curves dynamically stable)
 - **Sage/PARI rank consistency**: **99.8%**
-- **Arithmetic Scarcity trend**: Higher algebraic rank correlates with systematically smaller average \(\log_{10}|\Delta|\)
+- **Arithmetic Scarcity trend**: Higher algebraic rank correlates with systematically smaller average (log_10|Δ|)
 
 ### Repository Structure
 
