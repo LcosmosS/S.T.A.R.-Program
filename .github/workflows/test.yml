@@ -34,3 +34,27 @@ jobs:
     sed -n '1,200p' pyproject.toml || true
     echo "Run pytest collect-only (verbose):"
     pytest -q --collect-only -vv || true
+
+    # show where we are and what files exist
+pwd
+ls -la
+echo "Top-level tests dir:"
+ls -la tests || true
+
+# find candidate test files
+echo "Find test files:"
+find . -maxdepth 5 -type f \( -name "test_*.py" -o -name "*_test.py" \) -print || true
+
+# show pytest config and conftest
+echo "pyproject.toml (first 200 lines):"
+sed -n '1,200p' pyproject.toml || true
+echo "conftest.py present?"
+ls -la conftest.py || true
+
+# run pytest collection diagnostics
+echo "pytest collect-only (with config):"
+pytest -q --collect-only -vv || true
+
+echo "pytest collect-only ignoring config:"
+pytest -c /dev/null --collect-only -vv || true
+
