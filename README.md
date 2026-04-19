@@ -2,19 +2,20 @@
 
 # **Arithmetic–Cosmic Structure Conjecture (ACSC) 
 ---
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/LcosmosS/Arithmetic-Cosmic-Structure-Conjecture-ACSC-.git/HEAD)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/LcosmosS/Arithmetic-Cosmic-Structure-Conjecture-ACSC-.git/HEAD) 
 ---
 
 **A metric-preserving bijection between arithmetic invariants of elliptic curves over ℚ and topological invariants of the cosmic web.**
 
 ### Formal Statement
-
+---
 **Arithmetic–Cosmic Structure Conjecture (ACSC):**  
+
 There exists a metric-preserving bijection  
-\[
-\phi: \mathcal{A} \to \mathcal{T}
-\]  
-between the arithmetic class of an elliptic curve \(E/\mathbb{Q}\) (rank \(r\), regulator \(R\), real period \(\Omega\), discriminant \(\Delta\), conductor \(N\)) and the topological class of cosmic structures (Betti numbers \(\beta_k\), curvature scalars, persistence entropy strata), such that the map preserves the natural metrics on both sides and is dynamically stabilized by the **Complexity-14 Symbolic Action Principle**.
+
+ 𝛟: A → T
+
+between the arithmetic class of an elliptic curve E/ℚ (rank (r), regulator (R), real period (Omega(𝛀)), discriminant (Delta(Δ)), conductor (N)) and the topological class of cosmic structures (Betti numbers \(beta_k), curvature scalars, persistence entropy strata), such that the map preserves the natural metrics on both sides and is dynamically stabilized by the **Complexity-14 Symbolic Action Principle**.
 
 ### Core Components
 
