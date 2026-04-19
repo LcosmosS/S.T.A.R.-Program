@@ -8,13 +8,14 @@ def w2_between_diagrams(dgmA, dgmB):
 
 def empirical_p_value(observed, samples):
     """
-    Compute empirical p-value using the standard (1 + #samples >= observed) / (1 + n) rule.
+    Empirical p-value using the lower-tail rule:
+    p = (1 + #samples <= observed) / (1 + n)
     """
     samples = np.asarray(samples)
     n = len(samples)
     if n == 0:
         return 1.0
-    count = np.sum(samples >= observed)
+    count = np.sum(samples <= observed)
     return (1 + count) / (1 + n)
 
 def effect_size(observed, null_samples):
