@@ -19,7 +19,7 @@ dependencies = [
 
 [project.optional-dependencies]
 tda = ["gudhi==3.5.1", "ripser==0.6.2", "persim==0.6.0"]
-dev = ["pytest", "pytest-cov" "black", "isort", "pre-commit"]
+dev = ["pytest", "pytest-cov", "black", "isort", "pre-commit"]
 
 [tool.setuptools]
 packages = ["acsc"]
