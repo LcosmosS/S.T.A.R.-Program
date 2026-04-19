@@ -11,7 +11,9 @@ def empirical_p_value(observed, samples):
     Empirical p-value using the lower-tail rule:
     p = (1 + #samples <= observed) / (1 + n)
     """
-    samples = np.asarray(samples)
+    samples = np.array([10,20,30,40,50])
+    observed = 0
+    print(empirical_p_value(observed, samples))
     n = len(samples)
     if n == 0:
         return 1.0
