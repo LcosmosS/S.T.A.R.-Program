@@ -30,41 +30,43 @@ This repository provides:
 
 ---
 
-## **2. Repository Structure**
-
-Arithmetic-Cosmic-Structure-Conjecture-ACSC/
-├── README.md
-├── LICENSE
-├── CITATION.cff
-├── acsc/                          # Core Python package
-│   ├── __init__.py
-│   ├── core.py                    # Complexity-14 filter, scarcity functions
-│   ├── validation.py              # Rank consistency, statistics
-│   └── utils.py
+acsc/
+│
 ├── data/
-│   ├── raw/
-│   │   ├── cremona_raw_parsed.csv
-│   │   └── lmfdb_raw_parsed.csv
-│   └── processed/
-│       ├── cremona_3selmer_full_pari.csv
-│       ├── lmfdb_3selmer_full_pari.csv
-│       └── acsc_final_combined.csv
+│   ├── arithmetic/              # Cremona/LMFDB exports or Sage tables
+│   ├── cosmic/                  # SDSS/DESI volume-limited samples
+│   └── derived/                 # Projected clouds, aligned clouds, diagrams
+│
+├── acsc/
+│   ├── __init__.py
+│   ├── projection.py            # Φ_primary, PTD, MCJ implementations
+│   ├── quantile.py              # Non-linear quantile transformer
+│   ├── tda_pipeline.py          # VR complexes, persistence diagrams
+│   ├── statistics.py            # W2 distances, p-values, BH correction
+│   ├── null_models.py           # Null-A, Null-B, Null-C, Null-D
+│   ├── robustness.py            # Subsampling, jitter, parameter sweeps
+│   └── utils.py                 # I/O, logging, reproducibility helpers
+│
 ├── notebooks/
-│   ├── 01_data_preparation.ipynb
-│   ├── 02_complexity14_filter.ipynb
-│   └── 03_acsc_statistics.ipynb
-├── scripts/
-│   ├── generate_raw.py
-│   ├── compute_3selmer_full_pari.py
-│   └── acsc_validation_batch.py
-├── results/
-│   ├── figures/
-│   │   └── acsc_scarcity_plot.png
-│   └── tables/
-├── docker/
-│   └── Dockerfile
+│   ├── 01_preprocessing.ipynb
+│   ├── 02_projection.ipynb
+│   ├── 03_quantile_alignment.ipynb
+│   ├── 04_tda_analysis.ipynb
+│   ├── 05_null_models.ipynb
+│   ├── 06_statistics.ipynb
+│   └── 07_robustness.ipynb
+│
+├── tests/
+│   ├── test_projection.py
+│   ├── test_quantile.py
+│   ├── test_tda.py
+│   └── test_statistics.py
+│
+├── Dockerfile
 ├── requirements.txt
-└── pyproject.toml                 # or setup.py
+├── LICENSE
+└── README.md
+
 
 ---
 
