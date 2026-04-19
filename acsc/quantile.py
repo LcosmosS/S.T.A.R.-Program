@@ -55,6 +55,12 @@ class QuantileAligner:
             out[:, axis] = np.interp(frac, q, axis_map)
         return out
 
+    def fit_transform(self, ref_coords, src_coords, n_quantiles=200):
+    """Fit on ref_coords and transform src_coords in one step."""
+    self.fit(ref_coords, n_quantiles=n_quantiles)
+    return self.transform(src_coords)
+    
+    
     def save(self, path):
         d = {"quantiles": self._quantiles, "axis_maps": self._axis_maps}
         Path(path).write_text(json.dumps(d))
