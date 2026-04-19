@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e
 
-cd ~/Arithmetic-Cosmic-Structure-Conjecture-ACSC-
-
 echo "🔧 Step 1: Fix acsc/__init__.py..."
 cat > acsc/__init__.py << 'EOF'
 """
