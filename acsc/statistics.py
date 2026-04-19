@@ -25,44 +25,4 @@ def effect_size(observed, null_samples):
     sigma = float(np.std(null, ddof=1) if len(null) > 1 else 1.0)
     return float((mu - observed) / (sigma if sigma > 0 else 1.0))
 
-def effect_size(observed, null_samples):
-    """Cohen-like effect size: (mean_null - observed) / std_null"""
-    null = np.asarray(null_samples, dtype=float)
-    mu = float(np.mean(null))
-    sigma = float(np.std(null, ddof=1) if len(null) > 1 else 1.0)
-    return float((mu - observed) / (sigma if sigma > 0 else 1.0))
 
-def effect_size(observed, null_samples):
-    """Cohen-like effect size: (mean_null - observed) / std_null"""
-    null = np.asarray(null_samples, dtype=float)
-    mu = float(np.mean(null))
-    sigma = float(np.std(null, ddof=1) if len(null) > 1 else 1.0)
-    return float((mu - observed) / (sigma if sigma > 0 else 1.0))
-
-def effect_size(observed, null_samples):
-    """Cohen-like effect size: (mean_null - observed) / std_null"""
-    null = np.asarray(null_samples, dtype=float)
-    mu = float(np.mean(null))
-    sigma = float(np.std(null, ddof=1) if len(null) > 1 else 1.0)
-    return float((mu - observed) / (sigma if sigma > 0 else 1.0))
-
-def effect_size(observed, null_samples):
-    """Cohen-like effect size: (mean_null - observed) / std_null"""
-    null = np.asarray(null_samples, dtype=float)
-    mu = float(np.mean(null))
-    sigma = float(np.std(null, ddof=1) if len(null) > 1 else 1.0)
-    return float((mu - observed) / (sigma if sigma > 0 else 1.0))
-
-def effect_size(observed, null_samples):
-    """Cohen-like effect size: (mean_null - observed) / std_null"""
-    null = np.asarray(null_samples, dtype=float)
-    mu = float(np.mean(null))
-    sigma = float(np.std(null, ddof=1) if len(null) > 1 else 1.0)
-    return float((mu - observed) / (sigma if sigma > 0 else 1.0))
-
-def effect_size(observed, null_samples):
-    """Cohen-like effect size: (mean_null - observed) / std_null"""
-    null = np.asarray(null_samples, dtype=float)
-    mu = float(np.mean(null))
-    sigma = float(np.std(null, ddof=1) if len(null) > 1 else 1.0)
-    return float((mu - observed) / (sigma if sigma > 0 else 1.0))
