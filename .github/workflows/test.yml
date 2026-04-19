@@ -15,12 +15,6 @@ jobs:
 - name: Install dependencies
   run: pip install -e ".[dev]"
 
-- name: Run tests
-  run: pytest tests/ --cov=acsc
-
-- name: Check code style
-  run: black --check acsc/ tests/
-
 - name: Debug workspace and pytest collection
   run: |
     echo "PWD: $(pwd)"
@@ -57,4 +51,12 @@ pytest -q --collect-only -vv || true
 
 echo "pytest collect-only ignoring config:"
 pytest -c /dev/null --collect-only -vv || true
+
+- name: Run tests
+  run: pytest tests/ --cov=acsc
+
+- name: Check code style
+  run: black --check acsc/ tests/
+
+
 
