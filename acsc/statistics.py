@@ -1,6 +1,4 @@
 import numpy as np
-from .statistics import w2_between_diagrams, empirical_p_value
-
 
 def w2_between_diagrams(dgmA, dgmB):
     # minimal safe fallback: compare number of features
