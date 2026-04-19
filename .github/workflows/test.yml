@@ -28,23 +28,6 @@ jobs:
         if: ${{ matrix.python-version == '3.11' }}
         run: black --check --target-version py311 acsc/ tests/
 
-      - name: Deep debug: workspace, pytest, black, python
-        run: |
-          echo "PWD: $(pwd)"
-          python -V
-          echo "Listing top-level files:"
-          ls -la
-          echo "Find candidate test files:"
-          find . -maxdepth 5 -type f \( -name "test_*.py" -o -name "*_test.py" \) -print || true
-          echo "pyproject.toml (first 200 lines):"
-          sed -n '1,200p' pyproject.toml || true
-          echo "Top-level conftest.py:"
-          ls -la conftest.py || true
-          echo "pytest collect-only (with config):"
-          pytest -q --collect-only -vv || true
-          echo "pytest collect-only (ignore config):"
-          pytest -c /dev/null --collect-only -vv || true
-
       - name: Run tests
         run: pytest -q || true
 
