@@ -12,22 +12,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-- name: Install dependencies
-  run: pip install -e ".[dev]"
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
 
-- name: Debug workspace and pytest collection
-  run: |
-    echo "PWD: $(pwd)"
-    echo "Listing repo root:"
-    ls -la
-    echo "Listing tests folder (if exists):"
-    ls -la tests || true
-    echo "Find test files:"
-    find . -maxdepth 4 -type f -name "test_*.py" -o -name "*_test.py" -print || true
-    echo "Show pyproject.toml pytest config:"
-    sed -n '1,200p' pyproject.toml || true
-    echo "Run pytest collect-only (verbose):"
-    pytest -q --collect-only -vv || true
+      - name: Debug pytest collection
+    run: |
+      echo "PWD: $(pwd)"
+      echo "Repo root listing:"
+      ls -la
+      echo "Top-level tests dir:"
+      ls -la tests || true
+      echo "Find candidate test files:"
+      find . -maxdepth 5 -type f \( -name "test_*.py" -o -name "*_test.py" \) -print || true
+      echo "pyproject.toml (first 200 lines):"
+      sed -n '1,200p' pyproject.toml || true
+      echo "conftest.py present?"
+      ls -la conftest.py || true
+      echo "pytest collect-only (with config):"
+      pytest -q --collect-only -vv || true
+      echo "pytest collect-only (ignore config):"
+      pytest -c /dev/null --collect-only -vv || true
+
 
     # show where we are and what files exist
 pwd
