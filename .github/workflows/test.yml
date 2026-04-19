@@ -21,3 +21,16 @@ jobs:
 - name: Check code style
   run: black --check acsc/ tests/
 
+- name: Debug workspace and pytest collection
+  run: |
+    echo "PWD: $(pwd)"
+    echo "Listing repo root:"
+    ls -la
+    echo "Listing tests folder (if exists):"
+    ls -la tests || true
+    echo "Find test files:"
+    find . -maxdepth 4 -type f -name "test_*.py" -o -name "*_test.py" -print || true
+    echo "Show pyproject.toml pytest config:"
+    sed -n '1,200p' pyproject.toml || true
+    echo "Run pytest collect-only (verbose):"
+    pytest -q --collect-only -vv || true
