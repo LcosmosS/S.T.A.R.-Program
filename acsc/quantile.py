@@ -1,4 +1,4 @@
-mport numpy as np
+import numpy as np
 import json
 from pathlib import Path
 
