@@ -52,8 +52,16 @@ pytest -q --collect-only -vv || true
 echo "pytest collect-only ignoring config:"
 pytest -c /dev/null --collect-only -vv || true
 
-- name: Run tests
-  run: pytest tests/ --cov=acsc
+- name: Run tests debug
+  run: |
+    pwd
+    ls -la
+    ls -la tests || true
+    find . -maxdepth 5 -type f \( -name "test_*.py" -o -name "*_test.py" \) -print || true
+    sed -n '1,200p' pyproject.toml || true
+    pytest -q --collect-only -vv || true
+    pytest -q || true
+
 
 - name: Check code style
   run: black --check acsc/ tests/
