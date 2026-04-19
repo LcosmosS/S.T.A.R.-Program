@@ -56,9 +56,9 @@ class QuantileAligner:
         return out
 
     def fit_transform(self, ref_coords, src_coords, n_quantiles=200):
-    """Fit on ref_coords and transform src_coords in one step."""
-    self.fit(ref_coords, n_quantiles=n_quantiles)
-    return self.transform(src_coords)
+        """Fit on ref_coords and transform src_coords in one step."""
+        self.fit(ref_coords, n_quantiles=n_quantiles)
+        return self.transform(src_coords)
 
     
     def save(self, path):
