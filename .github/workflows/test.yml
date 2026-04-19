@@ -1,4 +1,8 @@
-name: Tests
+- name: Install dependencies
+  run: |
+    cd Arithmetic-Cosmic-Structure-Conjecture-ACSC
+    pip install -e ".[dev]"
+
 
 on: [push, pull_request]
 
