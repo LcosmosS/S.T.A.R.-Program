@@ -22,9 +22,9 @@ jobs:
       
       - name: Check code style
         run: black --check acsc/ tests/
-                    - name: Setup Go environment
-  uses: actions/setup-go@v6.4.0
-  with:
+      - name: Setup Go environment
+        uses: actions/setup-go@v6.4.0
+        with:
     # The Go version to download (if necessary) and use. Supports semver spec and ranges. Be sure to enclose this option in single quotation marks.
     go-version: # optional
     # Path to the go.mod, go.work, .go-version, or .tool-versions file.
