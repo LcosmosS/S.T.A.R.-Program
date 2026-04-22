@@ -60,6 +60,41 @@ S.T.A.R. - Empirical (Repository Link): Arithmetic Invariants and Cosmological G
   correlation using symbolic regression and introducing the Global-to-Local Mapping Paradox Correction Theory (GLMPCT).
 
 Repository Structure
+
+Arithmetic-Cosmic-Structure-Conjecture-ACSC/
+├── README.md
+├── LICENSE
+├── CITATION.cff
+├── acsc/                          # Core Python package
+│   ├── __init__.py
+│   ├── core.py                    # Complexity-14 filter, scarcity functions
+│   ├── validation.py              # Rank consistency, statistics
+│   └── utils.py
+├── data/
+│   ├── raw/
+│   │   ├── cremona_raw_parsed.csv
+│   │   └── lmfdb_raw_parsed.csv
+│   └── processed/
+│       ├── cremona_3selmer_full_pari.csv
+│       ├── lmfdb_3selmer_full_pari.csv
+│       └── acsc_final_combined.csv
+├── notebooks/
+│   ├── 01_data_preparation.ipynb
+│   ├── 02_complexity14_filter.ipynb
+│   └── 03_acsc_statistics.ipynb
+├── scripts/
+│   ├── generate_raw.py
+│   ├── compute_3selmer_full_pari.py
+│   └── acsc_validation_batch.py
+├── results/
+│   ├── figures/
+│   │   └── acsc_scarcity_plot.png
+│   └── tables/
+├── docker/
+│   └── Dockerfile
+├── requirements.txt
+└── pyproject.toml                 # or setup.py
+
 /manuscript: Contains the full 166-page ACSC Monograph (PDF) and the original LaTeX source files for complete transparency and peer-review verification.
 
 /theory-verification: Includes foundational data subsets (from LMFDB and Cremona databases) and the persistent homology barcode scripts utilized to define the arithmetic point clouds.
