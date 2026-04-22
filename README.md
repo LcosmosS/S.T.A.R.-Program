@@ -13,7 +13,9 @@ Keywords: Number Theory, Cosmology, Persistent Homology, Elliptic Curves, Symbol
 
 Overview
 ---
-This repository serves as the foundational archive for The Arithmetic–Cosmic Structure Conjecture (ACSC). It houses the complete 166-page theoretical monograph, which proposes a profound structural symmetry: that the topological blueprint of the large-scale universe is mathematically predetermined by the arithmetic invariants of elliptic curves over the rational numbers $\mathbb{Q}$.
+This repository serves as the foundational archive for The Arithmetic–Cosmic Structure Conjecture (ACSC). It houses the complete theoretical monograph, which proposes a profound structural symmetry: 
+  - that the topological blueprint of the large-scale universe is mathematically predetermined by the arithmetic invariants of elliptic curves over the rational numbers $\mathbb{Q}$.
+
 This work suggests that the universe operates as a "Symbolic Field," where physical constants and geometric realities emerge not by chance or anthropic selection, but by strict number-theoretic necessity.
 
 The Core Conjecture
@@ -35,11 +37,13 @@ The ACSC Trilogy Architecture
 ---
 
 This repository contains the Foundational Theory of a broader three-part research program. To fully contextualize this work, reviewers and researchers should reference the complete trilogy:
-ACSC - Theory (This Repository): The Foundational Monograph (166 pages). Establishes the core theoretical correspondence, the projection map $\Phi$, and the category theory frameworks unifying arithmetic and cosmology.
-
-ECC - Dynamics (Repository Link): The Entropy Cohomology Conjecture. Provides the mechanistic theory and cohomological conservation laws ($d\omega = 0$) that make the ACSC correspondence dynamically necessary rather than accidental.
-
-S.T.A.R. - Empirical (Repository Link): Arithmetic Invariants and Cosmological Geometry in Cartography. The empirical validation of the theory, demonstrating a $0.9864$ $R^2$ correlation using symbolic regression and introducing the Global-to-Local Mapping Paradox Correction Theory (GLMPCT).
+  - ACSC - Theory (This Repository): The Foundational Monograph. Establishes the core theoretical correspondence, the projection map $\Phi$, and the category theory frameworks unifying arithmetic and cosmology       and introducing the "Cosmic BSD Theorem."
+     
+  - ECC - Dynamics (Repository in Construction): The Entropy Cohomology Conjecture. Provides the mechanistic theory and cohomological conservation laws ($d\omega = 0$) that make the ACSC correspondence
+    dynamically necessary rather than accidental and introducing the "Symbolic Entropy Projection Theorem."
+    
+  - *S.T.A.R. - Empirical (Repository in Construction): Arithmetic Invariants and Cosmological Geometry in Cartography. The empirical validation of the theory, demonstrating a $0.9864$ stacked $R^2$ correlation
+    using symbolic regression and introducing the Global-to-Local Mapping Paradox Correction Theory (GLMPCT). (*S.T.A.R. - Symbolically. Tuned. Astronomical. Regression.)
 
 ---
 Repository Structure
