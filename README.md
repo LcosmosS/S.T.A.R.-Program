@@ -1,6 +1,6 @@
 
 
-# Arithmetic–Cosmic Structure Conjecture (ACSC) 
+## Arithmetic–Cosmic Structure Conjecture (ACSC) 
 ---
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/LcosmosS/Arithmetic-Cosmic-Structure-Conjecture-ACSC-.git/HEAD) 
 ---
@@ -10,7 +10,7 @@ Author: Patrick J. McNamara - ORCiD: 0009-0002-8978-5563
 Date: Beginning in March 2025 - Active
 
 Keywords: Number Theory, Cosmology, Persistent Homology, Elliptic Curves, Symbolic Regression, Mathematical Physics
----
+
 Overview
 ---
 This repository serves as the foundational archive for The Arithmetic–Cosmic Structure Conjecture (ACSC). It houses the complete 166-page theoretical monograph, which proposes a profound structural symmetry: that the topological blueprint of the large-scale universe is mathematically predetermined by the arithmetic invariants of elliptic curves over the rational numbers $\mathbb{Q}$.
