@@ -5,7 +5,7 @@
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/LcosmosS/Arithmetic-Cosmic-Structure-Conjecture-ACSC-.git/HEAD) 
 ---
 
-Author: Patrick J. McNamara
+Author: Patrick J. McNamara - ORCiD: 0009-0002-8978-5563
 
 Date: Beginning in March 2025 - Active
 
