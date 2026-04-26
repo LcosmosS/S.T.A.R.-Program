@@ -2,7 +2,7 @@
 ---
 
 # **S.T.A.R. Model**  
-[`https://mybinder.org/v2/gh/LcosmosS/Arithmetic-Cosmic-Structure-Conjecture-ACSC-.git/HEAD`](https://mybinder.org/v2/gh/LcosmosS/Arithmetic-Cosmic-Structure-Conjecture-ACSC-.git/HEAD)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/LcosmosS/S.T.A.R.-Model-for-Mathematical-and-Theoretical-Physics/HEAD?urlpath=%2Fdoc%2Ftree%2F01_preprocessing.ipynb)
 ### **Symbolic–Topological–Arithmetic–Relativity Model**
 ### **A Unified Framework for Mathematical & Theoretical Physics**  
 ### **Integrating ACSC + ECC to Address the Hubble–Planck Tension**
