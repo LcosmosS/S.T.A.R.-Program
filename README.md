@@ -42,8 +42,7 @@ This repository contains the Foundational Theory of a broader three-part researc
   - ECC - Dynamics (Repository in Construction): The Entropy Cohomology Conjecture. Provides the mechanistic theory and cohomological conservation laws ($d\omega = 0$) that make the ACSC correspondence
     dynamically necessary rather than accidental.
     
-  - *S.T.A.R. - Empirical (Repository in Construction): Arithmetic Invariants and Cosmological Geometry in Cartography. The empirical validation of the theory, demonstrating a $0.9864$ stacked $R^2$ correlation
-    using symbolic regression and introducing the Global-to-Local Mapping Paradox Correction Theory (GLMPCT). (*S.T.A.R. - Symbolically. Tuned. Astronomical. Regression.)
+  - *S.T.A.R. - Empirical (Repository in Construction): Arithmetic Invariants and Cosmological Geometry in Cartography. The empirical validation of the theory using symbolic regression. (*S.T.A.R. - Symbolically. Tuned. Astronomical. Regression.)
 
 ---
 Repository Structure
