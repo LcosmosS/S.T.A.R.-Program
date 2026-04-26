@@ -189,7 +189,7 @@ If you use the S.T.A.R. Model, ACSC, ECC, or any associated data pipelines, plea
 McNamara, P. J. (2026).
 The S.T.A.R. Model: A Symbolic–Topological–Arithmetic–Relativistic Framework for Cosmology.
 GitHub Repository.
-https://github.com/LcosmosS/Arithmetic-Cosmic-Structure-Conjecture-ACSC
+https://github.com/LcosmosS/S.T.A.R.-Model-for-Mathematical-and-Theoretical-Physics
 ```
 
 BibTeX:
@@ -199,7 +199,7 @@ BibTeX:
   author       = {Patrick J. McNamara},
   title        = {The S.T.A.R. Model: Symbolic--Topological--Arithmetic--Relativistic Cosmology},
   year         = {2026},
-  howpublished = {\url{https://github.com/LcosmosS/Arithmetic-Cosmic-Structure-Conjecture-ACSC}},
+  howpublished = {\url{https://github.com/LcosmosS/S.T.A.R.-Model-for-Mathematical-and-Theoretical-Physics}},
   note         = {Unified ACSC + ECC Framework}
 }
 ```
