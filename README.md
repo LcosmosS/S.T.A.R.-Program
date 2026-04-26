@@ -1,119 +1,207 @@
 
-
-## Arithmetic–Cosmic Structure Conjecture (ACSC) 
----
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/LcosmosS/Arithmetic-Cosmic-Structure-Conjecture-ACSC-.git/HEAD) 
 ---
 
-Author: Patrick J. McNamara - ORCiD: 0009-0002-8978-5563
-
-Date: Beginning in March 2025 - Active
-
-Keywords: Number Theory, Cosmology, Persistent Homology, Elliptic Curves, Symbolic Regression, Mathematical Physics
-
-Overview
----
-This repository serves as the foundational archive for The Arithmetic–Cosmic Structure Conjecture (ACSC). It houses the complete theoretical monograph, which proposes a profound structural symmetry: 
-  - that the topological blueprint of the large-scale universe is mathematically predetermined by the arithmetic invariants of elliptic curves over the rational numbers $\mathbb{Q}$.
-
-This work suggests that the universe operates as a "Symbolic Field," where physical constants and geometric realities emerge not by chance or anthropic selection, but by strict number-theoretic necessity.
-
-The Core Conjecture
----
-At the heart of the ACSC is the proposition of a metric-preserving correspondence between arithmetic classes of elliptic curves ($\mathcal{E}$) and the topological classes of cosmic structures ($M_{cosmo}$).
-
-
-Let $\mathcal{E}$ denote the set of isomorphism classes of elliptic curves over $\mathbb{Q}$. 
-We propose a projection:
-
-$$\Phi: \mathcal{E} \longrightarrow M_{cosmo}$$
-
-assigning to each curve a point in a 3‑manifold $M_{cosmo} \subset \mathbb{R}^3$ representing the large‑scale topology of observed cosmic structure.
-
-The conjecture posits that the projected point cloud $\Phi(\mathcal{E})$ reconstructs the persistent homology of $M_{cosmo}$ with an error bound of $W_2(D(\Phi(\mathcal{E})), D(M_{cosmo})) < \epsilon$, where $\epsilon < 10^{-2}$.
-
-
-The ACSC Trilogy Architecture
----
-
-This repository contains the Foundational Theory of a broader three-part research program. To fully contextualize this work, reviewers and researchers should reference the complete trilogy:
-  - ACSC - Theory (This Repository): The Foundational Monograph. Establishes the core theoretical correspondence through the Global-to-Local Mapping Paradox Correction Theory (GLMPCT), the projection map $\Phi$, and the category theory frameworks unifying arithmetic and cosmology.
-     
-  - ECC - Dynamics (Repository in Construction): The Entropy Cohomology Conjecture. Provides the mechanistic theory and cohomological conservation laws ($d\omega = 0$) that make the ACSC correspondence
-    dynamically necessary rather than accidental.
-    
-  - *S.T.A.R. - Empirical (Repository in Construction): Arithmetic Invariants and Cosmological Geometry in Cartography. The empirical validation of the theory using symbolic regression. (*S.T.A.R. - Symbolically. Tuned. Astronomical. Regression.)
+# **S.T.A.R. Model**  
+[`https://mybinder.org/v2/gh/LcosmosS/Arithmetic-Cosmic-Structure-Conjecture-ACSC-.git/HEAD`](https://mybinder.org/v2/gh/LcosmosS/Arithmetic-Cosmic-Structure-Conjecture-ACSC-.git/HEAD)
+### **Symbolic–Topological–Arithmetic–Relativity Model**
+### **A Unified Framework for Mathematical & Theoretical Physics**  
+### **Integrating ACSC + ECC to Address the Hubble–Planck Tension**
 
 ---
-Repository Structure
+
+**Author:** Patrick J. McNamara  
+**ORCiD:** 0009‑0002‑8978‑5563  
+**Project Start:** March 2025 — Active  
+**Keywords:** Number Theory, Cosmology, Entropy Cohomology, Persistent Homology, Elliptic Curves, Symbolic Regression, Mathematical Physics
+
+---
+
+## **Overview**
+
+This repository is the **primary research archive** for the **S.T.A.R. Model** — the *Symbolic–Topological–Arithmetic–Relativistic Model* — a unified theoretical physics framework that couples:
+
+- **ACSC** — *Arithmetic–Cosmic Structure Conjecture*  
+- **ECC** — *Entropy Cohomology Conjecture*
+
+Together, these form a dual‑layer architecture:
+
+- **ACSC** provides the *geometric projection law* mapping elliptic curve invariants into a cosmological manifold.  
+- **ECC** provides the *entropy‑cohomological conservation law* governing symbolic information flow across that manifold.
+
+The S.T.A.R. Model proposes that the **large‑scale structure of the universe**, the **effective expansion rate**, and the **Hubble–Planck tension** arise from the interaction between:
+
+- arithmetic projection geometry  
+- entropy curvature  
+- persistent cohomology classes  
+- symbolic geodesics  
+- scalar‑field coupling  
+
+This repository contains the **full theoretical monograph**, **computational toolkit**, **TDA stability pipeline**, and **symbolic regression engine** that define the S.T.A.R. Model.
+
+---
+
+## **The S.T.A.R. Model: Core Idea**
+
+The S.T.A.R. Model asserts that the universe behaves as a **Symbolic Field**, where:
+
+- arithmetic invariants  
+- entropy curvature  
+- topological persistence  
+- and geometric projection laws  
+
+jointly determine cosmic structure.
+
+The central hypothesis:
+
+> **Cosmic geometry is not arbitrary — it is symbolically encoded by arithmetic structure and conserved by entropy cohomology.**
+
+This leads to a scale‑dependent effective Hubble parameter:
+
+$\[
+H_{\mathrm{eff}}(z) = H_0 \cdot \langle \Omega_E r \rangle_z \cdot (1 + \alpha C_{\mathrm{entropy}}(z))
+\]$
+
+which naturally produces:
+
+- **higher local $\(H_0\)$**  
+- **lower CMB‑inferred $\(H_0\)$**  
+
+— a unified explanation for the **Hubble–Planck tension**.
+
+---
+
+## **The S.T.A.R. Trilogy Architecture**
+
+This repository represents the **unified theory layer** of a three‑part research program:
+
+### **1. ACSC — Geometry**  
+*Arithmetic–Cosmic Structure Conjecture*  
+Defines the projection map $\( \Phi(E) \)$, the k‑factor scaling, density‑equalizing rescaling, and the Global‑to‑Local Mapping Paradox Correction Theory.
+
+### **2. ECC — Field Theory**  
+*Entropy Cohomology Conjecture*  
+Defines the entropy field $\( \mathcal{M}(x) \)$, the differential forms $\( \theta = d\mathcal{M} \)$, $\( \omega = d\theta \)$, and the cohomology class $\([\omega]\)$ governing symbolic conservation.
+
+### **3. S.T.A.R. — Unified Physics**  
+*Symbolic–Topological–Arithmetic–Relativistic Model*  
+Combines ACSC + ECC into a full cosmological model with:
+
+- metric perturbations  
+- scalar‑field coupling  
+- symbolic Sachs–Wolfe transfer  
+- cosmic‑web alignment  
+- symbolic regression law discovery  
+
+This repository is the **central hub** of the S.T.A.R. program.
+
+---
+
+## **Repository Structure**
+
 ```
-
-Repository Structure
-Arithmetic-Cosmic-Structure-Conjecture-ACSC/
+S.T.A.R.-Model/
 ├── README.md
 ├── LICENSE
 ├── CITATION.cff
-├── acsc/                          # Core Python package
-│   ├── __init__.py
-│   ├── core.py                    # Complexity-14 filter, scarcity functions
-│   ├── validation.py              # Rank consistency, statistics
-│   └── utils.py
+│
+├── src/
+│   ├── projection/               # ACSC projection geometry
+│   ├── entropy/                  # ECC entropy/cohomology machinery
+│   ├── physics/                  # S.T.A.R. cosmological physics
+│   ├── tda/                      # Persistent homology + stability
+│   ├── symbolic_regression/      # Constrained GP + law discovery
+│   └── blender/                  # Paradox correction + infinite zoom
+│
 ├── data/
-│   ├── raw/
-│   │   ├── cremona_raw_parsed.csv
-│   │   └── lmfdb_raw_parsed.csv
-│   └── processed/
-│       ├── cremona_3selmer_full_pari.csv
-│       ├── lmfdb_3selmer_full_pari.csv
-│       └── acsc_final_combined.csv
+│   ├── raw/                      # LMFDB + Cremona datasets
+│   └── processed/                # Cleaned + merged arithmetic data
+│
 ├── notebooks/
-│   ├── 01_data_preparation.ipynb
-│   ├── 02_complexity14_filter.ipynb
-│   └── 03_acsc_statistics.ipynb
+│   ├── projection_demo.ipynb
+│   ├── entropy_field_demo.ipynb
+│   ├── hubble_tension_fit.ipynb
+│   └── tda_analysis.ipynb
+│
 ├── scripts/
 │   ├── generate_raw.py
 │   ├── compute_3selmer_full_pari.py
-│   └── acsc_validation_batch.py
+│   └── star_validation_batch.py
+│
 ├── results/
 │   ├── figures/
-│   │   └── acsc_scarcity_plot.png
 │   └── tables/
-├── docker/
-│   └── Dockerfile
-├── requirements.txt
-└── pyproject.toml                 # or setup.py
-
-/manuscript: Contains the full 166-page ACSC Monograph (PDF) source file for complete transparency and peer-review verification.
-
-/theory-verification: Includes foundational data subsets (from LMFDB and Cremona databases) and the persistent homology barcode scripts utilized to define the arithmetic point clouds.
-
-/docs: High-resolution diagrams, including the "Cosmic-Arithmetic Map," visually demonstrating the translation of rank and regulator in
-
-/manuscript: Contains the full 166-page ACSC Monograph (PDF) and the original LaTeX source files for complete transparency and peer-review verification.
-/theory-verification: Includes foundational data subsets (from LMFDB and Cremona databases) and the persistent homology barcode scripts utilized to define the arithmetic point clouds.
-/docs: High-resolution diagrams, including the "Cosmic-Arithmetic Map," visually demonstrating the translation of rank and regulator into cosmic voids and filaments.
+│
+├── manuscript/                   # Full S.T.A.R. monograph (PDF + LaTeX)
+├── theory-verification/          # PH barcodes + arithmetic point clouds
+└── docs/                         # High-resolution diagrams + maps
 ```
-Reproducibility Statement
----
-Transparency and empirical reproducibility are core tenets of this research program. The theoretical projections defined in this monograph are computationally verified in the accompanying S.T.A.R. repository. The $R^2 = 0.9864$ predictive parity on synthetic cosmic structures was achieved using a v3.1 leakage-free pipeline. Researchers are encouraged to review the .tex formulations in the /manuscript folder here, and execute the data pipelines provided in the S.T.A.R. repository to independently verify the projection mappings.
-Citation
 
-If you utilize the theoretical frameworks, projection operators, or data pipelines established in this program, please cite the monograph as follows:
-McNamara, P. J. (2025). The Arithmetic–Cosmic Structure Conjecture. GitHub Repository. https://github.com/LcosmosS/Arithmetic-Cosmic-Structure-Conjecture-ACSC
+---
+
+## **Reproducibility Statement**
+
+Reproducibility is a core principle of the S.T.A.R. Model.
+
+- All projection operators  
+- All entropy/cohomology computations  
+- All TDA pipelines  
+- All symbolic regression constraints  
+- All cosmological fits  
+
+are implemented in this repository.
+
+The **v3.1 leakage‑free pipeline** achieves:
+
+$\[
+R^2 = 0.9864
+\]$ (undergoing rigorous confirmation)
+
+on synthetic cosmic structures, validated through:
+
+- bootstrap persistence landscapes  
+- Wasserstein stability  
+- null‑scramble rejection  
+- isogeny‑invariance tests  
+
+Researchers are encouraged to:
+
+- inspect the LaTeX monograph in `/manuscript`  
+- run the full validation pipeline in `/scripts`  
+- explore the symbolic regression manifold in `/src/symbolic_regression`  
+
+---
+
+## **Installation**
 
 ```bash
-# 1. Clone and install
 git clone https://github.com/LcosmosS/Arithmetic-Cosmic-Structure-Conjecture-ACSC.git
 cd Arithmetic-Cosmic-Structure-Conjecture-ACSC
 pip install -r requirements.txt
+```
 
-# 2. Run the full ACSC validation (batching + incremental save)
-python scripts/acsc_validation_full_batch.py
+---
 
-@misc{mcnamara2025acsc,
-  author = {Patrick J. McNamara - ORCiD: 0009-0002-8978-5563},
-  title = {Arithmetic--Cosmic Structure Conjecture (ACSC)},
-  year = {2025},
+## **Citation**
+
+If you use the S.T.A.R. Model, ACSC, ECC, or any associated data pipelines, please cite:
+
+```
+McNamara, P. J. (2026).
+The S.T.A.R. Model: A Symbolic–Topological–Arithmetic–Relativistic Framework for Cosmology.
+GitHub Repository.
+https://github.com/LcosmosS/Arithmetic-Cosmic-Structure-Conjecture-ACSC
+```
+
+BibTeX:
+
+```bibtex
+@misc{mcnamara2026star,
+  author       = {Patrick J. McNamara},
+  title        = {The S.T.A.R. Model: Symbolic--Topological--Arithmetic--Relativistic Cosmology},
+  year         = {2026},
   howpublished = {\url{https://github.com/LcosmosS/Arithmetic-Cosmic-Structure-Conjecture-ACSC}},
-  note = {Part of the S.T.A.R. Program for Theoretical Physics}
+  note         = {Unified ACSC + ECC Framework}
 }
+```
+
+---
