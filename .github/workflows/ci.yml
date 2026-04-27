@@ -16,14 +16,14 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Install package
+        run: pip install -e [dev] .
+
       - name: Verify environment
         run: |
           which sage
           sage --version
           python3 --version
-
-      - name: Install package
-        run: pip install -e .
 
       - name: Run tests
         run: pytest -q
