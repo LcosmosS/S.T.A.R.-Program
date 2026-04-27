@@ -19,3 +19,8 @@ RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
 # Copy your project into the container
 WORKDIR /workspace
 COPY . /workspace
+
+echo "# trigger" >> docker/Dockerfile
+git add docker/Dockerfile
+git commit -m "Trigger image build"
+git push
