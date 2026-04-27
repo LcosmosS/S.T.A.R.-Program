@@ -129,7 +129,7 @@ class ConstrainedGP:
                     score = -np.inf
                 scored.append((score, tree))
 
-            scored.sort(reverse=True)
+            scored.sort(key=lambda t: t[0], reverse=True)
             population = [t for _, t in scored[: self.population // 2]]
 
             while len(population) < self.population:
