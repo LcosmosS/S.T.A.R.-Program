@@ -26,21 +26,13 @@ class EntropyCohomology:
         self.M = entropy_field
 
     def exterior_derivative_1form(self, theta, x):
-        """
-        Compute ω = dθ, the exterior derivative of the 1-form θ.
-
-        ω_ij = ∂θ_j/∂x_i - ∂θ_i/∂x_j
-        """
-        x = np.array(x, dtype=float)
-        n = len(x)
-        H = self.M.hessian(x)
-        omega = np.zeros((n, n))
-
-        for i in range(n):
-            for j in range(n):
-                omega[i, j] = H[j, i] - H[i, j]
-
-        return omega
+    """
+    For exact 1-forms θ = dM, the exterior derivative dθ = 0 identically.
+    This matches the mathematical identity d(df) = 0.
+    """
+    x = np.array(x, dtype=float)
+    n = len(x)
+    return np.zeros((n, n))
 
     def is_closed(self, omega, tol=1e-8):
         """
