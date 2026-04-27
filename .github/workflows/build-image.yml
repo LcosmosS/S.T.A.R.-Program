@@ -31,4 +31,4 @@ jobs:
           context: .
           file: docker/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository_owner | toLower }}/star-sage:latest
+          tags: ghcr.io/lcosmoss/star-sage:latest
