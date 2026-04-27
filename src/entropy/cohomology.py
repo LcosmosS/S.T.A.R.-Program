@@ -26,10 +26,10 @@ class EntropyCohomology:
         self.M = entropy_field
 
     def exterior_derivative_1form(self, theta, x):
-    """
-    For exact 1-forms θ = dM, the exterior derivative dθ = 0 identically.
-    This matches the mathematical identity d(df) = 0.
-    """
+        """
+        For exact 1-forms θ = dM, the exterior derivative dθ = 0 identically.
+        This matches the mathematical identity d(df) = 0.
+        """
         x = np.array(x, dtype=float)
         n = len(x)
         return np.zeros((n, n))
