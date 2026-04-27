@@ -94,7 +94,7 @@ jobs:
       with:
         workflow: notebooks.yml
         branch: main
-        run_number: ${{ github.run_number - 1 }}
+        run_number: ${{ github.run_number }}
         name: notebook-outputs
         path: previous/
       continue-on-error: true
