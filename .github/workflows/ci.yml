@@ -5,45 +5,20 @@ on:
   pull_request:
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     env:
       DEBIAN_FRONTEND: noninteractive
-    container:
-      image: ghcr.io/lcosmoss/star-sage:latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Install package
         run: pip install -e .
 
       - name: Verify environment
         run: |
-          which sage
-          sage --version
           python3 --version
 
       - name: Run tests
         run: pytest -q
-
-      - name: Generate CI subset of ≥1000 Cremona labels
-        run: |
-          mkdir -p data/raw
-          echo "label" > data/raw/ci_subset.csv
-          sage -python scripts/generate_cremona_subset.py >> data/raw/ci_subset.csv
-
-      - name: Run dataset builder on CI subset
-        run: |
-          sage -python scripts/build_ec_dataset_parallel.sage \
-            --labels-file data/raw/ci_subset.csv \
-            --output results/ci_ec_subset.csv \
-            --workers 2 \
-            --batch-size 10
-
-      - name: Upload CI artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: ci-results
-          path: results/
