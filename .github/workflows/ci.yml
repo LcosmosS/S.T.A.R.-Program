@@ -71,7 +71,7 @@ jobs:
       run: |
         mkdir -p data/raw
         echo "label" > data/raw/ci_subset.csv
-sage -python - <<EOF >> data/raw/ci_subset.csv
+        sage -python - <<EOF >> data/raw/ci_subset.csv
 from sageall import CremonaDatabase
 db = CremonaDatabase()
 labels = []
