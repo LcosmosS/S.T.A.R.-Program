@@ -7,94 +7,30 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      DEBIAN_FRONTEND: noninteractive
+
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/star-sage:latest
 
     steps:
-      - name: Force-disable tzdata prompts system-wide
-        run: |
-          echo 'tzdata tzdata/Areas select America' | sudo debconf-set-selections
-          echo 'tzdata tzdata/Zones/America select New_York' | sudo debconf-set-selections
-          sudo rm -f /etc/localtime
-          sudo ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
-          sudo dpkg-reconfigure -f noninteractive tzdata
-
-      - name: Preseed tzdata BEFORE ANYTHING ELSE
-        run: |
-          sudo rm -f /etc/localtime
-          echo "America/New_York" | sudo tee /etc/timezone
-          sudo ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
-          sudo apt-get update
-          sudo apt-get install -y tzdata
-          sudo dpkg-reconfigure --frontend noninteractive tzdata
-
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Fix tzdata inside container
-        run: |
-          sudo apt-get update
-          echo 'tzdata tzdata/Areas select America' | sudo debconf-set-selections
-          echo 'tzdata tzdata/Zones/America select New_York' | sudo debconf-set-selections
-          sudo ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
-          sudo dpkg-reconfigure -f noninteractive tzdata
-
-      - name: Install Miniconda
-        uses: conda-incubator/setup-miniconda@v3
-        with:
-          auto-update-conda: true
-          python-version: "3.11"
-          environment-file: environment.yml
-          activate-environment: star-env
-          channels: conda-forge
-
-      - name: Install joblib
-        shell: bash 
-        run: conda install -y joblib
-
-      - name: Clone Cremona and LMFDB archives
-        shell: bash 
-        run: |
-          mkdir -p external
-          git clone https://github.com/JohnCremona/ecdata.git external/ecdata || true
-          git clone https://github.com/JohnCremona/eclib.git external/eclib || true
-          git clone https://github.com/LMFDB/lmfdb.git external/lmfdb || true
-
-      - name: Install eclib + LMFDB
-        shell: bash 
-        run: |
-          pip install external/eclib || true
-          pip install external/lmfdb || true
-
-      - name: Install SageMath
-        shell: bash 
-        run: sudo apt-get install -y sage
-
-      - name: Add src to PYTHONPATH
-        shell: bash 
-        run: echo "PYTHONPATH=${PYTHONPATH}:${GITHUB_WORKSPACE}/src" >> $GITHUB_ENV
-
       - name: Verify environment
-        shell: bash 
         run: |
-          which python
-          python --version
-          which pytest || echo "pytest not found"
-          echo "PYTHONPATH=$PYTHONPATH"
+          which sage
+          sage --version
+          python3 --version
 
       - name: Run tests
-        shell: bash 
         run: pytest -q
 
       - name: Generate CI subset of ≥1000 Cremona labels
-        shell: bash 
         run: |
           mkdir -p data/raw
           echo "label" > data/raw/ci_subset.csv
           sage -python scripts/generate_cremona_subset.py >> data/raw/ci_subset.csv
 
       - name: Run dataset builder on CI subset
-        shell: bash 
         run: |
           sage -python scripts/build_ec_dataset_parallel.sage \
             --labels-file data/raw/ci_subset.csv \
