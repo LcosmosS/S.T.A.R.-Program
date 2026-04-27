@@ -46,10 +46,29 @@ jobs:
       shell: bash -l {0}
       run: pytest -q
 
-    - name: Prepare small subset of labels
+    - name: Generate CI subset of ≥1000 Cremona labels
       shell: bash -l {0}
       run: |
-        head -n 21 data/raw/curve_labels.csv > data/raw/ci_subset.csv
+        mkdir -p data/raw
+        echo "label" > data/raw/ci_subset.csv
+        sage -python - << 'EOF' >> data/raw/ci_subset.csv
+from sageall import CremonaDatabase
+db = CremonaDatabase()
+
+labels = []
+for N in range(1, 5000):
+    try:
+        curves = db.curves(N)
+        for L in curves:
+            labels.append(L)
+            if len(labels) >= 1000:
+                raise StopIteration
+    except StopIteration:
+        break
+
+for L in labels[:1000]:
+    print(L)
+EOF
 
     - name: Run dataset builder on CI subset
       shell: bash -l {0}
