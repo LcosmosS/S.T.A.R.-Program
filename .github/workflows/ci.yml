@@ -66,23 +66,23 @@ jobs:
         mkdir -p data/raw
         echo "label" > data/raw/ci_subset.csv
         sage -python - <<EOF >> data/raw/ci_subset.csv
-        from sageall import CremonaDatabase
+from sageall import CremonaDatabase
 
-        db = CremonaDatabase()
-        labels = []
+db = CremonaDatabase()
+labels = []
 
-        for N in range(1, 5000):
-            curves = db.curves(N)
-            for L in curves:
-                labels.append(L)
-                if len(labels) >= 1000:
-                    break
-            if len(labels) >= 1000:
-                break
+for N in range(1, 5000):
+    curves = db.curves(N)
+    for L in curves:
+        labels.append(L)
+        if len(labels) >= 1000:
+            break
+    if len(labels) >= 1000:
+        break
 
-        for L in labels[:1000]:
-            print(L)
-        EOF
+for L in labels[:1000]:
+    print(L)
+EOF
 
     - name: Run dataset builder on CI subset
       shell: bash -l {0}
