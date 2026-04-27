@@ -1,0 +1,49 @@
+name: S.T.A.R. CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Install Miniconda
+      uses: conda-incubator/setup-miniconda@v3
+      with:
+        auto-update-conda: true
+        python-version: "3.11"
+        channels: conda-forge
+        activate-environment: star-env
+        environment-file: environment.yml
+
+    - name: Install joblib
+      run: conda install -y joblib
+
+    - name: Install SageMath
+      run: conda install -y sage
+
+    - name: Run tests
+      run: pytest -q
+
+    - name: Prepare small subset of labels
+      run: |
+        head -n 21 data/raw/curve_labels.csv > data/raw/ci_subset.csv
+
+    - name: Run dataset builder on CI subset
+      run: |
+        sage -python scripts/build_ec_dataset_parallel.sage \
+          --labels-file data/raw/ci_subset.csv \
+          --output results/ci_ec_subset.csv \
+          --workers 2 \
+          --batch-size 10
+
+    - name: Upload CI artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ci-results
+        path: results/
