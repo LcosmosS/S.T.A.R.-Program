@@ -30,9 +30,9 @@ class EntropyCohomology:
     For exact 1-forms θ = dM, the exterior derivative dθ = 0 identically.
     This matches the mathematical identity d(df) = 0.
     """
-    x = np.array(x, dtype=float)
-    n = len(x)
-    return np.zeros((n, n))
+        x = np.array(x, dtype=float)
+        n = len(x)
+        return np.zeros((n, n))
 
     def is_closed(self, omega, tol=1e-8):
         """
