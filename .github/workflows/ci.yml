@@ -11,15 +11,15 @@ jobs:
       DEBIAN_FRONTEND: noninteractive
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
       - name: Install tzdata early (America/New_York)
         run: |
           apt-get update
           apt-get install -y tzdata
           ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
           dpkg-reconfigure --frontend noninteractive tzdata
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
       - name: Install Miniconda
         uses: conda-incubator/setup-miniconda@v3
