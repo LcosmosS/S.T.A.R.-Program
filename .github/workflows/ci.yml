@@ -44,12 +44,17 @@ jobs:
         conda list
         pip list
 
+    - name: Add src to PYTHONPATH
+      shell: bash -l {0}
+      run: |
+        export PYTHONPATH="$PYTHONPATH:$(pwd)/src"
+        echo "PYTHONPATH=$PYTHONPATH"
+
     - name: Run tests
       shell: bash -l {0}
       env:
         PYTHONPATH: "${{ github.workspace }}/src"
       run: pytest -q
-
 
     - name: Prepare small subset of labels
       run: |
