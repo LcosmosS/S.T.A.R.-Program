@@ -22,44 +22,40 @@ jobs:
         channels: conda-forge
 
     - name: Install joblib
+      shell: bash -l {0}
       run: conda install -y joblib
 
     - name: Install SageMath
+      shell: bash -l {0}
       run: conda install -y sage
 
-    - name: Check installed packages
+    - name: Add src to PYTHONPATH (persistent)
       shell: bash -l {0}
       run: |
-        conda list
-        pip list
+        echo "PYTHONPATH=${PYTHONPATH}:${GITHUB_WORKSPACE}/src" >> $GITHUB_ENV
 
-    - name: Add src to PYTHONPATH
-      shell: bash -l {0}
-      run: |
-        export PYTHONPATH="$PYTHONPATH:$(pwd)/src"
-        echo "PYTHONPATH=$PYTHONPATH"
-        
     - name: Verify environment
+      shell: bash -l {0}
       run: |
         which python
         python --version
         which pytest || echo "pytest not found"
-        
+        echo "PYTHONPATH=$PYTHONPATH"
+
     - name: Run tests
       shell: bash -l {0}
-      env:
-        PYTHONPATH: "${{ github.workspace }}/src"
       run: pytest -q
 
     - name: Prepare small subset of labels
+      shell: bash -l {0}
       run: |
         head -n 21 data/raw/curve_labels.csv > data/raw/ci_subset.csv
 
     - name: Run dataset builder on CI subset
+      shell: bash -l {0}
       run: |
         sage -python scripts/build_ec_dataset_parallel.sage \
-          --labels-file cremona_raw_parsed.csv \
-          --labels-file lmfdb_raw_parsed.csv \
+          --labels-file data/raw/ci_subset.csv \
           --output results/ci_ec_subset.csv \
           --workers 2 \
           --batch-size 10
