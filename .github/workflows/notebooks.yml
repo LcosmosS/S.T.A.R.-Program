@@ -19,6 +19,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Install system tools inside container
+      run: |
+        apt-get update
+        apt-get install -y git curl
+
     - name: Install Python dependencies
       run: |
         sage -python -m pip install --upgrade pip
@@ -40,20 +45,26 @@ jobs:
       run: |
         mkdir -p data/raw
         echo "label" > data/raw/ci_subset.csv
-        find external/ecdata -type f -name "*.txt" | head -n 20 | xargs cat | \
-          grep -v "^#" | awk '{print $1}' | head -n 1000 >> data/raw/ci_subset.csv || true
+        if [ -d external/ecdata ]; then
+          find external/ecdata -type f -name "*.txt" | head -n 20 | xargs cat | \
+            grep -v "^#" | awk '{print $1}' | head -n 1000 >> data/raw/ci_subset.csv
+        fi
 
     - name: Execute notebooks
       run: |
         mkdir -p results
-        for nb in examples/*.ipynb; do
-          echo "Running $nb"
-          sage -python -m jupyter nbconvert \
-            --to notebook \
-            --execute "$nb" \
-            --output "$(basename $nb .ipynb)-executed.ipynb" \
-            --ExecutePreprocessor.timeout=1800
-        done
+        if ls examples/*.ipynb 1> /dev/null 2>&1; then
+          for nb in examples/*.ipynb; do
+            echo "Running $nb"
+            sage -python -m jupyter nbconvert \
+              --to notebook \
+              --execute "$nb" \
+              --output "$(basename $nb .ipynb)-executed.ipynb" \
+              --ExecutePreprocessor.timeout=1800
+          done
+        else
+          echo "No notebooks found in examples/. Skipping execution."
+        fi
 
     - name: Upload notebook results
       uses: actions/upload-artifact@v4
@@ -62,3 +73,4 @@ jobs:
         path: |
           results/
           examples/*-executed.ipynb
+        if-no-files-found: warn
