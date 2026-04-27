@@ -1,0 +1,17 @@
+name: star-env
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - sage=10.3
+  - numpy
+  - pandas
+  - matplotlib
+  - joblib
+  - pip
+  - pip:
+      - jupyter
+      - notebook
+      - nbconvert
+      - nbformat
+      - pytest
