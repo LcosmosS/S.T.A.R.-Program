@@ -12,6 +12,12 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v4
 
+    - name: Set noninteractive tzdata
+      run: |
+        export DEBIAN_FRONTEND=noninteractive
+        ln -fs /usr/share/zoneinfo/UTC /etc/localtime
+        dpkg-reconfigure --frontend noninteractive tzdata
+
     - name: Install Miniconda
       uses: conda-incubator/setup-miniconda@v3
       with:
