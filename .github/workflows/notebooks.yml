@@ -1,0 +1,94 @@
+name: Execute Notebooks
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  run-notebooks:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # ---------------------------------------------------------
+    # Install SageMath (same version as your Dockerfile)
+    # ---------------------------------------------------------
+    - name: Install SageMath
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y sagemath sagemath-jupyter
+
+    # ---------------------------------------------------------
+    # Install Python dependencies (same as Dockerfile)
+    # ---------------------------------------------------------
+    - name: Install Python dependencies
+      run: |
+        sage -python -m pip install --upgrade pip
+        sage -python -m pip install numpy pandas tqdm scikit-learn flask pymongo gunicorn ripser persim jupyterlab
+
+    # ---------------------------------------------------------
+    # Clone Cremona + LMFDB archives (same as Dockerfile)
+    # ---------------------------------------------------------
+    - name: Clone arithmetic archives
+      run: |
+        mkdir -p external
+        git clone https://github.com/JohnCremona/ecdata.git external/ecdata || true
+        git clone https://github.com/JohnCremona/eclib.git external/eclib || true
+        git clone https://github.com/LMFDB/lmfdb.git external/lmfdb || true
+
+    # ---------------------------------------------------------
+    # Install eclib + LMFDB (best-effort)
+    # ---------------------------------------------------------
+    - name: Install eclib + LMFDB
+      run: |
+        sage -python -m pip install external/eclib || true
+        sage -python -m pip install external/lmfdb || true
+
+    # ---------------------------------------------------------
+    # Generate CI Cremona label subset (1000 labels)
+    # ---------------------------------------------------------
+    - name: Generate CI Cremona label subset
+      run: |
+        mkdir -p data/raw
+        echo "label" > data/raw/ci_subset.csv
+        find external/ecdata -type f -name "*.txt" | head -n 20 | xargs cat | \
+          grep -v "^#" | awk '{print $1}' | head -n 1000 >> data/raw/ci_subset.csv || true
+        echo "Generated CI label subset"
+
+    # ---------------------------------------------------------
+    # Install nbconvert for notebook execution
+    # ---------------------------------------------------------
+    - name: Install nbconvert
+      run: |
+        sage -python -m pip install nbconvert
+
+    # ---------------------------------------------------------
+    # Execute all notebooks in examples/
+    # ---------------------------------------------------------
+    - name: Execute notebooks
+      run: |
+        mkdir -p results
+        for nb in examples/*.ipynb; do
+          echo "Running $nb"
+          sage -python -m jupyter nbconvert \
+            --to notebook \
+            --execute "$nb" \
+            --output "$(basename $nb .ipynb)-executed.ipynb" \
+            --ExecutePreprocessor.timeout=1800
+        done
+
+    # ---------------------------------------------------------
+    # Upload all results/ artifacts
+    # ---------------------------------------------------------
+    - name: Upload notebook results
+      uses: actions/upload-artifact@v4
+      with:
+        name: notebook-results
+        path: |
+          results/
+          examples/*-executed.ipynb
