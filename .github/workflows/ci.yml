@@ -24,6 +24,20 @@ jobs:
     - name: Install joblib
       shell: bash -l {0}
       run: conda install -y joblib
+    
+    - name: Clone Cremona and LMFDB archives
+      shell: bash -l {0}
+      run: |
+        mkdir -p external
+        git clone https://github.com/JohnCremona/ecdata.git external/ecdata || true
+        git clone https://github.com/JohnCremona/eclib.git external/eclib || true
+        git clone https://github.com/LMFDB/lmfdb.git external/lmfdb || true
+
+    - name: Install eclib + LMFDB
+      shell: bash -l {0}
+      run: |
+        pip install external/eclib || true
+        pip install external/lmfdb || true
 
     - name: Install SageMath
       shell: bash -l {0}
