@@ -11,13 +11,13 @@ jobs:
       DEBIAN_FRONTEND: noninteractive
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
       - name: Preseed tzdata (prevent interactive prompt)
         run: |
           ln -fs /usr/share/zoneinfo/UTC /etc/localtime
           dpkg-reconfigure --frontend noninteractive tzdata
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
       - name: Install Miniconda
         uses: conda-incubator/setup-miniconda@v3
