@@ -32,3 +32,4 @@ jobs:
           file: docker/Dockerfile
           push: true
           tags: ghcr.io/lcosmoss/star-sage:latest
+          
