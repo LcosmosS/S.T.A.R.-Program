@@ -27,9 +27,24 @@ jobs:
 
     - name: Install Python dependencies
       run: |
-        sage -python -m pip install --upgrade pip
-        sage -python -m pip install numpy pandas tqdm scikit-learn flask pymongo gunicorn ripser persim jupyterlab nbconvert
+        sage -python -m pip install --upgrade pip setuptools wheel
+        # core runtime libs used by your code and notebook execution
+        sage -python -m pip install --no-cache-dir \
+          numpy pandas tqdm scikit-learn flask pymongo gunicorn \
+          ripser persim \
+          plotly==5.18.0 \
+          nbconvert nbclient ipykernel jupyter-core nest_asyncio
 
+    - name: Prepare IPython runtime dir
+      run: |
+        # nbconvert / IPython sometimes tries to write to an unwritable parent.
+        # Force a writable IPYTHONDIR and ensure permissions.
+        export IPYTHONDIR=/tmp/.ipython
+        mkdir -p "$IPYTHONDIR"
+        chmod -R 0777 "$IPYTHONDIR"
+        # Export for subsequent steps in this job
+        echo "IPYTHONDIR=$IPYTHONDIR" >> $GITHUB_ENV
+    
     - name: Clone arithmetic archives
       run: |
         mkdir -p external
