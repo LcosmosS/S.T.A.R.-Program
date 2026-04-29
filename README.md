@@ -56,9 +56,7 @@ The central hypothesis:
 
 This leads to a scale‑dependent effective Hubble parameter:
 
-$\[
-H_{\mathrm{eff}}(z) = H_0 \cdot \langle \Omega_E r \rangle_z \cdot (1 + \alpha C_{\mathrm{entropy}}(z))
-\]$
+$H_{\mathrm{eff}}(z) = H_0 \cdot \langle \Omega_E r \rangle_z \cdot (1 + \alpha C_{\mathrm{entropy}}(z))\$
 
 which naturally produces:
 
@@ -79,7 +77,7 @@ Defines the projection map $\( \Phi(E) \)$, the k‑factor scaling, density‑eq
 
 ### **2. ECC — Field Theory**  
 *Entropy Cohomology Conjecture*  
-Defines the entropy field $\( \mathcal{M}(x) \)$, the differential forms $\( \theta = d\mathcal{M} \)$, $\( \omega = d\theta \)$, and the cohomology class $\([\omega]\)$ governing symbolic conservation.
+Defines the entropy field $\( \mathcal{M}(x) \)$, the differential forms $\( \theta = d\mathcal{M} \)$, $\( \omega = d\theta \)$, and the cohomology class $\(\omega\)$ governing symbolic conservation.
 
 ### **3. S.T.A.R. — Unified Physics**  
 *Symbolic–Topological–Arithmetic–Relativity Model*  
@@ -91,7 +89,7 @@ Combines ACSC + ECC into a full cosmological model with:
 - cosmic‑web alignment  
 - symbolic regression law discovery  
 
-This repository is the **central hub** of the S.T.A.R. program, and ultimately proposes the introduction of a **Symbolic Field-Theory.**
+This repository is the **central hub** of the S.T.A.R. program, and ultimately proposes the introduction of a **Symbolic Field-Theory** paradigm.
 
 ---
 
@@ -151,9 +149,7 @@ are implemented in this repository.
 
 The **v3.1 leakage‑free pipeline** achieves:
 
-$\[
-R^2 = 0.9864
-\]$ (undergoing rigorous confirmation)
+$R^2 = 0.9864$ (undergoing rigorous confirmation)
 
 on synthetic cosmic structures, validated through:
 
