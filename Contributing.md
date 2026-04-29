@@ -1,10 +1,10 @@
-# Contributing to ACSC
+# Contributing to S.T.A.R.
 
 ## Development Setup
 pip install -e ".[dev]"
 
 ## Running Tests
-pytest tests/ --cov=acsc
+pytest tests/ --cov=s.t.a.r.
 
 ## Code Style
 black acsc/ tests/
