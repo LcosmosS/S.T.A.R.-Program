@@ -4,7 +4,7 @@ FROM mambaorg/micromamba:1.4.0
 ARG USER=star
 ARG UID=1000
 ARG CONDA_ENV=star-env
-ARG PYTHON_VERSION=3.10
+ARG PYTHON_VERSION=3.12
 
 ENV PATH=/opt/conda/bin:$PATH
 SHELL ["/bin/bash", "-lc"]
