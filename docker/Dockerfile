@@ -31,7 +31,7 @@ RUN mkdir -p /var/lib/apt/lists/partial \
 # Create conda env with Python 3.10 and install TDA libs from conda-forge
 RUN micromamba create -y -n ${CONDA_ENV} python=${PYTHON_VERSION} -c conda-forge \
     numpy scipy pandas \
-    gudhi=3.5.1 ripser=0.6.2 persim=0.6.0 \
+    gudhi=3.12.0 ripser=0.6.14 persim=0.3.8 \
  && micromamba clean --all --yes
 
 # Make the conda env the default for subsequent RUN steps
