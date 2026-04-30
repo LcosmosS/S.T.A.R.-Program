@@ -33,3 +33,23 @@ jobs:
           path: |
             data/raw/JApJ94494_2MASS_GAIADR3_EPOCH.csv
             data/raw/DESIDR8_SDSSDR16_SIMBAD.csv
+
+  build_cosmology_data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: pip install numpy pandas
+      - name: Build cosmology data
+        run: python scripts/build_cosmology_data.py
+      - name: Commit updated data modules
+        run: |
+          git config user.name "CI"
+          git config user.email "ci@example.com"
+          git add src/likelihoods/data/*.py
+          git commit -m "CI: update embedded cosmology data" || echo "No changes"
+          git push
