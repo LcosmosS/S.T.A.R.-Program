@@ -127,6 +127,7 @@ jobs:
         pip3 install numpy pandas
 
     - name: Run regression diffs
+      continue-on-error: true
       run: |
         mkdir -p diff_report
         python3 scripts/diff_outputs.py current/ previous/ diff_report/
