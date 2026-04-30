@@ -13,16 +13,26 @@ import pandas as pd
 
 
 class DESIBAO:
-    def __init__(self, bao_csv, r_d=147.1):
+    def __init__(self, bao_data, r_d=147.1):
         """
-        Parameters
-        ----------
-        bao_csv : str
-            CSV containing DESI BAO measurements
-        r_d : float
-            Sound horizon at drag epoch
+        bao_data can be:
+        - a dict (embedded data module)
+        - a CSV file path (legacy mode)
         """
-        self.bao = pd.read_csv(bao_csv)
+        if isinstance(bao_data, dict):
+            # Embedded data mode
+            self.bao = bao_data
+        else:
+            # Legacy CSV mode
+            df = pd.read_csv(bao_data)
+            self.bao = {
+                "z": df["z"].tolist(),
+                "DM_over_rd": df["DM_over_rd"].tolist(),
+                "sigma_DM": df["sigma_DM"].tolist(),
+                "H_rd": df["H_rd"].tolist(),
+                "sigma_H": df["sigma_H"].tolist(),
+            }
+
         self.r_d = r_d
 
     def log_likelihood(self, model):
