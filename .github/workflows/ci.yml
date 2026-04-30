@@ -19,3 +19,9 @@ jobs:
         
       - name: Run tests
         run: python3 -m pytest -q
+
+      - name: Verify sky survey datasets exist
+        shell: bash -l {0}
+        run: |
+          ls -lh data/raw/*2MASS* || exit 1
+          ls -lh data/raw/*SIMBAD* || exit 1
