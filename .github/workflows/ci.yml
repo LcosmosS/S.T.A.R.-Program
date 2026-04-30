@@ -5,6 +5,7 @@ on:
   pull_request:
 
 jobs:
+
   test:
     runs-on: ubuntu-latest
 
@@ -16,7 +17,7 @@ jobs:
 
       - name: Install package and TDA extras
         run: python3 -m pip install -e ".[dev,tda]"
-        
+
       - name: Run tests
         run: python3 -m pytest -q
 
@@ -25,7 +26,7 @@ jobs:
         run: |
           ls -lh data/raw/*2MASS* || exit 1
           ls -lh data/raw/*SIMBAD* || exit 1
-      
+
       - name: Upload sky survey datasets
         uses: actions/upload-artifact@v4
         with:
@@ -34,18 +35,38 @@ jobs:
             data/raw/JApJ94494_2MASS_GAIADR3_EPOCH.csv
             data/raw/DESIDR8_SDSSDR16_SIMBAD.csv
 
+
   build_cosmology_data:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+
       - name: Install dependencies
         run: pip install numpy pandas
+
+      - name: Extract BAO data
+        run: |
+          mkdir -p data/cosmic/bao_data-master
+          unzip -o data/cosmic/bao_data-master.zip -d data/cosmic/bao_data-master
+
+      - name: Extract Planck chain
+        run: |
+          mkdir -p data/cosmic/planck_chain
+          unzip -o data/cosmic/COM_CosmoParams_base-plikHM-TTTEEE-lowl-lowE_R3.00.zip -d data/cosmic/planck_chain
+
+      - name: Verify CC dataset exists
+        run: |
+          test -f data/cosmic/cc/Hz_Moresco2022.dat
+
       - name: Build cosmology data
         run: python scripts/build_cosmology_data.py
+
       - name: Commit updated data modules
         run: |
           git config user.name "CI"
@@ -53,3 +74,4 @@ jobs:
           git add src/likelihoods/data/*.py
           git commit -m "CI: update embedded cosmology data" || echo "No changes"
           git push
+
