@@ -16,20 +16,22 @@ from src.physics.symbolic_cosmology import SymbolicCosmology
 
 
 class PlanckSH0ESJointLikelihood:
-    def __init__(self, planck_csv, H0_shoes=73.04, sigma_shoes=1.04):
-        """
-        Parameters
-        ----------
-        planck_csv : str
-            Path to Planck distance priors CSV
-        H0_shoes : float
-            SH0ES central H0 value
-        sigma_shoes : float
-            SH0ES uncertainty
-        """
-        self.planck = pd.read_csv(planck_csv)
-        self.H0_shoes = H0_shoes
-        self.sigma_shoes = sigma_shoes
+    def __init__(self, planck_data, H0_shoes=73.04, sigma_shoes=1.04):
+    """
+    planck_data can be:
+    - a dict (embedded data module)
+    - a CSV file path (legacy mode)
+    """
+    if isinstance(planck_data, dict):
+        # Embedded data mode
+        self.planck = planck_data
+    else:
+        # Legacy CSV mode
+        self.planck = pd.read_csv(planck_data)
+
+    self.H0_shoes = H0_shoes
+    self.sigma_shoes = sigma_shoes
+
 
     def log_likelihood_planck(self, model):
         z = self.planck["z"].values
