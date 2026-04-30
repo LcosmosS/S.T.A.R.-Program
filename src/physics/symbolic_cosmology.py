@@ -46,3 +46,36 @@ class SymbolicCosmology:
 
     def luminosity_distance(self, z):
         return self.cosmo.luminosity_distance(z)
+
+# ---------------------------------------------------------
+    # Planck compressed likelihood support
+    # ---------------------------------------------------------
+
+    def ombh2(self):
+        # If user did not include Ωb explicitly, assume 0.0224 (Planck)
+        if "Ωb" in self.params:
+            return self.params["Ωb"] * (self.params["H0"] / 100)**2
+        return 0.0224  # fallback
+
+    def comoving_distance(self, z):
+        # Numerical integral of c/H(z)
+        zs = np.linspace(0, z, 200)
+        Hz = np.array([self.H(zi) for zi in zs])
+        return np.trapz(299792.458 / Hz, zs)
+
+    def sound_horizon(self):
+        # Approximate r_s at drag epoch (Planck 2018)
+        return 147.1  # Mpc
+
+    def R(self):
+        z_star = 1089.0
+        r = self.comoving_distance(z_star)
+        Om = self.params["Ωm"]
+        H0 = self.params["H0"]
+        return np.sqrt(Om) * H0 * r / 299792.458
+
+    def lA(self):
+        z_star = 1089.0
+        r = self.comoving_distance(z_star)
+        rs = self.sound_horizon()
+        return np.pi * r / rs
