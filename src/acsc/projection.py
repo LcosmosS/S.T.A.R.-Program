@@ -1,6 +1,12 @@
 from typing import Sequence, List, Dict, Any, Optional, Tuple
 import numpy as np
 import pandas as pd
+from src.data.load_sky_surveys import load_sky_surveys
+
+def test_sky_surveys_load():
+    df1, df2 = load_sky_surveys(downsample=100, validate_schema=True)
+    assert len(df1) > 0
+    assert len(df2) > 0
 
 def _safe_log10(x: np.ndarray, floor: float = 1.0) -> np.ndarray:
     """Compute log10 of absolute values with a floor to avoid -inf."""
