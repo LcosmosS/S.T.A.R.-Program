@@ -87,18 +87,29 @@ with zipfile.ZipFile(PLANCK_CHAIN_ZIP, "r") as z:
 
 chain_dir = DATA_DIR / "planck_chain"
 samples = []
+
+# Load only the columns we need: omegabh2, omegach2, H0, theta_MC
+usecols = (2, 3, 4, 5)
+
 for f in chain_dir.rglob("*.txt"):
-    arr = np.loadtxt(f)
-    samples.append(arr)
+    try:
+        arr = np.loadtxt(f, usecols=usecols)
+        samples.append(arr)
+    except Exception:
+        pass  # skip non-chain files
+
+if len(samples) == 0:
+    raise RuntimeError("No valid Planck chain files found.")
+
 samples = np.vstack(samples)
 
-# Columns: [weight, lnlike, omegabh2, omegach2, H0, theta_MC, ...]
-ombh2 = samples[:,2]
-H0 = samples[:,4]
-theta = samples[:,5]
+ombh2 = samples[:,0]
+omegach2 = samples[:,1]
+H0 = samples[:,2]
+theta = samples[:,3]
 
-# Compute R, lA (approximate reconstruction)
-R = np.sqrt((ombh2 + samples[:,3]) * (H0/100)**2) * theta
+# Compute R and lA (approximate)
+R = np.sqrt((ombh2 + omegach2) * (H0/100)**2) * theta
 lA = np.pi / theta
 
 PLANCK_2018_RECON_PRIORS = {
@@ -107,6 +118,7 @@ PLANCK_2018_RECON_PRIORS = {
     "ombh2": float(np.mean(ombh2)),
     "cov": np.cov(np.vstack([R, lA, ombh2])).tolist()
 }
+
 write_module("planck_2018_recon", PLANCK_2018_RECON_PRIORS)
 
 print("Cosmology data modules generated.")
