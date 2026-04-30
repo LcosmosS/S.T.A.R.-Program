@@ -15,7 +15,8 @@ dependencies = [
   "numpy>=1.26.0,<2.0",
   "pandas>=2.2.0,<3.0",
   "scipy>=1.11.0,<2.0",
-  "sympy>=1.12"
+  "sympy>=1.12",
+  "corner>=2.2.1"
 ]
 
 [project.optional-dependencies]
