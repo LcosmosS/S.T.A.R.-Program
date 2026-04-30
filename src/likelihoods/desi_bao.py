@@ -36,21 +36,40 @@ class DESIBAO:
         self.r_d = r_d
 
     def log_likelihood(self, model):
-        chi2 = 0
+    chi2 = 0.0
 
-        for _, row in self.bao.iterrows():
-            z = row["z"]
-            DM_over_rd_obs = row["DM_over_rd"]
-            H_rd_obs = row["H_rd"]
-            sigma_DM = row["sigma_DM"]
-            sigma_H = row["sigma_H"]
+    # Embedded dict mode
+    if isinstance(self.bao, dict):
+        z_list = self.bao["z"]
+        DM_over_rd_list = self.bao["DM_over_rd"]
+        sigma_DM_list = self.bao["sigma_DM"]
+        H_rd_list = self.bao["H_rd"]
+        sigma_H_list = self.bao["sigma_H"]
 
+        for z, DM_obs, sDM, H_obs, sH in zip(
+            z_list, DM_over_rd_list, sigma_DM_list, H_rd_list, sigma_H_list
+        ):
             # Model predictions
-            Dc = model.comoving_distance(z)
-            DM_over_rd_model = Dc / self.r_d
-            H_rd_model = model.H(z) * self.r_d
+            DM_model = model.DM(z) / self.r_d
+            H_model = model.H(z) * self.r_d
 
-            chi2 += ((DM_over_rd_obs - DM_over_rd_model) / sigma_DM)**2
-            chi2 += ((H_rd_obs - H_rd_model) / sigma_H)**2
+            chi2 += ((DM_obs - DM_model) / sDM) ** 2
+            chi2 += ((H_obs - H_model) / sH) ** 2
 
         return -0.5 * chi2
+
+    # Legacy CSV mode (DataFrame)
+    for _, row in self.bao.iterrows():
+        z = row["z"]
+        DM_obs = row["DM_over_rd"]
+        sDM = row["sigma_DM"]
+        H_obs = row["H_rd"]
+        sH = row["sigma_H"]
+
+        DM_model = model.DM(z) / self.r_d
+        H_model = model.H(z) * self.r_d
+
+        chi2 += ((DM_obs - DM_model) / sDM) ** 2
+        chi2 += ((H_obs - H_model) / sH) ** 2
+
+    return -0.5 * chi2
