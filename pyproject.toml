@@ -24,7 +24,7 @@ tda = ["gudhi>=3.10.0", "ripser==0.6.14", "persim==0.3.8"]
 dev = ["pytest", "pytest-cov", "black", "isort", "pre-commit"]
 
 [tool.setuptools.packages.find]
-where = ["S.T.A.R.-Model-for-Mathematical-and-Theoretical-Physics/src"]
+where = ["src"]
 
 [tool.black]
 line-length = 88
