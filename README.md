@@ -170,7 +170,7 @@ Researchers are encouraged to:
 
 ```bash
 git clone https://github.com/LcosmosS/S.T.A.R.-Model-for-Mathematical-and-Theoretical-Physics.git
-cd Arithmetic-Cosmic-Structure-Conjecture-ACSC
+cd ~/S.T.A.R.-Model-for-Mathematical-and-Theoretical-Physics
 pip install -r requirements.txt
 ```
 
