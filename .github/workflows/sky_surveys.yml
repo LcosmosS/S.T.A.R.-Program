@@ -18,6 +18,9 @@ jobs:
     - name: Install package
       run: pip install -e .
 
+    - name: Verify working directory
+      run: pwd
+
     - name: Validate sky survey loader
       run: pytest -q src/tests/test_load_sky_surveys.py
 
