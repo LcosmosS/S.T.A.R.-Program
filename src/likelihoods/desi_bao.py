@@ -36,7 +36,7 @@ class DESIBAO:
         self.r_d = r_d
 
     def log_likelihood(self, model):
-    chi2 = 0.0
+        chi2 = 0.0
 
     # Embedded dict mode
     if isinstance(self.bao, dict):
