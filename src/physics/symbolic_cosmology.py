@@ -12,7 +12,7 @@ Used to test alternative expansion histories and Hubble tension resolutions.
 from __future__ import annotations
 import sympy as sp
 from src.physics.cosmology import Cosmology
-
+import numpy as np
 
 class SymbolicCosmology:
     """
