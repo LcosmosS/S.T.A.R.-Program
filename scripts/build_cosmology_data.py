@@ -87,7 +87,7 @@ with zipfile.ZipFile(PLANCK_CHAIN_ZIP, "r") as z:
 
 chain_dir = DATA_DIR / "planck_chain"
 samples = []
-for f in chain_dir.glob("*.txt"):
+for f in chain_dir.rglob("*.txt"):
     arr = np.loadtxt(f)
     samples.append(arr)
 samples = np.vstack(samples)
