@@ -37,7 +37,7 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE/S.T.A.R.-Model-for-Mathematical-and-Theoretical-Physics
         python - << 'EOF'
-from src.data.sky_survey_dataset_builder import SkySurveyDatasetBuilder
-builder = SkySurveyDatasetBuilder(downsample=200)
-builder.save("sky_surveys_ci.parquet")
-EOF
+        from src.data.sky_survey_dataset_builder import SkySurveyDatasetBuilder
+        builder = SkySurveyDatasetBuilder(downsample=200)
+        builder.save("sky_surveys_ci.parquet")
+        EOF
