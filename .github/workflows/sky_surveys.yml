@@ -9,30 +9,42 @@ jobs:
   sky-pipeline:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: ${{ github.workspace }}/S.T.A.R.-Model-for-Mathematical-and-Theoretical-Physics
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Detect project root
+      id: findroot
+      run: |
+        echo "Searching for project root..."
+        ROOT=$(find "$GITHUB_WORKSPACE" -maxdepth 3 -type d -name src -printf '%h\n' | head -n 1)
+        echo "ROOT=$ROOT" >> $GITHUB_OUTPUT
+        echo "Detected project root: $ROOT"
+
     - name: Install dependencies
-      run: pip install -r requirements.txt
+      run: |
+        cd "${{ steps.findroot.outputs.ROOT }}"
+        pip install -r requirements.txt
 
     - name: Install package
-      run: pip install -e .
+      run: |
+        cd "${{ steps.findroot.outputs.ROOT }}"
+        pip install -e .
 
     - name: Verify working directory
       run: |
+        cd "${{ steps.findroot.outputs.ROOT }}"
         pwd
         ls -al
 
     - name: Validate sky survey loader
-      run: pytest -q src/tests/test_load_sky_surveys.py
+      run: |
+        cd "${{ steps.findroot.outputs.ROOT }}"
+        pytest -q src/tests/test_load_sky_surveys.py
 
     - name: Run dataset builder (downsampled)
       run: |
+        cd "${{ steps.findroot.outputs.ROOT }}"
         python - << 'EOF'
         from src.data.sky_survey_dataset_builder import SkySurveyDatasetBuilder
         builder = SkySurveyDatasetBuilder(downsample=200)
