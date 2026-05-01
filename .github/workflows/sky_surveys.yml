@@ -12,14 +12,15 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install package
-      run: python3 -m pip install -e ".[dev]"
-
-    - name: Install package and TDA extras
-      run: python3 -m pip install -e ".[dev,tda]"
-
     - name: Install dependencies
-      run: pip install numpy pandas
+      run: |
+        cd $GITHUB_WORKSPACE/S.T.A.R.-Model-for-Mathematical-and-Theoretical-Physics
+        pip install -r requirements.txt
+
+    - name: Install package
+      run: |
+        cd $GITHUB_WORKSPACE/S.T.A.R.-Model-for-Mathematical-and-Theoretical-Physics
+        pip install -e .
 
     - name: Verify working directory
       run: |
@@ -36,7 +37,7 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE/S.T.A.R.-Model-for-Mathematical-and-Theoretical-Physics
         python - << 'EOF'
-        from src.data.sky_survey_dataset_builder import SkySurveyDatasetBuilder
-        builder = SkySurveyDatasetBuilder(downsample=200)
-        builder.save("sky_surveys_ci.parquet")
-        EOF
+from src.data.sky_survey_dataset_builder import SkySurveyDatasetBuilder
+builder = SkySurveyDatasetBuilder(downsample=200)
+builder.save("sky_surveys_ci.parquet")
+EOF
