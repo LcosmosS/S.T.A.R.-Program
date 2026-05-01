@@ -14,29 +14,21 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Install dependencies
-      run: |
-        cd "$GITHUB_WORKSPACE/S.T.A.R.-Model-for-Mathematical-and-Theoretical-Physics"
-        pip install -r requirements.txt
+      run: pip install -r requirements.txt
 
     - name: Install package
-      run: |
-        cd "$GITHUB_WORKSPACE/S.T.A.R.-Model-for-Mathematical-and-Theoretical-Physics"
-        pip install -e .
+      run: pip install -e .
 
     - name: Verify working directory
       run: |
-        cd "$GITHUB_WORKSPACE/S.T.A.R.-Model-for-Mathematical-and-Theoretical-Physics"
         pwd
         ls -al
 
     - name: Validate sky survey loader
-      run: |
-        cd "$GITHUB_WORKSPACE/S.T.A.R.-Model-for-Mathematical-and-Theoretical-Physics"
-        pytest -q src/tests/test_load_sky_surveys.py
+      run: pytest -q src/tests/test_load_sky_surveys.py
 
     - name: Run dataset builder (downsampled)
       run: |
-        cd "$GITHUB_WORKSPACE/S.T.A.R.-Model-for-Mathematical-and-Theoretical-Physics"
         python - << 'EOF'
         from src.data.sky_survey_dataset_builder import SkySurveyDatasetBuilder
         builder = SkySurveyDatasetBuilder(downsample=200)
