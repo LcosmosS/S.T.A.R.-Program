@@ -4,10 +4,17 @@ on:
   push:
     branches: [ main ]
   pull_request:
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
-  sky-pipeline:
+  execute-notebooks:
     runs-on: ubuntu-latest
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    container:
+      image: sagemath/sagemath:latest
+      options: --user root
 
     steps:
     - name: Checkout repository
