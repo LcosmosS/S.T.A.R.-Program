@@ -2,17 +2,15 @@
 Symbolic Regression Integration for Cosmology
 =============================================
 
-This module integrates symbolic regression models with the Cosmology engine.
-It accepts a sympy expression or a string expression for H(z), and wraps it
-into a Cosmology instance.
-
-Used to test alternative expansion histories and Hubble tension resolutions.
+Wraps a symbolic regression model into the Cosmology engine.
+Provides numerical stability for MCMC and symbolic models.
 """
 
 from __future__ import annotations
 import sympy as sp
-from src.physics.cosmology import Cosmology
 import numpy as np
+from src.physics.cosmology import Cosmology
+
 
 class SymbolicCosmology:
     """
@@ -27,54 +25,81 @@ class SymbolicCosmology:
     """
 
     def __init__(self, H_expr, params):
+        # Convert sympy expression to string if needed
         if isinstance(H_expr, sp.Expr):
             H_expr = str(H_expr)
 
         self.H_expr = H_expr
         self.params = params
 
+        # Build underlying cosmology engine
         self.cosmo = Cosmology(H_expr, params)
 
+        # Build symbolic H(z) function
+        self._build_symbolic_function()
+
+    # ---------------------------------------------------------
+    # Build symbolic function
+    # ---------------------------------------------------------
+    def _build_symbolic_function(self):
+        z = sp.symbols("z")
+        expr = sp.sympify(self.H_expr)
+
+        # Substitute parameters
+        for k, v in self.params.items():
+            expr = expr.subs(sp.Symbol(k), v)
+
+        # Lambdify
+        self._H_func = sp.lambdify(z, expr, "numpy")
+
+    # ---------------------------------------------------------
+    # Safe H(z)
+    # ---------------------------------------------------------
     def H(self, z):
-    Hz = self._H_func(z)
+        """
+        Safe evaluation of H(z) with numerical stability fixes.
+        """
+        Hz = self._H_func(z)
+        Hz = np.asarray(Hz, dtype=float)
 
-    # Clamp negative sqrt arguments
-    Hz = np.where(np.isfinite(Hz), Hz, np.nan)
-    Hz = np.where(Hz < 0, np.nan, Hz)
+        # Replace non-finite values
+        Hz = np.where(np.isfinite(Hz), Hz, np.nan)
 
-    # Replace NaNs with a large penalty value
-    Hz = np.where(np.isnan(Hz), 1e12, Hz)
+        # Clamp negative sqrt arguments
+        Hz = np.where(Hz < 0, np.nan, Hz)
 
-    return Hz
+        # Replace NaNs with a large penalty
+        Hz = np.where(np.isnan(Hz), 1e12, Hz)
 
+        return Hz
+
+    # ---------------------------------------------------------
+    # Distance functions (delegated to Cosmology)
+    # ---------------------------------------------------------
     def distance_modulus(self, z):
         return self.cosmo.distance_modulus(z)
-
-    def comoving_distance(self, z):
-        return self.cosmo.comoving_distance(z)
 
     def luminosity_distance(self, z):
         return self.cosmo.luminosity_distance(z)
 
-# ---------------------------------------------------------
+    # ---------------------------------------------------------
+    # Comoving distance (override with safe H(z))
+    # ---------------------------------------------------------
+    def comoving_distance(self, z):
+        zs = np.linspace(0, z, 200)
+        Hz = self.H(zs)
+        return np.trapz(299792.458 / Hz, zs)
+
+    # ---------------------------------------------------------
     # Planck compressed likelihood support
     # ---------------------------------------------------------
-
     def ombh2(self):
-        # If user did not include Ωb explicitly, assume 0.0224 (Planck)
         if "Ωb" in self.params:
             return self.params["Ωb"] * (self.params["H0"] / 100)**2
         return 0.0224  # fallback
 
-    def comoving_distance(self, z):
-        # Numerical integral of c/H(z)
-        zs = np.linspace(0, z, 200)
-        Hz = np.array([self.H(zi) for zi in zs])
-        return np.trapz(299792.458 / Hz, zs)
-
     def sound_horizon(self):
-        # Approximate r_s at drag epoch (Planck 2018)
-        return 147.1  # Mpc
+        return 147.1  # Mpc (Planck 2018)
 
     def R(self):
         z_star = 1089.0
