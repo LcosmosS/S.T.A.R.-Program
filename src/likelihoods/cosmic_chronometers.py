@@ -10,25 +10,9 @@ import numpy as np
 import pandas as pd
 
 
-class CosmicChronometers:
-    """
-    Cosmic Chronometer H(z) likelihood.
-
-    Supports:
-    - embedded Python dictionaries (your CI-safe data modules)
-    - pandas DataFrames (legacy CSV workflows)
-
-    Provides:
-    - strict validation
-    - vectorized Gaussian log-likelihood
-    - numerical stability checks
-    - API compatibility with DESIBAO and PlanckSH0ESJointLikelihood
-    """
-"""
-Embedded Cosmic Chronometer H(z) dataset (Moresco et al. 2022)
-CI‑safe, file‑free, used by CosmicChronometers likelihood.
-"""
-
+# ----------------------------------------------------------------------
+# Embedded Cosmic Chronometer dataset (Moresco et al. 2022)
+# ----------------------------------------------------------------------
 COSMIC_CHRONOMETERS = {
     "z": [
         0.07, 0.09, 0.12, 0.17, 0.179, 0.199, 0.2, 0.27, 0.28, 0.352,
@@ -47,20 +31,32 @@ COSMIC_CHRONOMETERS = {
     ],
 }
 
+
+# ----------------------------------------------------------------------
+# Cosmic Chronometer Likelihood Class
+# ----------------------------------------------------------------------
+class CosmicChronometers:
+    """
+    Cosmic Chronometer H(z) likelihood.
+
+    Supports:
+    - embedded Python dictionaries (CI‑safe)
+    - pandas DataFrames
+
+    Provides:
+    - strict validation
+    - vectorized Gaussian log-likelihood
+    - numerical stability checks
+    - API compatibility with DESIBAO and PlanckSH0ESJointLikelihood
+    """
+
     def __init__(self, data):
-        """
-        Parameters
-        ----------
-        data : dict or pandas.DataFrame
-            Must contain keys/columns: "z", "H", "sigma".
-        """
         self.z, self.H, self.sigma = self._parse_and_validate(data)
 
     # ------------------------------------------------------------------
     # Parsing + Validation
     # ------------------------------------------------------------------
     def _parse_and_validate(self, data):
-        # Accept dict or DataFrame
         if isinstance(data, dict):
             try:
                 z = np.asarray(data["z"], dtype=float)
@@ -68,6 +64,7 @@ COSMIC_CHRONOMETERS = {
                 sigma = np.asarray(data["sigma"], dtype=float)
             except KeyError as e:
                 raise KeyError(f"Missing required key in CC data: {e}")
+
         elif isinstance(data, pd.DataFrame):
             for key in ["z", "H", "sigma"]:
                 if key not in data.columns:
@@ -75,10 +72,9 @@ COSMIC_CHRONOMETERS = {
             z = data["z"].to_numpy(dtype=float)
             H = data["H"].to_numpy(dtype=float)
             sigma = data["sigma"].to_numpy(dtype=float)
+
         else:
-            raise TypeError(
-                "CosmicChronometers data must be a dict or pandas.DataFrame"
-            )
+            raise TypeError("CosmicChronometers data must be a dict or pandas.DataFrame")
 
         # Shape validation
         if not (z.shape == H.shape == sigma.shape):
@@ -104,21 +100,6 @@ COSMIC_CHRONOMETERS = {
     # Log-likelihood
     # ------------------------------------------------------------------
     def log_likelihood(self, model):
-        """
-        Gaussian log-likelihood:
-
-            -0.5 * sum( ((H_obs - H_model) / sigma)^2 )
-
-        Parameters
-        ----------
-        model : SymbolicCosmology or compatible object
-            Must implement H(z_array) -> array of predicted H(z).
-
-        Returns
-        -------
-        float
-        """
-        # Vectorized model prediction
         H_model = np.asarray(model.H(self.z), dtype=float)
 
         if H_model.shape != self.H.shape:
@@ -126,23 +107,16 @@ COSMIC_CHRONOMETERS = {
                 f"Model.H(z) returned shape {H_model.shape}, expected {self.H.shape}"
             )
 
-        # Numerical stability: ensure finite predictions
         if not np.all(np.isfinite(H_model)):
             raise ValueError("Model returned non-finite H(z) values")
 
-        # Residuals
         resid = (self.H - H_model) / self.sigma
-
-        # Gaussian log-likelihood
         chi2 = np.sum(resid * resid)
         return -0.5 * chi2
 
     # ------------------------------------------------------------------
-    # Optional helper for debugging / consistency
-    # ------------------------------------------------------------------
     @property
     def ndata(self):
-        """Number of CC data points."""
         return self.z.size
 
     def __repr__(self):
