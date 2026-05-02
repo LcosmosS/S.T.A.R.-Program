@@ -61,7 +61,8 @@ class CosmicChronometers:
             try:
                 z = np.asarray(data["z"], dtype=float)
                 H = np.asarray(data["H"], dtype=float)
-                sigma = np.asarray(data["sigma"], dtype=float)
+                sigma_key = "sigma" if "sigma" in data else "sigma_H"
+                sigma = np.asarray(data[sigma_key], dtype=float)
             except KeyError as e:
                 raise KeyError(f"Missing required key in CC data: {e}")
 
