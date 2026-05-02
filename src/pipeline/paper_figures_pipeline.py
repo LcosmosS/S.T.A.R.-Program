@@ -14,24 +14,18 @@ Automatically generates all figures needed for a cosmology paper:
 from __future__ import annotations
 import pandas as pd
 import numpy as np
+import os
 
 from src.physics.cosmology import Cosmology
 from src.physics.symbolic_cosmology import SymbolicCosmology
 from src.visualization.paper_figures import (
     plot_hubble_diagram, plot_Hz, plot_residuals
 )
-from src.visualization.joint_corner_plot import plot_joint_corner
-from src.analysis.star_constraints_table import summarize_chain, to_markdown_table
+import corner
 
 
 class PaperFiguresPipeline:
     def __init__(self, chain, param_names, H_expr, data_paths):
-        """
-        data_paths: dict with keys:
-            - planck
-            - bao
-            - cc
-        """
         self.chain = chain
         self.param_names = param_names
         self.H_expr = H_expr
@@ -48,15 +42,11 @@ class PaperFiguresPipeline:
         )
 
     def run(self, output_dir="paper_figures"):
-        import os
         os.makedirs(output_dir, exist_ok=True)
 
-        # Load Planck data
+        # Load Planck data (embedded dict)
         planck_data = self.data_paths["planck"]
-        if isinstance(planck_data, str):
-            df_planck = pd.read_csv(planck_data)
-        else:
-            df_planck = pd.DataFrame(planck_data)
+        df_planck = pd.DataFrame(planck_data)
 
         # Build models
         star = self.best_fit_model()
@@ -68,12 +58,6 @@ class PaperFiguresPipeline:
         plot_residuals(df_planck, lcdm, star)
 
         # Corner plot
-        plot_joint_corner(self.chain, self.param_names,
-                          save_path=f"{output_dir}/corner_plot.png")
-
-        # Constraints table
-        df_constraints = summarize_chain(self.chain, self.param_names)
-        with open(f"{output_dir}/constraints.md", "w") as f:
-            f.write(to_markdown_table(df_constraints))
-
-        return df_constraints
+        fig = corner.corner(self.chain, labels=self.param_names, show_titles=True)
+        fig.savefig(f"{output_dir}/corner_plot.png", dpi=200)
+        return dict(zip(self.param_names, self.chain.mean(axis=0)))
