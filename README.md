@@ -101,13 +101,21 @@ S.T.A.R.-Program/
 ├── CITATION.cff
 │
 ├── src/
-│   ├── projection/               # ACSC projection geometry
-│   ├── entropy/                  # ECC entropy/cohomology machinery
+|   ├── acsc/                     # # ACSC projection geometry
+|   ├── analysis/                 # Documentation generation
+|   ├── blender/                  # Paradox correction + infinite zoom
+|   ├── cli/                      # Cosmological inference constraints
+|   ├── data/                     # Sky survey integration preprocessing
+│   ├── entropy/                  # ECC entropy/cohomology machinery               
+│   ├── likelihoods/              # Comparisons to Planck/SH0ES + DESI BAO + PANTHEON+
+|   ├── pipeline/                 # Inference + PaperFigure pipelines
 │   ├── physics/                  # S.T.A.R. cosmological physics
-│   ├── tda/                      # Persistent homology + stability
 │   ├── symbolic_regression/      # Constrained GP + law discovery
-│   └── blender/                  # Paradox correction + infinite zoom
-│
+│   ├── tda/                      # Persistent homology + stability
+|   ├── tests/                    # Sky survey integration
+|   ├── utils/                    # Astronomical utilities
+|   └── visualization/            # PaperFigure + plotting
+│    
 ├── data/
 │   ├── raw/                      # LMFDB + Cremona datasets
 │   └── processed/                # Cleaned + merged arithmetic data
