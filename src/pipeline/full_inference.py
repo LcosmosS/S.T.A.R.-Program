@@ -13,6 +13,7 @@ from src.likelihoods.joint_likelihood import JointLikelihood
 from src.physics.mcmc_joint_pipeline import JointMCMCPipeline
 from src.pipeline.paper_figures_pipeline import PaperFiguresPipeline
 from src.likelihoods.data.pantheon_plus_full import PANTHEON_PLUS_FULL
+from src.likelihoods.pantheon_plus import PantheonPlusLikelihood
 
 DATASET_REGISTRY = {
     "PLANCK_2015": PLANCK_2015,
@@ -30,11 +31,18 @@ def load_dataset(name):
     return DATASET_REGISTRY[name]
 
 
-def build_joint_likelihood(planck_dict):
-    planck_like = PlanckSH0ESJointLikelihood(planck_dict)
-    bao_like = DESIBAO(DESI_BAO_DR1)
-    cc_like = CosmicChronometers(COSMIC_CHRONOMETERS)
-    return JointLikelihood(planck_like, bao_like, cc_like)
+def build_joint_likelihood(config):
+    planck = load_dataset(config["datasets"]["planck"])
+    bao = load_dataset(config["datasets"]["bao"])
+    cc = load_dataset(config["datasets"]["cc"])
+    sn = load_dataset(config["datasets"]["sn"])
+
+    planck_like = PlanckSH0ESJointLikelihood(planck)
+    bao_like = DESIBAO(bao)
+    cc_like = CosmicChronometers(cc)
+    sn_like = PantheonPlusLikelihood(sn)
+
+    return JointLikelihood(planck_like, bao_like, cc_like, sn_like)
 
 
 def run_full_inference(config_path):
