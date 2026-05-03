@@ -83,7 +83,17 @@ jobs:
         print('Pantheon+ dataset OK: {} SNe'.format(len(d['z'])))
         PY
 
-    
+    - name: Check generated module for ellipses
+      run: |
+        cd "${{ steps.root.outputs.ROOT }}"
+        FILE=src/likelihoods/data/pantheon_plus.py
+        if grep -nE '\.\.\.|Ellipsis' "$FILE"; then
+          echo "ERROR: Generated module contains '...' or 'Ellipsis' tokens. Inspect $FILE" >&2
+          sed -n '1,200p' "$FILE" >&2
+          exit 1
+        fi
+        echo "No ellipses found in $FILE"
+
     - name: Validate sky survey loader
       run: |
         cd "${{ steps.root.outputs.ROOT }}"
@@ -92,10 +102,8 @@ jobs:
     - name: Run dataset builder (downsampled)
       run: |
         cd "${{ steps.root.outputs.ROOT }}"
-        sage -python - << 'EOF'
+        sage -python - <<'EOF'
         from src.data.sky_survey_dataset_builder import SkySurveyDatasetBuilder
         builder = SkySurveyDatasetBuilder(downsample=200)
         builder.save("sky_surveys_ci.parquet")
         EOF
-
-
