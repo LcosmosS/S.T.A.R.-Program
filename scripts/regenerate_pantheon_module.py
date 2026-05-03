@@ -1,9 +1,20 @@
-#!/usr/bin/env python3
-# scripts/regenerate_pantheon_module.py
-import pandas as pd
+"""
+Regenerate a canonical, importable Pantheon+ module:
+  src/likelihoods/data/pantheon_plus.py
+
+The generated module exports:
+  PANTHEON_PLUS_FULL = {"z": [...], "mu": [...], "sigma_mu": [...]}
+
+This script:
+- reads data/raw/pantheon_plus.dat
+- maps common column names to canonical names
+- collapses duplicate columns (takes first non-null per row)
+- coerces to numeric and drops invalid rows
+- writes a deterministic Python module with numeric lists
+"""
 from pathlib import Path
+import pandas as pd
 import sys
-import math
 
 RAW = Path("data/raw/pantheon_plus.dat")
 OUT = Path("src/likelihoods/data/pantheon_plus.py")  # canonical module
@@ -12,7 +23,7 @@ if not RAW.exists():
     print(f"Error: {RAW} not found. Place pantheon_plus.dat in data/raw/", file=sys.stderr)
     sys.exit(1)
 
-# Use regex separator instead of deprecated delim_whitespace
+# Read using regex separator (avoids deprecated delim_whitespace)
 df = pd.read_csv(RAW, sep=r'\s+', comment="#", header=0, engine="python")
 
 # Map many possible input names to canonical names
@@ -24,26 +35,23 @@ rename_map = {
 }
 df = df.rename(columns=rename_map)
 
-# If renaming produced duplicate column labels (e.g., two 'z' columns),
-# collapse them by taking the first non-null value across duplicates.
+# Collapse duplicate columns (if renaming produced multiple 'z' etc.)
 def collapse_duplicates(df, target):
     cols = [c for c in df.columns if c == target]
     if len(cols) == 0:
         return None
     if len(cols) == 1:
         return df[cols[0]]
-    # multiple columns with same name: take first non-null per row
     sub = df[cols]
-    # bfill across columns then take first column
+    # Backfill across columns and take first non-null per row
     collapsed = sub.bfill(axis=1).iloc[:, 0]
     return collapsed
 
-# Build canonical series for each required field
 z_series = collapse_duplicates(df, "z")
 mu_series = collapse_duplicates(df, "mu")
 sigma_series = collapse_duplicates(df, "sigma_mu")
 
-# If any are None, try to fall back to original column names explicitly
+# Fallback to original names if collapse found nothing
 if z_series is None:
     for alt in ("zHD", "zCMB"):
         if alt in df.columns:
@@ -60,7 +68,6 @@ if sigma_series is None:
             sigma_series = df[alt]
             break
 
-# If still missing, fail with a clear message
 if z_series is None or mu_series is None or sigma_series is None:
     print("Error: Could not find required columns (z, mu, sigma_mu) after parsing.", file=sys.stderr)
     print("Available columns:", list(df.columns), file=sys.stderr)
@@ -81,6 +88,11 @@ clean_df = clean_df.dropna()
 
 # Final numeric conversion
 clean_df = clean_df.astype(float)
+
+# Debug prints for CI logs
+print("DEBUG: clean_df shape:", clean_df.shape)
+print("DEBUG: first 10 rows:")
+print(clean_df.head(10).to_string(index=False))
 
 z = clean_df["z"].tolist()
 mu = clean_df["mu"].tolist()
