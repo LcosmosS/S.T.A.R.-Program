@@ -1,9 +1,8 @@
-
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/LcosmosS/S.T.A.R.-Model-for-Mathematical-and-Theoretical-Physics/HEAD?urlpath=%2Fdoc%2Ftree%2F01_preprocessing.ipynb)
 ---
 
 # **The S.T.A.R. Program**  
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/LcosmosS/S.T.A.R.-Model-for-Mathematical-and-Theoretical-Physics/HEAD?urlpath=%2Fdoc%2Ftree%2F01_preprocessing.ipynb)
-## **Symbolic–Topological–Arithmetic–Relativity Model**
+## **Symbolic–Topological–Arithmetic–Relativity Model for Cosmology**
 ### **A Proposed Model for Mathematical & Theoretical Physics– Integrating ACSC + ECC to Address the Hubble–Planck Tension**
 
 ---
