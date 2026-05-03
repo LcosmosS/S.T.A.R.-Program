@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# scripts/regenerate_pantheon_module.py
 import pandas as pd
 from pathlib import Path
 import sys
