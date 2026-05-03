@@ -47,7 +47,7 @@ jobs:
         pwd
         ls -al
 
-        - name: Regenerate Pantheon+ dataset
+    - name: Regenerate Pantheon+ dataset
       run: |
         cd "${{ steps.root.outputs.ROOT }}"
         # Ensure the raw file exists (fail fast with a clear message)
