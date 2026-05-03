@@ -22,6 +22,7 @@ from src.physics.symbolic_cosmology import SymbolicCosmology
 from src.visualization.paper_figures import (
     plot_hubble_diagram, plot_Hz, plot_residuals
 )
+from src.analysis.latex_constraints import constraints_to_latex
 
 
 class PaperFiguresPipeline:
@@ -41,7 +42,7 @@ class PaperFiguresPipeline:
     # ---------------------------------------------------------
     # Validation
     # ---------------------------------------------------------
-       def _validate_inputs(self):
+    def _validate_inputs(self):
         keys = set(self.data_paths.keys())
 
         # Accept either full set (planck/cc/bao) OR plotting-only set (sn)
@@ -56,7 +57,8 @@ class PaperFiguresPipeline:
             f"Expected either keys: {self.REQUIRED_KEYS} (full) or {self.PLOTTING_ONLY_KEYS} (plotting-only)."
         )
 
-        # Validate each dataset
+        # Validate each dataset (this block is unreachable if we raise above;
+        # keep it here if you change validation behavior)
         for key, value in self.data_paths.items():
             if isinstance(value, str):
                 raise TypeError(
@@ -73,14 +75,31 @@ class PaperFiguresPipeline:
     # Model builders
     # ---------------------------------------------------------
     def best_fit_model(self):
-        params = dict(zip(self.param_names, self.chain.mean(axis=0)))
+        """Return the best-fit S.T.A.R. model built from chain mean."""
+        params = dict(zip(self.param_names, np.mean(self.chain, axis=0)))
         return SymbolicCosmology(self.H_expr, params)
+
+    def star_model(self):
+        """Alias for best-fit S.T.A.R. model (keeps run() readable)."""
+        return self.best_fit_model()
 
     def lcdm_model(self):
         return Cosmology(
             "H0*sqrt(Ωm*(1+z)**3 + ΩΛ)",
             {"H0": 67.4, "Ωm": 0.315, "ΩΛ": 0.685}
         )
+
+    # ---------------------------------------------------------
+    # Constraints helper
+    # ---------------------------------------------------------
+    def compute_constraints(self):
+        """
+        Produce a simple constraints dict from the chain:
+        {param_name: mean} (you can extend to include errors)
+        """
+        means = np.mean(self.chain, axis=0)
+        stds = np.std(self.chain, axis=0)
+        return {name: f"{m:.4f} ± {s:.4f}" for name, m, s in zip(self.param_names, means, stds)}
 
     # ---------------------------------------------------------
     # Main pipeline
@@ -92,18 +111,18 @@ class PaperFiguresPipeline:
         if "sn" in self.data_paths:
             df_sn = pd.DataFrame(self.data_paths["sn"])
         else:
-            # fallback: try to construct a plotting table from other datasets if needed
-            # (or raise a clear error)
             raise RuntimeError("No SN data found for plotting. Provide 'sn' in data_paths.")
 
-        # build models from chain (example names; adapt to your implementation)
+        # build models from chain
         lcdm = self.lcdm_model()
         star = self.star_model()
 
+        # Generate figures (each function should accept output_dir or save internally)
         plot_hubble_diagram(df_sn, lcdm, star, output_dir)
         plot_residuals(df_sn, lcdm, star, output_dir)
         plot_Hz([lcdm, star], ["ΛCDM", "S.T.A.R."], output_dir)
 
+        # Compute and export constraints
         constraints = self.compute_constraints()
         latex = constraints_to_latex(constraints)
         with open(f"{output_dir}/constraints.tex", "w") as f:
