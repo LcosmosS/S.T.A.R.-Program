@@ -3,6 +3,7 @@ Pantheon+ Loader
 """
 from pathlib import Path
 import pandas as pd
+from src.likelihoods.data.pantheon_plus_full import PANTHEON_PLUS_FULL
 
 def load_pantheon_plus():
     raw_dir = Path(__file__).parent.parent.parent / "data" / "raw"
