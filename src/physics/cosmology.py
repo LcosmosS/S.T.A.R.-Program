@@ -14,7 +14,7 @@ class Cosmology:
         Numeric parameter values used in H_expr.
     """
 
-    c = 299792.458  # Lightspeed in km/s
+    c = 299792.458  # speed of light in km/s
 
     def __init__(self, H_expr: str, params: dict):
         self.H_expr = H_expr
@@ -34,27 +34,38 @@ class Cosmology:
             raise RuntimeError(f"Failed to lambdify H_expr: {e}")
 
     def H_of_z(self, z):
-        """Evaluate H(z) numerically for scalar or array-like z."""
+        """
+        Evaluate H(z) numerically.
+        - If input is scalar, returns a scalar float.
+        - If input is array-like, returns a numpy array of floats.
+        Raises RuntimeError with a clear message on failure.
+        """
         try:
-            vals = self.H(z, *self.params.values())
+            raw = self.H(z, *self.params.values())
         except Exception as e:
             raise RuntimeError(f"H(z) evaluation error at z={z!r}: {e}")
 
         # Convert to numpy array for checks
-        vals_arr = np.asarray(vals)
+        arr = np.asarray(raw)
 
-        # If lambdify returned an object array with Ellipsis or None, fail clearly
-        if vals_arr.dtype == object:
-            # try to detect Ellipsis or None inside
-            if np.any([v is Ellipsis or v is None for v in vals_arr.ravel()]):
+        # If lambdify returned an object array containing Ellipsis/None, fail clearly
+        if arr.dtype == object:
+            flat = arr.ravel()
+            if any((v is Ellipsis or v is None) for v in flat):
                 raise RuntimeError("H(z) evaluation returned Ellipsis or None; check symbolic expression and params.")
-        # Ensure numeric
-        try:
-            vals_float = vals_arr.astype(float)
-        except Exception:
-            raise RuntimeError("H(z) did not produce numeric values; check expression and parameter types.")
+            # try to coerce object array to float
+            try:
+                arr = arr.astype(float)
+            except Exception:
+                raise RuntimeError("H(z) returned non-numeric object array; check expression and parameter types.")
 
-        return vals_float
+        # Now arr is numeric. If scalar-like, return scalar float
+        if arr.shape == () or arr.size == 1:
+            try:
+                return float(arr)
+            except Exception:
+                raise RuntimeError("H(z) could not be converted to float; check expression and params.")
+        return arr.astype(float)
 
     def _comoving_scalar(self, zi: float) -> float:
         """Compute comoving distance for a single scalar zi."""
@@ -65,20 +76,24 @@ class Cosmology:
 
         def integrand(zp):
             try:
-                Hz = self.H_of_z(zp)
+                Hz_val = self.H_of_z(zp)
             except Exception as e:
                 raise RuntimeError(f"H(z) evaluation failed at z={zp}: {e}")
 
-            # H_of_z returns numpy scalar/array; ensure scalar
-            Hz_val = np.asarray(Hz).ravel()[0]
-            if not np.isfinite(Hz_val):
-                raise RuntimeError(f"H(z) is not finite at z={zp}: {Hz_val!r}")
-            if Hz_val <= 0.0:
-                raise RuntimeError(f"H(z) must be positive; got {Hz_val!r} at z={zp}")
-            return self.c / float(Hz_val)
+            # Ensure scalar numeric
+            try:
+                Hz_scalar = float(np.asarray(Hz_val).ravel()[0])
+            except Exception:
+                raise RuntimeError(f"H(z) did not produce a scalar numeric value at z={zp}: {Hz_val!r}")
+
+            if not np.isfinite(Hz_scalar):
+                raise RuntimeError(f"H(z) is not finite at z={zp}: {Hz_scalar!r}")
+            if Hz_scalar <= 0.0:
+                raise RuntimeError(f"H(z) must be positive; got {Hz_scalar!r} at z={zp}")
+            return self.c / Hz_scalar
 
         try:
-            result, err = quad(integrand, 0.0, float(zi), limit=200)
+            result, err = quad(integrand, 0.0, float(zi), limit=200, epsabs=1e-8, epsrel=1e-8)
         except Exception as e:
             raise RuntimeError(f"Integration of 1/H(z) failed for z={zi}: {e}")
 
