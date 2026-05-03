@@ -12,7 +12,7 @@ from src.likelihoods.joint_likelihood import JointLikelihood
 
 from src.physics.mcmc_joint_pipeline import JointMCMCPipeline
 from src.pipeline.paper_figures_pipeline import PaperFiguresPipeline
-
+from src.likelihoods.data.pantheon_plus_full import PANTHEON_PLUS_FULL
 
 DATASET_REGISTRY = {
     "PLANCK_2015": PLANCK_2015,
