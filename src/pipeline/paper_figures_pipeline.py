@@ -28,28 +28,33 @@ class PaperFiguresPipeline:
     """
     Unified, validated pipeline for generating paper-ready figures.
     """
-
-    REQUIRED_KEYS = {"planck", "bao", "cc"}
+    REQUIRED_KEYS = {"planck", "cc", "bao"}   # keep for backward compatibility
+    PLOTTING_ONLY_KEYS = {"sn"}
 
     def __init__(self, chain, param_names, H_expr, data_paths):
         self.chain = chain
         self.param_names = param_names
         self.H_expr = H_expr
         self.data_paths = data_paths
-
         self._validate_inputs()
 
     # ---------------------------------------------------------
     # Validation
     # ---------------------------------------------------------
-    def _validate_inputs(self):
-        # Validate required keys
-        missing = self.REQUIRED_KEYS - set(self.data_paths.keys())
-        if missing:
-            raise ValueError(
-                f"data_paths missing required keys: {missing}. "
-                f"Expected keys: {self.REQUIRED_KEYS}"
-            )
+       def _validate_inputs(self):
+        keys = set(self.data_paths.keys())
+
+        # Accept either full set (planck/cc/bao) OR plotting-only set (sn)
+        if keys >= self.REQUIRED_KEYS:
+            return
+        if keys >= self.PLOTTING_ONLY_KEYS:
+            return
+
+        missing = self.REQUIRED_KEYS - keys
+        raise ValueError(
+            f"data_paths missing required keys: {missing}. "
+            f"Expected either keys: {self.REQUIRED_KEYS} (full) or {self.PLOTTING_ONLY_KEYS} (plotting-only)."
+        )
 
         # Validate each dataset
         for key, value in self.data_paths.items():
