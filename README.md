@@ -169,7 +169,7 @@ Researchers are encouraged to:
 
 ```bash
 git clone https://github.com/LcosmosS/S.T.A.R.-Program.git
-cd ~/S.T.A.R.-S.T.A.R.-Program
+cd ~/S.T.A.R.-Program
 pip install -r requirements.txt
 ```
 
