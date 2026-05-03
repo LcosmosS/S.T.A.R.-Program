@@ -23,13 +23,10 @@ DATASET_REGISTRY = {
     "PANTHEON_PLUS_FULL": PANTHEON_PLUS_FULL
 }
 
-
-
 def load_dataset(name):
     if name not in DATASET_REGISTRY:
         raise KeyError(f"Unknown dataset '{name}'. Available: {list(DATASET_REGISTRY.keys())}")
     return DATASET_REGISTRY[name]
-
 
 def build_joint_likelihood(config):
     planck = load_dataset(config["datasets"]["planck"])
@@ -43,7 +40,6 @@ def build_joint_likelihood(config):
     sn_like = PantheonPlusLikelihood(sn)
 
     return JointLikelihood(planck_like, bao_like, cc_like, sn_like)
-
 
 def run_full_inference(config_path):
     with open(config_path, "r") as f:
