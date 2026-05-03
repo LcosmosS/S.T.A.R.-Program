@@ -84,16 +84,16 @@ class PaperFiguresPipeline:
         os.makedirs(output_dir, exist_ok=True)
 
         # Convert embedded dict → DataFrame
-        df_planck = pd.DataFrame(self.data_paths["planck"])
+        df_sn = pd.DataFrame(self.data_paths["sn"])
 
         # Build models
         star = self.best_fit_model()
         lcdm = self.lcdm_model()
 
         # Generate figures
-        plot_hubble_diagram(df_planck, lcdm, star)
+        plot_hubble_diagram(df_sn, lcdm, star)
         plot_Hz([lcdm, star], ["ΛCDM", "S.T.A.R."])
-        plot_residuals(df_planck, lcdm, star)
+        plot_residuals(df_sn, lcdm, star)
 
         # Corner plot
         fig = corner.corner(self.chain, labels=self.param_names, show_titles=True)
