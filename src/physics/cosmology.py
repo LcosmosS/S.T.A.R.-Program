@@ -37,7 +37,7 @@ class Cosmology:
         Example: {"H0": 70, "Ωm": 0.3, "ΩΛ": 0.7, "a": 0.1, "b": -0.02}
     """
 
-    c = 299792.458  # km/s
+    c = 299792.458  # speed of light in km/s
 
     def __init__(self, H_expr: str, params: dict):
         self.H_expr = H_expr
@@ -61,13 +61,72 @@ class Cosmology:
         return self.H(z, *self.params.values())
 
     def comoving_distance(self, z):
-        """Compute comoving distance Dc(z) = c ∫ dz / H(z)."""
-        integrand = lambda zp: self.c / self.H_of_z(zp)
-        return quad(integrand, 0, z)[0]
+    """
+    Compute comoving distance Dc(z) = c * ∫_0^z dz' / H(z').
+    Accepts scalar or array-like z. Returns float for scalar input or np.ndarray for array input.
+    Raises RuntimeError on evaluation/integration failures and ValueError for invalid z.
+    """
+    def _comoving_scalar(zi):
+        if not np.isfinite(zi):
+            raise ValueError(f"Invalid redshift z={zi!r}; must be finite.")
+        if zi < 0:
+            raise ValueError(f"Invalid redshift z={zi!r}; must be non-negative.")
+
+        def integrand(zp):
+            try:
+                Hz = self.H_of_z(zp)
+            except Exception as e:
+                raise RuntimeError(f"H(z) evaluation failed at z={zp}: {e}")
+
+            # Reject Ellipsis or non-finite values
+            if Hz is Ellipsis:
+                raise RuntimeError(f"H(z) returned Ellipsis at z={zp}")
+            Hz_arr = np.asarray(Hz)
+            if Hz_arr.size != 1:
+                raise RuntimeError(f"H(z) must return a scalar for scalar input; got shape {Hz_arr.shape} at z={zp}")
+            Hz_val = float(Hz_arr)
+            if not np.isfinite(Hz_val) or Hz_val == 0.0:
+                raise RuntimeError(f"H(z) returned non-finite or zero value {Hz_val!r} at z={zp}")
+            return self.c / Hz_val
+
+        try:
+            result, err = quad(integrand, 0.0, float(zi), limit=100)
+        except Exception as e:
+            raise RuntimeError(f"Integration of 1/H(z) failed for z={zi}: {e}")
+        if not np.isfinite(result):
+            raise RuntimeError(f"Integration produced non-finite result for z={zi}: {result!r}")
+        return float(result)
+
+    # Handle scalar vs array-like inputs
+    try:
+        z_arr = np.asarray(z)
+    except Exception as e:
+        raise TypeError(f"Could not convert z to array-like: {e}")
+
+    if z_arr.ndim == 0:
+        return _comoving_scalar(float(z_arr))
+    else:
+        # preserve input shape
+        flat = z_arr.ravel()
+        out = np.empty_like(flat, dtype=float)
+        for i, zi in enumerate(flat):
+            out[i] = _comoving_scalar(float(zi))
+        return out.reshape(z_arr.shape)
 
     def luminosity_distance(self, z):
-        """DL = (1+z) * Dc."""
-        return (1 + z) * self.comoving_distance(z)
+    """
+    Luminosity distance DL(z) = (1+z) * Dc(z).
+    Accepts scalar or array-like z and returns same shape as input.
+    Raises the same errors as comoving_distance when underlying computations fail.
+    """
+    Dc = self.comoving_distance(z)
+    # Broadcast (1+z) with Dc safely using numpy
+    try:
+        z_arr = np.asarray(z)
+        return (1.0 + z_arr) * Dc
+    except Exception as e:
+        # If Dc is scalar and z is scalar this will still work; otherwise raise clear error
+        raise RuntimeError(f"Failed to compute luminosity distance for z={z!r}: {e}")
 
     def angular_diameter_distance(self, z):
         """DA = Dc / (1+z)."""
