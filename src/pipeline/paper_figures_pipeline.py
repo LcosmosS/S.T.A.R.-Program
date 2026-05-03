@@ -85,24 +85,28 @@ class PaperFiguresPipeline:
     # ---------------------------------------------------------
     # Main pipeline
     # ---------------------------------------------------------
-    def run(self, output_dir="paper_figures"):
+    def run(self, output_dir):
         os.makedirs(output_dir, exist_ok=True)
 
-        # Convert embedded dict → DataFrame
-        df_sn = pd.DataFrame(self.data_paths["sn"])
+        # Prefer SN data for plotting if provided
+        if "sn" in self.data_paths:
+            df_sn = pd.DataFrame(self.data_paths["sn"])
+        else:
+            # fallback: try to construct a plotting table from other datasets if needed
+            # (or raise a clear error)
+            raise RuntimeError("No SN data found for plotting. Provide 'sn' in data_paths.")
 
-        # Build models
-        star = self.best_fit_model()
+        # build models from chain (example names; adapt to your implementation)
         lcdm = self.lcdm_model()
+        star = self.star_model()
 
-        # Generate figures
-        plot_hubble_diagram(df_sn, lcdm, star)
-        plot_Hz([lcdm, star], ["ΛCDM", "S.T.A.R."])
-        plot_residuals(df_sn, lcdm, star)
+        plot_hubble_diagram(df_sn, lcdm, star, output_dir)
+        plot_residuals(df_sn, lcdm, star, output_dir)
+        plot_Hz([lcdm, star], ["ΛCDM", "S.T.A.R."], output_dir)
 
-        # Corner plot
-        fig = corner.corner(self.chain, labels=self.param_names, show_titles=True)
-        fig.savefig(f"{output_dir}/corner_plot.png", dpi=200)
+        constraints = self.compute_constraints()
+        latex = constraints_to_latex(constraints)
+        with open(f"{output_dir}/constraints.tex", "w") as f:
+            f.write(latex)
 
-        # Return constraints
-        return dict(zip(self.param_names, self.chain.mean(axis=0)))
+        return constraints
