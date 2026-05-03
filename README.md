@@ -1,10 +1,10 @@
 
 ---
 
-# **S.T.A.R. Model**  
+# **The S.T.A.R. Program**  
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/LcosmosS/S.T.A.R.-Model-for-Mathematical-and-Theoretical-Physics/HEAD?urlpath=%2Fdoc%2Ftree%2F01_preprocessing.ipynb)
 ## **Symbolic–Topological–Arithmetic–Relativity Model**
-### **A Proposed Framework for Mathematical & Theoretical Physics– Integrating ACSC + ECC to Address the Hubble–Planck Tension**
+### **A Proposed Model for Mathematical & Theoretical Physics– Integrating ACSC + ECC to Address the Hubble–Planck Tension**
 
 ---
 
@@ -17,7 +17,7 @@
 
 ## **Overview**
 
-This repository is the **primary research archive** for the **S.T.A.R. Model** — the *Symbolic–Topological–Arithmetic–Relativity Model* — a proposed theoretical physics framework that couples:
+This repository is the **primary research archive** for the **S.T.A.R. Program** — the *Symbolic–Topological–Arithmetic–Relativity Model* — a proposed theoretical physics framework that couples:
 
 - **ACSC** — *Arithmetic–Cosmic Structure Conjecture*  
 - **ECC** — *Entropy Cohomology Conjecture*
@@ -35,13 +35,13 @@ The S.T.A.R. Model proposes that the **large‑scale structure of the universe**
 - symbolic geodesics  
 - scalar‑field coupling  
 
-This repository contains the **full theoretical monographs**, **computational toolkit**, **TDA stability pipeline**, and **symbolic regression engine** that define the S.T.A.R. Model.
+This repository contains the **full theoretical monographs**, **computational toolkit**, **TDA stability pipeline**, and **symbolic regression engine** that define the S.T.A.R. Program.
 
 ---
 
-## **The S.T.A.R. Model: Core Idea**
+## **Core Idea**
 
-The S.T.A.R. Model asserts that the universe behaves as a **Symbolic Field**, where:
+The S.T.A.R. Program asserts that the universe behaves as a **Symbolic Field**, where:
 
 - arithmetic invariants  
 - entropy curvature  
@@ -69,7 +69,7 @@ which naturally produces:
 
 ## **The S.T.A.R. Trilogy Architecture**
 
-This repository represents the **unified theory layer** of a three‑part research program:
+This repository represents the **theory layering** of a three‑part research program:
 
 ### **1. ACSC — Geometry**  
 *Arithmetic–Cosmic Structure Conjecture*  
@@ -79,7 +79,7 @@ Defines the projection map $\( \Phi(E) \)$, the k‑factor scaling, density‑eq
 *Entropy Cohomology Conjecture*  
 Defines the entropy field $\( \mathcal{M}(x) \)$, the differential forms $\( \theta = d\mathcal{M} \)$, $\( \omega = d\theta \)$, and the cohomology class $\(\omega\)$ governing symbolic conservation.
 
-### **3. S.T.A.R. — Unified Physics**  
+### **3. S.T.A.R. Program — Combined Physics**  
 *Symbolic–Topological–Arithmetic–Relativity Model*  
 Combines ACSC + ECC into a full cosmological model with:
 
@@ -89,7 +89,7 @@ Combines ACSC + ECC into a full cosmological model with:
 - cosmic‑web alignment  
 - symbolic regression law discovery  
 
-This repository is the **central hub** of the S.T.A.R. program, and ultimately proposes the introduction of a **Symbolic Field-Theory** paradigm.
+This repository is the **central hub** of the S.T.A.R. Program, and ultimately proposes the introduction of a **Symbolic Field-Theory** paradigm.
 
 ---
 
@@ -137,7 +137,7 @@ S.T.A.R.-Model/
 
 ## **Reproducibility Statement**
 
-Reproducibility is a core principle of the S.T.A.R. Model.
+Reproducibility is a core principle of the S.T.A.R. Program.
 
 - All projection operators  
 - All entropy/cohomology computations  
@@ -178,11 +178,11 @@ pip install -r requirements.txt
 
 ## **Citation**
 
-If you use the S.T.A.R. Model, ACSC, ECC, or any associated data pipelines, please cite:
+If you use the S.T.A.R. Program, ACSC, ECC, or any associated data pipelines, please cite:
 
 ```
 McNamara, P. J. (2026).
-The S.T.A.R. Model: A Symbolic–Topological–Arithmetic–Relativistic Framework for Cosmology.
+The S.T.A.R. Model: A Symbolic–Topological–Arithmetic–Relativity Model for Cosmology.
 GitHub Repository.
 https://github.com/LcosmosS/S.T.A.R.-Model-for-Mathematical-and-Theoretical-Physics
 ```
@@ -192,10 +192,10 @@ BibTeX:
 ```bibtex
 @misc{mcnamara2026star,
   author       = {Patrick J. McNamara},
-  title        = {The S.T.A.R. Model: Symbolic--Topological--Arithmetic--Relativistic Cosmology},
+  title        = {The S.T.A.R. Program: A Symbolic--Topological--Arithmetic--Relativity Model for Cosmology},
   year         = {2026},
   howpublished = {\url{https://github.com/LcosmosS/S.T.A.R.-Model-for-Mathematical-and-Theoretical-Physics}},
-  note         = {Unified ACSC + ECC Framework}
+  note         = {Combined ACSC + ECC Framework}
 }
 ```
 
