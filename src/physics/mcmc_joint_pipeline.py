@@ -130,3 +130,24 @@ class JointMCMCPipeline:
                 chain[i] = chain[i - 1]
 
         return chain
+        
+def _validate_inputs(self, theta0):
+    if len(theta0) != len(self.param_names):
+        raise ValueError(
+            f"theta0 length {len(theta0)} does not match number of parameters {len(self.param_names)}"
+        )
+
+    for p in self.param_names:
+        if p not in self.priors:
+            raise KeyError(f"Missing prior for parameter '{p}'")
+
+        if p not in self.proposal_widths:
+            raise KeyError(f"Missing proposal width for parameter '{p}'")
+
+def run(self, theta0, nsteps):
+    self._validate_inputs(theta0)
+
+    if nsteps <= 0:
+        raise ValueError("nsteps must be positive")
+
+    return self._run_mcmc(theta0, nsteps)
