@@ -66,11 +66,11 @@ class Cosmology:
     Accepts scalar or array-like z. Returns float for scalar input or np.ndarray for array input.
     Raises RuntimeError on evaluation/integration failures and ValueError for invalid z.
     """
-    def _comoving_scalar(zi):
-        if not np.isfinite(zi):
-            raise ValueError(f"Invalid redshift z={zi!r}; must be finite.")
-        if zi < 0:
-            raise ValueError(f"Invalid redshift z={zi!r}; must be non-negative.")
+        def _comoving_scalar(zi):
+            if not np.isfinite(zi):
+                raise ValueError(f"Invalid redshift z={zi!r}; must be finite.")
+            if zi < 0:
+                raise ValueError(f"Invalid redshift z={zi!r}; must be non-negative.")
 
         def integrand(zp):
             try:
