@@ -168,8 +168,8 @@ Researchers are encouraged to:
 ## **Installation**
 
 ```bash
-git clone https://github.com/LcosmosS/S.T.A.R.-Model-for-Mathematical-and-Theoretical-Physics.git
-cd ~/S.T.A.R.-Model-for-Mathematical-and-Theoretical-Physics
+git clone https://github.com/LcosmosS/S.T.A.R.-Program.git
+cd ~/S.T.A.R.-S.T.A.R.-Program
 pip install -r requirements.txt
 ```
 
@@ -183,7 +183,7 @@ If you use the S.T.A.R. Program, ACSC, ECC, or any associated data pipelines, pl
 McNamara, P. J. (2026).
 The S.T.A.R. Program: A Symbolic–Topological–Arithmetic–Relativity Model.
 GitHub Repository.
-https://github.com/LcosmosS/S.T.A.R.-Model-for-Mathematical-and-Theoretical-Physics
+https://github.com/LcosmosS/S.T.A.R.-Program
 ```
 
 BibTeX:
@@ -193,7 +193,7 @@ BibTeX:
   author       = {Patrick J. McNamara},
   title        = {The S.T.A.R. Program: A Symbolic--Topological--Arithmetic--Relativity Model},
   year         = {2026},
-  howpublished = {\url{https://github.com/LcosmosS/S.T.A.R.-Model-for-Mathematical-and-Theoretical-Physics}},
+  howpublished = {\url{https://github.com/LcosmosS/S.T.A.R.-Program}},
   note         = {Combined ACSC + ECC Framework}
 }
 ```
