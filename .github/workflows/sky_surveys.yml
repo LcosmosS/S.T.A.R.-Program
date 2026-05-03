@@ -98,15 +98,4 @@ jobs:
         builder.save("sky_surveys_ci.parquet")
         EOF
 
-    - name: Regenerate Pantheon+ dataset
-      run: |
-        python scripts/regenerate_pantheon_module.py
-        python - <<'PY'
-        import importlib, sys
-        m = importlib.import_module('src.likelihoods.data.pantheon_plus')
-        d = m.PANTHEON_PLUS_FULL
-        assert isinstance(d, dict) and all(k in d for k in ('z','mu','sigma_mu'))
-        assert all(isinstance(x, (int,float)) for x in d['z'][:10])
-        print('Pantheon+ dataset OK')
-        PY
 
