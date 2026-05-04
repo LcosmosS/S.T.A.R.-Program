@@ -97,8 +97,13 @@ class Cosmology:
         except Exception as e:
             raise RuntimeError(f"Integration of 1/H(z) failed for z={zi}: {e}")
 
-        if not np.isfinite(result) or result <= 0.0:
-            raise RuntimeError(f"Integration produced non-positive or non-finite result for z={zi}: {result!r}")
+        # Accept Dc(0) == 0.0 as valid; otherwise require positive finite result
+        if not np.isfinite(result):
+            raise RuntimeError(f"Integration produced non-finite result for z={zi}: {result!r}")
+        if result <= 0.0:
+            if float(zi) == 0.0:
+                return 0.0
+            raise RuntimeError(f"Integration produced non-positive result for z={zi}: {result!r}")
 
         return float(result)
 
@@ -154,9 +159,21 @@ class Cosmology:
     def distance_modulus(self, z):
         """μ = 5 log10(DL / 10 pc). DL in Mpc."""
         DL_Mpc = self.luminosity_distance(z)
-        DL_pc = DL_Mpc * 1e6
-        # final validation
-        if np.any(np.asarray(DL_pc) <= 0):
-            raise RuntimeError("Luminosity distance must be positive to compute distance modulus.")
-        return 5.0 * (np.log10(DL_pc) - 1.0)
+        DL_arr = np.asarray(DL_Mpc)
 
+        # For any zero or negative distances: handle z==0 specially, otherwise error
+        if np.any(DL_arr < 0):
+            raise RuntimeError("Luminosity distance must be non-negative to compute distance modulus.")
+
+        # If scalar input and DL==0, return -inf
+        if DL_arr.shape == () or DL_arr.size == 1:
+            if float(DL_arr) == 0.0:
+                return -np.inf
+            return 5.0 * (np.log10(float(DL_arr) * 1e6) - 1.0)
+
+        # Array input: compute elementwise, map zeros to -inf
+        DL_pc = DL_arr * 1e6
+        with np.errstate(divide='ignore', invalid='ignore'):
+            mu = 5.0 * (np.log10(DL_pc) - 1.0)
+        # log10(0) -> -inf; keep that behavior rather than raising
+        return mu
