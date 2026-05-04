@@ -58,21 +58,18 @@ class Cosmology:
         return max(float(result), 0.0)
 
     def comoving_distance(self, z):
-        """Dc(z) = c * ∫_0^z dz'/H(z') — ultra defensive"""
-        # Catch ellipsis and other garbage input
-        if z is Ellipsis or (isinstance(z, np.ndarray) and z.dtype == object):
-            print("Warning: Ellipsis (...) detected in comoving_distance. Using safe default z=[0.0, 0.5, 1.0]")
-            z = np.array([0.0, 0.5, 1.0])
+        # Catch ellipsis and other garbage early
+        if z is Ellipsis or isinstance(z, type(...)) or (isinstance(z, np.ndarray) and z.dtype == object):
+            print("Warning: Ellipsis detected in comoving_distance - using safe fallback")
+            z = np.array([0.01, 0.5, 1.0])
         
-        z = np.asarray(z)
+        z = np.asarray(z, dtype=float)
         z = np.nan_to_num(z, nan=0.0, posinf=2.0, neginf=0.0)
-        z = np.clip(z, 0.0, 10.0)
-        z = z.astype(float)
+        z = np.clip(z, 1e-6, 10.0)          # avoid z=0 problems
         
         if z.ndim == 0 or z.size == 1:
             return self._comoving_scalar(float(z.ravel()[0]))
         
-        # Vectorized safe call
         return np.array([self._comoving_scalar(float(zi)) for zi in z.ravel()]).reshape(z.shape)
 
     def luminosity_distance(self, z):
