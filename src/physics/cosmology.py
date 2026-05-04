@@ -48,6 +48,9 @@ class Cosmology:
             raise RuntimeError(f"H(z) evaluation error at z={z!r}: {e}")
 
         arr = np.asarray(raw)
+        if arr.dtype == object:
+            sample = arr.ravel()[:6].tolist()
+            raise RuntimeError(f"H(z) returned object-dtype values (sample={sample}). Check H_expr and params.")
 
         # If lambdify returned an object array containing Ellipsis/None, fail clearly
         if arr.dtype == object:
@@ -98,6 +101,20 @@ class Cosmology:
             result, err = quad(integrand, 0.0, float(zi), limit=200, epsabs=1e-8, epsrel=1e-8)
         except Exception as e:
             raise RuntimeError(f"Integration of 1/H(z) failed for z={zi}: {e}")
+      
+        tol = 1e-12
+        
+        if not np.isfinite(result):
+            raise RuntimeError(f"Integration produced non-finite result for z={zi}: {result!r}")
+        # allow tiny negative due to numerical roundoff when zi>0
+        if result <= 0.0:
+            if float(zi) == 0.0:
+                return 0.0
+            if result > -tol:
+                # treat tiny negative as zero (numerical noise)
+                result = 0.0
+            else:
+                raise RuntimeError(f"Integration produced non-positive result for z={zi}: {result!r}")
 
         # Accept Dc(0) == 0.0 as valid; otherwise require positive finite result
         if not np.isfinite(result):
