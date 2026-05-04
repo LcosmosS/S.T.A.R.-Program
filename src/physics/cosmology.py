@@ -18,6 +18,7 @@ class Cosmology:
 
     def __init__(self, H_expr: str, params: dict):
         self.H_expr = H_expr
+        # Ensure numeric parameter values (avoid sympy types)
         self.params = {k: float(v) for k, v in (params or {}).items()}
 
         # symbolic variable and expression
@@ -30,10 +31,10 @@ class Cosmology:
         # lambdify: (z, *params) -> numeric
         try:
             keys = tuple(self.params.keys())
-        self.H = sp.lambdify((z, *keys), self.H_sym, modules=["numpy"])
+            self.H = sp.lambdify((z, *keys), self.H_sym, modules=["numpy"])
         except Exception as e:
             raise RuntimeError(f"Failed to lambdify H_expr: {e}")
-        
+
     def H_of_z(self, z):
         """
         Evaluate H(z) numerically.
@@ -43,29 +44,21 @@ class Cosmology:
         """
         try:
             raw = self.H(z, *self.params.values())
-            arr = np.asarray(raw)
-            if arr.dtype == object:
-                sample = arr.ravel()[:6].tolist()
-                raise RuntimeError(f"H(z) returned object-dtype values (sample={sample}). Check H_expr and params.")
-            arr = arr.astype(float)
-            if arr.shape == () or arr.size == 1:
-                return float(arr)
-            return arr
         except Exception as e:
             raise RuntimeError(f"H(z) evaluation error at z={z!r}: {e}")
 
-        # Convert to numpy array for checks
         arr = np.asarray(raw)
 
-        # If object dtype, try to coerce elements to float and fail with clear message if not possible
+        # If lambdify returned an object array containing Ellipsis/None, fail clearly
         if arr.dtype == object:
             flat = arr.ravel()
             if any((v is Ellipsis or v is None) for v in flat):
                 raise RuntimeError("H(z) evaluation returned Ellipsis or None; check symbolic expression and params.")
+            # try to coerce object array to float
             try:
                 arr = arr.astype(float)
             except Exception:
-                sample = flat[:5].tolist()
+                sample = flat[:6].tolist()
                 raise RuntimeError(f"H(z) returned non-numeric objects: sample={sample!r}. Check H_expr and params.")
 
         # Now arr is numeric. If scalar-like, return scalar float
@@ -121,17 +114,14 @@ class Cosmology:
         Dc(z) = c * ∫_0^z dz' / H(z').
         Accepts scalar or array-like z. Returns float for scalar input or np.ndarray for array input.
         """
-        # Convert input to numpy array
         try:
             z_arr = np.asarray(z)
         except Exception as e:
             raise TypeError(f"Could not convert z to array-like: {e}")
 
-        # Scalar input
         if z_arr.ndim == 0:
             return self._comoving_scalar(float(z_arr))
 
-        # Array input: compute elementwise (preserve shape)
         flat = z_arr.ravel()
         out = np.empty_like(flat, dtype=float)
         for i, zi in enumerate(flat):
@@ -170,19 +160,16 @@ class Cosmology:
         DL_Mpc = self.luminosity_distance(z)
         DL_arr = np.asarray(DL_Mpc)
 
-        # For any zero or negative distances: handle z==0 specially, otherwise error
+        # For any negative distances: error. For zeros, return -inf for scalar or elementwise -inf for arrays.
         if np.any(DL_arr < 0):
             raise RuntimeError("Luminosity distance must be non-negative to compute distance modulus.")
 
-        # If scalar input and DL==0, return -inf
         if DL_arr.shape == () or DL_arr.size == 1:
             if float(DL_arr) == 0.0:
                 return -np.inf
             return 5.0 * (np.log10(float(DL_arr) * 1e6) - 1.0)
 
-        # Array input: compute elementwise, map zeros to -inf
         DL_pc = DL_arr * 1e6
         with np.errstate(divide='ignore', invalid='ignore'):
             mu = 5.0 * (np.log10(DL_pc) - 1.0)
-        # log10(0) -> -inf; keep that behavior rather than raising
         return mu
