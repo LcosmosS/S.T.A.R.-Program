@@ -146,17 +146,19 @@ class Cosmology:
         return out.reshape(z_arr.shape)
 
     def luminosity_distance(self, z):
-        """
-        DL(z) = (1+z) * Dc(z).
-        Accepts scalar or array-like z and returns same shape as input.
-        """
-        Dc = self.comoving_distance(z)
-        z_arr = np.asarray(z)
-        try:
-            DL = (1.0 + z_arr) * Dc
-        except Exception as e:
-            raise RuntimeError(f"Failed to compute luminosity distance for z={z!r}: {e}")
+        """Compute luminosity distance in Mpc."""
+        z = np.asarray(z)
 
+        # Evaluate the expression
+        DL = self._evaluate(self.expr, z)
+
+        # Safety clamp for numerical stability
+        DL = np.maximum(DL, 1e-6)
+
+        if np.any(DL <= 0)
+            print(f"Warning: Negative/zero luminosity distance detected. Clamped to small positive value.")
+        return DL
+        
         # Validate positive distances
         if np.any(np.asarray(DL) <= 0):
             raise RuntimeError("Luminosity distance must be positive to compute distance modulus.")
