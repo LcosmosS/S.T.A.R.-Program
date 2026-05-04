@@ -112,7 +112,7 @@ job_index = 0
 def launch_job(job):
     start, end = job["start"], job["end"]
     cmd = [sys.executable, worker_script, coords_npz, out_dir, str(start), str(end), str(maxdim), str(thresh)]
-    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False, check=True)
     return {"proc": p, "start": start, "end": end, "launched_at": time.time()}
 
 print("Launching jobs...")
