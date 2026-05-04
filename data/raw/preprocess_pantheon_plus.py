@@ -15,7 +15,7 @@ OUT = Path("src/likelihoods/data/pantheon_plus_full.py")
 def main():
     if not RAW.exists():
         raise FileNotFoundError(
-            f"{RAW} not found. Place pantheon_plus.dat in data/raw/"
+            f"{RAW} not found. Place pantheon_plus.csv in data/processed/"
         )
 
     print(f"Loading Pantheon+ from {RAW} ...")
