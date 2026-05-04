@@ -1,5 +1,5 @@
-# Dockerfile — sagemath base, clone ecdata/eclib/lmfdb, copy cremona DB if present
-FROM sagemath/sagemath:latest
+# sagemath 10.7
+FROM sagemath/sagemath:latest     
 
 USER root
 
