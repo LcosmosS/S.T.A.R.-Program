@@ -155,7 +155,7 @@ class Cosmology:
         # Safety clamp for numerical stability
         DL = np.maximum(DL, 1e-6)
 
-        if np.any(DL <= 0)
+        if np.any(DL <= 0):
             print(f"Warning: Negative/zero luminosity distance detected. Clamped to small positive value.")
         return DL
         
