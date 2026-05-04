@@ -18,20 +18,23 @@ def _ensure_outdir(output_dir):
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
 
-def plot_hubble_diagram(df, lcdm, star, output_dir=None):
-    """
-    Plot distance modulus vs redshift and save to output_dir if provided.
-    Signature: plot_hubble_diagram(df, lcdm, star, output_dir=None)
-    """
-    _ensure_outdir(output_dir)
-
-    z = np.array(df["z"])
-    mu_obs = np.array(df["mu"])
-    sigma = np.array(df["sigma_mu"])
-
-    # Compute model distance moduli
-    mu_lcdm = np.array([lcdm.distance_modulus(zi) for zi in z])
-    mu_star = np.array([star.distance_modulus(zi) for zi in z])
+def plot_hubble_diagram(df, lcdm, star, output_dir="results"):
+    """Plot Hubble diagram with strong input sanitization."""
+    # Defensive input cleaning
+    if df is None or len(df) == 0:
+        print("Warning: Empty supernova dataframe")
+        return
+    
+    z = np.asarray(df["z"].values, dtype=float)
+    mu_obs = np.asarray(df["mu"].values, dtype=float)
+    sigma = np.asarray(df.get("sigma_mu", df.get("mu_err", 0.15)), dtype=float)
+    
+    # Safety clamp
+    z = np.clip(z, 1e-6, 10.0)
+    
+    # Compute model predictions safely
+    mu_lcdm = np.array([lcdm.distance_modulus(float(zi)) for zi in z])
+    mu_star = np.array([star.distance_modulus(float(zi)) for zi in z])
 
     plt.figure(figsize=(10, 6))
     plt.errorbar(z, mu_obs, yerr=sigma, fmt=".", label="Pantheon+", alpha=0.6)
