@@ -16,3 +16,9 @@ __all__ = [
     "symbolic_regression",
     "acsc",
 ]
+
+# ensure numeric parameter values (avoid sympy types)
+self.params = {k: float(v) for k, v in (params or {}).items()}
+# then lambdify using the stable key order
+keys = tuple(self.params.keys())
+self.H = sp.lambdify((z, *keys), self.H_sym, modules=["numpy"])
