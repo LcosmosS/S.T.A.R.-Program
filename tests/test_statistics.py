@@ -7,11 +7,13 @@ import numpy as np
 from typing import Sequence, List
 from acsc.tda_pipeline import persistence_wasserstein
 
+
 def w2_between_diagrams(dgmA, dgmB) -> float:
     """
     Compute 2-Wasserstein distance between two persistence diagrams.
     """
     return float(persistence_wasserstein(np.asarray(dgmA), np.asarray(dgmB), order=2))
+
 
 def empirical_p_value(observed: float, null_samples: Sequence[float]) -> float:
     """
@@ -23,6 +25,7 @@ def empirical_p_value(observed: float, null_samples: Sequence[float]) -> float:
     count = np.sum(null <= observed)
     return float((1 + count) / (1 + m))
 
+
 def effect_size(observed: float, null_samples: Sequence[float]) -> float:
     """
     Cohen-like effect size: (mean_null - observed) / std_null
@@ -32,4 +35,3 @@ def effect_size(observed: float, null_samples: Sequence[float]) -> float:
     mu = float(np.mean(null))
     sigma = float(np.std(null, ddof=1) if len(null) > 1 else 1.0)
     return float((mu - observed) / (sigma if sigma > 0 else 1.0))
-

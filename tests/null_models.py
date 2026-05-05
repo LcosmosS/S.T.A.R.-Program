@@ -1,10 +1,12 @@
 import numpy as np
 
+
 def null_random_spatial(n_points, bbox):
     bbox = np.asarray(bbox, dtype=float)
     mins = bbox[0]
     maxs = bbox[1]
     return np.random.uniform(mins, maxs, size=(n_points, mins.size))
+
 
 def null_permuted_invariant(records, invariant_key, project_fn):
     recs = list(records)

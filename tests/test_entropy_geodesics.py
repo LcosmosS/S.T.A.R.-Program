@@ -1,6 +1,7 @@
 import numpy as np
 from src.entropy.entropy_geodesics import EntropyGeodesics
 
+
 def test_geodesic_runs():
     G = EntropyGeodesics()
     x0 = np.array([1.0, 2.0, 3.0])

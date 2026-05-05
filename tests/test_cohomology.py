@@ -2,6 +2,7 @@ import numpy as np
 from src.entropy.entropy_field import EntropyField
 from src.entropy.cohomology import EntropyCohomology
 
+
 def test_two_form_closedness():
     M = EntropyField()
     C = EntropyCohomology(M)

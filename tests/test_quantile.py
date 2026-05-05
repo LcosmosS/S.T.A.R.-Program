@@ -8,11 +8,13 @@ from typing import Tuple
 import numpy as np
 from scipy.interpolate import PchipInterpolator
 
+
 class QuantileAligner:
     """
     Fit on a reference point cloud (cosmic) and apply to a target cloud (arithmetic).
     Works coordinate-wise.
     """
+
     def __init__(self):
         self._maps = []  # list of (xs, ys) interpolators per coordinate
 
@@ -43,7 +45,8 @@ class QuantileAligner:
             out[:, j] = interp(ranks)
         return out
 
-    def fit_transform(self, ref_coords: np.ndarray, src_coords: np.ndarray, n_quantiles: int = 200) -> np.ndarray:
+    def fit_transform(
+        self, ref_coords: np.ndarray, src_coords: np.ndarray, n_quantiles: int = 200
+    ) -> np.ndarray:
         self.fit(ref_coords, n_quantiles=n_quantiles)
         return self.transform(src_coords)
-

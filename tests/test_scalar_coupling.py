@@ -1,6 +1,7 @@
 import numpy as np
 from src.physics.scalar_coupling import ScalarCoupling
 
+
 def test_scalar_field_output():
     S = ScalarCoupling()
     invariants = {"omega": 1.0, "rank": 2, "conductor": 11}

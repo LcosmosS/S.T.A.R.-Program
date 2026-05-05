@@ -1,6 +1,7 @@
 import numpy as np
 from src.tda.bootstrap_stability import BootstrapStability
 
+
 def test_bootstrap():
     B = BootstrapStability(num_bootstrap=5)
     X = np.random.rand(20, 3)

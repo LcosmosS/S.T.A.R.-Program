@@ -11,19 +11,22 @@ import numpy as np
 try:
     from ripser import ripser
     from persim import PersistenceImager, wasserstein
+
     _HAS_RIPSER = True
 except Exception:
     _HAS_RIPSER = False
 
 try:
     import gudhi as gd
+
     _HAS_GUDHI = True
 except Exception:
     _HAS_GUDHI = False
 
-def compute_persistence(coords: np.ndarray,
-                        maxdim: int = 2,
-                        thresh: Optional[float] = None) -> dict:
+
+def compute_persistence(
+    coords: np.ndarray, maxdim: int = 2, thresh: Optional[float] = None
+) -> dict:
     """
     Compute persistence diagrams for coords (n_points, d).
     Returns ripser-style dict with 'dgms' key (list of diagrams per dimension).
@@ -37,7 +40,9 @@ def compute_persistence(coords: np.ndarray,
         return result
     elif _HAS_GUDHI:
         # rudimentary GUDHI pipeline: compute RipsComplex -> simplex tree -> persistence
-        rips = gd.RipsComplex(points=coords, max_edge_length=thresh if thresh is not None else np.inf)
+        rips = gd.RipsComplex(
+            points=coords, max_edge_length=thresh if thresh is not None else np.inf
+        )
         st = rips.create_simplex_tree(max_dimension=maxdim + 1)
         st.compute_persistence()
         dgms = []
@@ -46,7 +51,10 @@ def compute_persistence(coords: np.ndarray,
             dgms.append(dgm)
         return {"dgms": dgms}
     else:
-        raise RuntimeError("Neither ripser nor gudhi is available. Install one of them.")
+        raise RuntimeError(
+            "Neither ripser nor gudhi is available. Install one of them."
+        )
+
 
 def persistence_wasserstein(dgm1, dgm2, order: int = 2, internal_p: int = 2) -> float:
     """
@@ -55,7 +63,10 @@ def persistence_wasserstein(dgm1, dgm2, order: int = 2, internal_p: int = 2) -> 
     """
     try:
         from persim import wasserstein
-        return wasserstein(dgm1, dgm2, matching=False, order=order, internal_p=internal_p)
+
+        return wasserstein(
+            dgm1, dgm2, matching=False, order=order, internal_p=internal_p
+        )
     except Exception:
         # fallback simple bottleneck via numpy (approximate): use max absolute difference of sorted births/deaths
         b1 = np.sort(dgm1[:, 0] - dgm1[:, 1]) if len(dgm1) else np.array([0.0])
@@ -64,4 +75,3 @@ def persistence_wasserstein(dgm1, dgm2, order: int = 2, internal_p: int = 2) -> 
         if m == 0:
             return float(np.max(np.abs(np.concatenate([b1, b2]))))
         return float(np.mean(np.abs(b1[:m] - b2[:m])))
-

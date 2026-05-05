@@ -18,16 +18,18 @@ import numpy as np
 
 # --- Utilities --------------------------------------------------------------
 
+
 def _safe_log10(x, eps=1e-12):
     x = np.asarray(x, dtype=float)
     return np.log10(np.maximum(np.abs(x), eps))
 
+
 # --- Primary projection (rank-normalized spherical embedding) ---------------
 
-def primary_projection(records: Iterable[Dict],
-                       Amax: float = 1e12,
-                       Nmax: float = 1e6,
-                       V0: float = 1.0) -> np.ndarray:
+
+def primary_projection(
+    records: Iterable[Dict], Amax: float = 1e12, Nmax: float = 1e6, V0: float = 1.0
+) -> np.ndarray:
     """
     Rank-normalized primary projection (¢_prim).
     records: iterable of dict-like objects with required keys (see module docstring).
@@ -49,7 +51,9 @@ def primary_projection(records: Iterable[Dict],
         Wr = 2 * rank * (rank + 1)
         # avoid division by zero
         denom = max(1, rank)
-        radial = V0 * (T * np.log(max(Q, 1e-12) / 2.0) * (R ** (1.0 / denom))) * np.exp(Wr)
+        radial = (
+            V0 * (T * np.log(max(Q, 1e-12) / 2.0) * (R ** (1.0 / denom))) * np.exp(Wr)
+        )
 
         # angular coordinates (wrapped logs)
         theta = np.mod(_safe_log10(delta) / np.log10(max(Amax, 10.0)), 2 * np.pi)
@@ -64,7 +68,9 @@ def primary_projection(records: Iterable[Dict],
 
     return coords
 
+
 # --- Alternative projection PTD ---------------------------------------------
+
 
 def projection_ptd(records: Iterable[Dict]) -> np.ndarray:
     """
@@ -79,7 +85,9 @@ def projection_ptd(records: Iterable[Dict]) -> np.ndarray:
         coords[i, 2] = np.log1p(abs(int(r.get("torsion_order", 0))))
     return coords
 
+
 # --- Alternative projection MCJ ---------------------------------------------
+
 
 def projection_mcj(records: Iterable[Dict]) -> np.ndarray:
     """
@@ -102,7 +110,9 @@ def projection_mcj(records: Iterable[Dict]) -> np.ndarray:
         coords[i, 2] = np.log1p(float(r.get("regulator", 0.0)))
     return coords
 
+
 # --- Batch dispatcher -------------------------------------------------------
+
 
 def project(records: Iterable[Dict], method: str = "primary", **kwargs) -> np.ndarray:
     """
@@ -117,4 +127,3 @@ def project(records: Iterable[Dict], method: str = "primary", **kwargs) -> np.nd
         return projection_mcj(records)
     else:
         raise ValueError(f"Unknown projection method: {method}")
-

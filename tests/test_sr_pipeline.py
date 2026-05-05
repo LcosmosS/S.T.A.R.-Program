@@ -1,6 +1,7 @@
 import numpy as np
 from src.symbolic_regression.sr_pipeline import SRPipeline
 
+
 def test_sr_pipeline_runs():
     SR = SRPipeline()
     X = np.random.rand(20, 3)
