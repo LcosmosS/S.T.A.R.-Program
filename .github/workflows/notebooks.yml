@@ -92,7 +92,7 @@ jobs:
 
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: notebook-outputs
         path: |
@@ -109,13 +109,13 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Download current artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v6
       with:
         name: notebook-outputs
         path: current/
 
     - name: Download previous artifacts
-      uses: dawidd6/action-download-artifact@v3
+      uses: dawidd6/action-download-artifact@v6
       with:
         workflow: notebooks.yml
         branch: main
@@ -137,7 +137,7 @@ jobs:
         python3 scripts/diff_outputs.py current/ previous/ diff_report/
 
     - name: Upload diff report
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: regression-diff
         path: diff_report/
