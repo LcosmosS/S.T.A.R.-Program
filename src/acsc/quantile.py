@@ -3,10 +3,12 @@ import json
 from pathlib import Path
 from src.data.load_sky_surveys import load_sky_surveys
 
+
 def test_sky_surveys_load():
     df1, df2 = load_sky_surveys(downsample=100, validate_schema=True)
     assert len(df1) > 0
     assert len(df2) > 0
+
 
 class QuantileAligner:
     def __init__(self):
@@ -25,7 +27,7 @@ class QuantileAligner:
             vals = ref_coords[:, axis]
             vals_sorted = np.sort(vals[~np.isnan(vals)])
             if vals_sorted.size == 0:
-                self._axis_maps.append([0.0]*n_quantiles)
+                self._axis_maps.append([0.0] * n_quantiles)
             else:
                 # compute empirical quantiles via interpolation
                 qs = np.quantile(vals_sorted, q)
@@ -66,7 +68,6 @@ class QuantileAligner:
         self.fit(ref_coords, n_quantiles=n_quantiles)
         return self.transform(src_coords)
 
-    
     def save(self, path):
         d = {"quantiles": self._quantiles, "axis_maps": self._axis_maps}
         Path(path).write_text(json.dumps(d))

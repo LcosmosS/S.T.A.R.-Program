@@ -16,15 +16,12 @@ from __future__ import annotations
 from pathlib import Path
 import pandas as pd
 
-
 # Resolve project root → data/raw/
 DATA = Path(__file__).resolve().parents[2] / "data" / "raw"
 
 
 def load_sky_surveys(
-    *, 
-    downsample: int | None = None,
-    validate_schema: bool = False
+    *, downsample: int | None = None, validate_schema: bool = False
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
     Load the two sky-survey datasets used in the astronomy pipeline.

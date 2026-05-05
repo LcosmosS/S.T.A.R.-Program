@@ -7,25 +7,29 @@ import traceback
 from tqdm import tqdm
 from src.data.load_sky_surveys import load_sky_surveys
 
+
 def test_sky_surveys_load():
     df1, df2 = load_sky_surveys(downsample=100, validate_schema=True)
     assert len(df1) > 0
     assert len(df2) > 0
 
+
 # ============== CONFIG ==============
-IN = "cremona_raw_parsed.csv"          # or "lmfdb_raw_parsed.csv"
+IN = "cremona_raw_parsed.csv"  # or "lmfdb_raw_parsed.csv"
 OUT = "cremona_3selmer_full_pari.csv"
-RESUME_FROM_LABEL = None             # set to resume, e.g. "9990.p1"
+RESUME_FROM_LABEL = None  # set to resume, e.g. "9990.p1"
 BATCH_FLUSH = 1000
 # ====================================
 
 # Increase PARI stack significantly (helps a lot)
 try:
     from cypari2 import pari
-    pari.allocatemem(2**31)   # 2 GiB — adjust if your machine has more RAM
+
+    pari.allocatemem(2**31)  # 2 GiB — adjust if your machine has more RAM
     print("PARI stack set to ~2 GiB")
 except Exception as e:
     print("Could not set PARI stack:", e)
+
 
 def parse_a_invs(s):
     if not s or s in ("[]", ""):
@@ -38,6 +42,7 @@ def parse_a_invs(s):
     except:
         return None
 
+
 def compute_full_evidence(label, a_raw):
     evidence = {
         "label": label,
@@ -48,7 +53,7 @@ def compute_full_evidence(label, a_raw):
         "pari_analytic_rank": None,
         "has_rational_3_torsion": None,
         "estimated_3_selmer_bound": "Inconclusive",
-        "notes": ""
+        "notes": "",
     }
 
     a_invs = parse_a_invs(a_raw)
@@ -88,7 +93,7 @@ def compute_full_evidence(label, a_raw):
     # 3. Torsion (safe)
     try:
         tors = E.torsion_subgroup().order()
-        evidence["has_rational_3_torsion"] = (int(tors) % 3 == 0)
+        evidence["has_rational_3_torsion"] = int(tors) % 3 == 0
     except:
         pass
 
@@ -113,16 +118,27 @@ def compute_full_evidence(label, a_raw):
 
     return evidence
 
+
 def main():
     start_time = time.time()
-    fieldnames = ["label","used_a_invariants","sage_rank","sage_rank_error",
-                  "pari_2_selmer_rank","pari_analytic_rank","has_rational_3_torsion",
-                  "estimated_3_selmer_bound","notes"]
+    fieldnames = [
+        "label",
+        "used_a_invariants",
+        "sage_rank",
+        "sage_rank_error",
+        "pari_2_selmer_rank",
+        "pari_analytic_rank",
+        "has_rational_3_torsion",
+        "estimated_3_selmer_bound",
+        "notes",
+    ]
 
     resume_found = RESUME_FROM_LABEL is None
 
-    with open(IN, newline='', encoding='utf-8') as inf, \
-         open(OUT, 'w', newline='', encoding='utf-8') as outf:
+    with (
+        open(IN, newline="", encoding="utf-8") as inf,
+        open(OUT, "w", newline="", encoding="utf-8") as outf,
+    ):
 
         reader = csv.DictReader(inf)
         writer = csv.DictWriter(outf, fieldnames=fieldnames)
@@ -141,17 +157,19 @@ def main():
                 evidence = compute_full_evidence(label, a_raw)
                 writer.writerow(evidence)
             except Exception as e:
-                writer.writerow({
-                    "label": label,
-                    "used_a_invariants": a_raw,
-                    "sage_rank": "",
-                    "sage_rank_error": str(e)[:200],
-                    "pari_2_selmer_rank": "",
-                    "pari_analytic_rank": "",
-                    "has_rational_3_torsion": "",
-                    "estimated_3_selmer_bound": "ERROR",
-                    "notes": "exception"
-                })
+                writer.writerow(
+                    {
+                        "label": label,
+                        "used_a_invariants": a_raw,
+                        "sage_rank": "",
+                        "sage_rank_error": str(e)[:200],
+                        "pari_2_selmer_rank": "",
+                        "pari_analytic_rank": "",
+                        "has_rational_3_torsion": "",
+                        "estimated_3_selmer_bound": "ERROR",
+                        "notes": "exception",
+                    }
+                )
 
             if i % BATCH_FLUSH == 0:
                 outf.flush()
@@ -161,6 +179,7 @@ def main():
 
     print(f"\n Finished writing {OUT} with full PARI data where possible")
     print(f"Total time: {int(time.time()-start_time)} seconds")
+
 
 if __name__ == "__main__":
     main()

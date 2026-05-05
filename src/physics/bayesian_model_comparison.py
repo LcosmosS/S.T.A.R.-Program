@@ -17,7 +17,7 @@ def log_evidence_laplace(chi2_min, k, n):
     Laplace approximation:
     log Z ≈ -0.5 χ²_min - (k/2) log(n)
     """
-    return -0.5 * chi2_min - (k/2) * np.log(n)
+    return -0.5 * chi2_min - (k / 2) * np.log(n)
 
 
 def bayes_factor(logZ1, logZ2):

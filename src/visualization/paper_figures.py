@@ -15,16 +15,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 
+
 def _ensure_outdir(output_dir):
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
+
 
 def plot_hubble_diagram(df, lcdm, star, output_dir="results"):
     """Plot Hubble diagram"""
     df = df if isinstance(df, dict) else df
     if isinstance(df, dict):
-        df = pd.DataFrame(df).T   # safety
-    
+        df = pd.DataFrame(df).T  # safety
+
     z = np.asarray(df["z"].values, dtype=float)
     mu_obs = np.asarray(df["mu"].values, dtype=float)
     sigma = np.asarray(df.get("sigma_mu", 0.15), dtype=float)
@@ -48,47 +50,52 @@ def plot_hubble_diagram(df, lcdm, star, output_dir="results"):
         plt.savefig(outpath, dpi=200)
     plt.close()
 
+
 def plot_Hz(models, labels, output_dir="results"):
     """Improved H(z) plot with better model detection"""
     from pathlib import Path
+
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     zgrid = np.linspace(0.0, 2.5, 200)
     plt.figure(figsize=(8, 5))
-    
+
     for model, lab in zip(models, labels):
         Hz = None
         try:
             # Try common cosmology method names
-            if hasattr(model, 'H'):
+            if hasattr(model, "H"):
                 Hz = np.array([model.H(z) for z in zgrid])
-            elif hasattr(model, 'hubble_parameter'):
+            elif hasattr(model, "hubble_parameter"):
                 Hz = np.array([model.hubble_parameter(z) for z in zgrid])
-            elif hasattr(model, 'efunc') and hasattr(model, 'H0'):
+            elif hasattr(model, "efunc") and hasattr(model, "H0"):
                 Hz = np.array([model.efunc(z) * model.H0 for z in zgrid])
-            elif hasattr(model, 'H0'):
+            elif hasattr(model, "H0"):
                 # Use constant H(z) = H0 as fallback (better than 70 hardcoded)
                 h0 = float(model.H0)
                 Hz = np.full_like(zgrid, h0)
                 print(f"→ Using constant H(z) = H0 ≈ {h0:.1f} for {lab}")
             else:
                 Hz = np.full_like(zgrid, 70.0)
-                print(f"Warning: No H(z) method found for {lab}, using placeholder H0=70")
+                print(
+                    f"Warning: No H(z) method found for {lab}, using placeholder H0=70"
+                )
         except Exception as e:
             print(f"Error computing H(z) for {lab}: {e}")
             Hz = np.full_like(zgrid, 70.0)
-        
+
         plt.plot(zgrid, Hz, label=lab, lw=2.2)
-    
+
     plt.xlabel("Redshift z")
     plt.ylabel("H(z) [km/s/Mpc]")
     plt.title("Hubble Parameter Evolution")
     plt.legend()
     plt.grid(True, alpha=0.3)
-    plt.savefig(output_dir / "Hz_comparison.png", dpi=300, bbox_inches='tight')
+    plt.savefig(output_dir / "Hz_comparison.png", dpi=300, bbox_inches="tight")
     plt.close()
     print(f" Saved H(z) plot")
+
 
 def plot_residuals(df, lcdm, star, output_dir=None):
     """
@@ -121,4 +128,3 @@ def plot_residuals(df, lcdm, star, output_dir=None):
         outpath = os.path.join(output_dir, "residuals.png")
         plt.savefig(outpath, dpi=200)
     plt.close()
-

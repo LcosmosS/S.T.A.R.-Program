@@ -32,7 +32,7 @@ def plot_hubble_diagram(df, lcdm, star, zmax=0.2):
     mu_lcdm = np.array([lcdm.distance_modulus(zi) for zi in z])
     mu_star = np.array([star.distance_modulus(zi) for zi in z])
 
-    plt.figure(figsize=(10,6))
+    plt.figure(figsize=(10, 6))
     plt.scatter(z, mu_obs, s=10, alpha=0.6, label="Observed")
     plt.plot(z, mu_lcdm, lw=2, label="ΛCDM")
     plt.plot(z, mu_star, lw=2, label="S.T.A.R. Model")
@@ -44,7 +44,7 @@ def plot_hubble_diagram(df, lcdm, star, zmax=0.2):
     plt.show()
 
     # Residuals
-    plt.figure(figsize=(10,4))
+    plt.figure(figsize=(10, 4))
     plt.scatter(z, mu_obs - mu_lcdm, s=10, alpha=0.6, label="Obs - ΛCDM")
     plt.scatter(z, mu_obs - mu_star, s=10, alpha=0.6, label="Obs - S.T.A.R.")
     plt.axhline(0, color="black", lw=1)

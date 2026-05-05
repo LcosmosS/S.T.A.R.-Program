@@ -3,6 +3,7 @@ import numpy as np
 import sympy as sp
 from scipy.integrate import quad
 
+
 class Cosmology:
     """
     Cosmology engine with pluggable symbolic H(z).
@@ -11,6 +12,7 @@ class Cosmology:
     params : dict
         Numeric parameter values used in H_expr.
     """
+
     c = 299792.458  # km/s
 
     def __init__(self, H_expr: str, params: dict):
@@ -40,7 +42,7 @@ class Cosmology:
             OL = self.params.get("ΩΛ", 0.7)
             a = self.params.get("a", 0.0)
             b = self.params.get("b", 0.0)
-            inside = Om * (1 + z)**3 + OL + a*z + b*z**2
+            inside = Om * (1 + z) ** 3 + OL + a * z + b * z**2
             return H0 * np.sqrt(np.maximum(inside, 1e-10))
 
     def _comoving_scalar(self, zi: float) -> float:
@@ -59,18 +61,26 @@ class Cosmology:
 
     def comoving_distance(self, z):
         # Catch ellipsis and other garbage early
-        if z is Ellipsis or isinstance(z, type(...)) or (isinstance(z, np.ndarray) and z.dtype == object):
-            print("Warning: Ellipsis detected in comoving_distance - using safe fallback")
+        if (
+            z is Ellipsis
+            or isinstance(z, type(...))
+            or (isinstance(z, np.ndarray) and z.dtype == object)
+        ):
+            print(
+                "Warning: Ellipsis detected in comoving_distance - using safe fallback"
+            )
             z = np.array([0.01, 0.5, 1.0])
-        
+
         z = np.asarray(z, dtype=float)
         z = np.nan_to_num(z, nan=0.0, posinf=2.0, neginf=0.0)
-        z = np.clip(z, 1e-6, 10.0)          # avoid z=0 problems
-        
+        z = np.clip(z, 1e-6, 10.0)  # avoid z=0 problems
+
         if z.ndim == 0 or z.size == 1:
             return self._comoving_scalar(float(z.ravel()[0]))
-        
-        return np.array([self._comoving_scalar(float(zi)) for zi in z.ravel()]).reshape(z.shape)
+
+        return np.array([self._comoving_scalar(float(zi)) for zi in z.ravel()]).reshape(
+            z.shape
+        )
 
     def luminosity_distance(self, z):
         """DL = (1 + z) * Dc(z)"""
@@ -84,11 +94,11 @@ class Cosmology:
         """μ = 5 log10(DL / 10 pc)"""
         DL = self.luminosity_distance(z)
         DL = np.maximum(DL, 1e-6)
-        
+
         if np.isscalar(DL) or DL.size == 1:
             dl = float(DL)
             return 5.0 * (np.log10(dl * 1e6) - 1.0) if dl > 0 else -np.inf
-        
-        with np.errstate(divide='ignore', invalid='ignore'):
+
+        with np.errstate(divide="ignore", invalid="ignore"):
             mu = 5.0 * (np.log10(DL * 1e6) - 1.0)
         return mu

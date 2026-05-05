@@ -3,10 +3,12 @@ import numpy as np
 import pandas as pd
 from src.data.load_sky_surveys import load_sky_surveys
 
+
 def test_sky_surveys_load():
     df1, df2 = load_sky_surveys(downsample=100, validate_schema=True)
     assert len(df1) > 0
     assert len(df2) > 0
+
 
 def _safe_log10(x: np.ndarray, floor: float = 1.0) -> np.ndarray:
     """Compute log10 of absolute values with a floor to avoid -inf."""
@@ -17,6 +19,7 @@ def _safe_log10(x: np.ndarray, floor: float = 1.0) -> np.ndarray:
     out[mask] = np.log10(float(floor))
     out[~mask] = np.log10(np.abs(x[~mask]))
     return out
+
 
 def _scale_to_range(arr: np.ndarray, out_min: float, out_max: float) -> np.ndarray:
     """Linearly scale arr to [out_min, out_max]. If constant, return midpoint."""
@@ -29,6 +32,7 @@ def _scale_to_range(arr: np.ndarray, out_min: float, out_max: float) -> np.ndarr
         return np.full_like(arr, 0.5 * (out_min + out_max))
     scaled = (arr - mn) / (mx - mn)
     return out_min + scaled * (out_max - out_min)
+
 
 def _saturating_rank_map(ranks: np.ndarray, v0: float = 1.0) -> np.ndarray:
     """Map integer ranks to a bounded real axis using arctan-like saturation.
@@ -43,11 +47,14 @@ def _saturating_rank_map(ranks: np.ndarray, v0: float = 1.0) -> np.ndarray:
     mapped = np.clip(mapped, 0.0, 1.0)
     return mapped
 
-def project(records: Sequence[Dict[str, Any]],
-            method: str = "primary",
-            Amax: float = 1.0,
-            Nmax: float = 1.0,
-            V0: float = 1.0) -> np.ndarray:
+
+def project(
+    records: Sequence[Dict[str, Any]],
+    method: str = "primary",
+    Amax: float = 1.0,
+    Nmax: float = 1.0,
+    V0: float = 1.0,
+) -> np.ndarray:
     """
     Convert a sequence of record dicts into Nx3 coordinates.
 

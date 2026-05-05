@@ -16,4 +16,3 @@ __all__ = [
     "symbolic_regression",
     "acsc",
 ]
-

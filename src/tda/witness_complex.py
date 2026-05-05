@@ -15,6 +15,7 @@ from scipy.spatial.distance import cdist
 
 from src.data.load_sky_surveys import load_sky_surveys
 
+
 def test_sky_surveys_load():
     df1, df2 = load_sky_surveys(downsample=100, validate_schema=True)
     assert len(df1) > 0
@@ -56,7 +57,4 @@ class WitnessComplex:
                 if W[i] == W[j]:
                     edges.add((i, j))
 
-        return {
-            "landmarks": L,
-            "edges": list(edges)
-        }
+        return {"landmarks": L, "edges": list(edges)}

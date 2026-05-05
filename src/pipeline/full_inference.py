@@ -20,13 +20,17 @@ DATASET_REGISTRY = {
     "PLANCK_2018_RECON": PLANCK_2018_RECON,
     "DESI_BAO_DR1": DESI_BAO_DR1,
     "COSMIC_CHRONOMETERS": COSMIC_CHRONOMETERS,
-    "PANTHEON_PLUS_FULL": PANTHEON_PLUS_FULL
+    "PANTHEON_PLUS_FULL": PANTHEON_PLUS_FULL,
 }
+
 
 def load_dataset(name):
     if name not in DATASET_REGISTRY:
-        raise KeyError(f"Unknown dataset '{name}'. Available: {list(DATASET_REGISTRY.keys())}")
+        raise KeyError(
+            f"Unknown dataset '{name}'. Available: {list(DATASET_REGISTRY.keys())}"
+        )
     return DATASET_REGISTRY[name]
+
 
 def build_joint_likelihood(config):
     planck = load_dataset(config["datasets"]["planck"])
@@ -40,6 +44,7 @@ def build_joint_likelihood(config):
     sn_like = PantheonPlusLikelihood(sn)
 
     return JointLikelihood(planck_like, bao_like, cc_like, sn_like)
+
 
 def run_full_inference(config_path):
     with open(config_path, "r") as f:
@@ -59,20 +64,17 @@ def run_full_inference(config_path):
         config["model"]["param_names"],
         config["priors"],
         config["proposal_widths"],
-        joint
+        joint,
     )
 
-    chain = mcmc.run(
-        theta0=config["mcmc"]["theta0"],
-        nsteps=config["mcmc"]["nsteps"]
-    )
+    chain = mcmc.run(theta0=config["mcmc"]["theta0"], nsteps=config["mcmc"]["nsteps"])
 
     # Generate figures
     fig = PaperFiguresPipeline(
         chain,
         config["model"]["param_names"],
         config["model"]["H_expr"],
-        data_paths={"planck": planck, "bao": bao, "cc": cc}
+        data_paths={"planck": planck, "bao": bao, "cc": cc},
     )
 
     constraints = fig.run(config["output_dir"])

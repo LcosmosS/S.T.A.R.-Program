@@ -13,6 +13,7 @@ Returns total log-likelihood for any cosmology model.
 
 from __future__ import annotations
 
+
 class JointLikelihood:
     def __init__(self, planck_shoes, desi_bao, cc):
         """

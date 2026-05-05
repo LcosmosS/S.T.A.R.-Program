@@ -27,15 +27,17 @@ def summarize_chain(chain, param_names):
         lo_1, hi_1 = np.percentile(samples, [16, 84])
         lo_2, hi_2 = np.percentile(samples, [2.5, 97.5])
 
-        summary.append({
-            "parameter": name,
-            "mean": mean,
-            "median": median,
-            "1σ_low": lo_1,
-            "1σ_high": hi_1,
-            "2σ_low": lo_2,
-            "2σ_high": hi_2,
-        })
+        summary.append(
+            {
+                "parameter": name,
+                "mean": mean,
+                "median": median,
+                "1σ_low": lo_1,
+                "1σ_high": hi_1,
+                "2σ_low": lo_2,
+                "2σ_high": hi_2,
+            }
+        )
 
     return pd.DataFrame(summary)
 

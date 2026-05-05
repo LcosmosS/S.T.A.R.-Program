@@ -19,9 +19,7 @@ import corner
 
 from src.physics.cosmology import Cosmology
 from src.physics.symbolic_cosmology import SymbolicCosmology
-from src.visualization.paper_figures import (
-    plot_hubble_diagram, plot_Hz, plot_residuals
-)
+from src.visualization.paper_figures import plot_hubble_diagram, plot_Hz, plot_residuals
 from src.analysis.latex_constraints import constraints_to_latex
 
 
@@ -29,7 +27,8 @@ class PaperFiguresPipeline:
     """
     Unified, validated pipeline for generating paper-ready figures.
     """
-    REQUIRED_KEYS = {"planck", "cc", "bao"}   # keep for backward compatibility
+
+    REQUIRED_KEYS = {"planck", "cc", "bao"}  # keep for backward compatibility
     PLOTTING_ONLY_KEYS = {"sn"}
 
     def __init__(self, chain, param_names, H_expr, data_paths):
@@ -85,8 +84,7 @@ class PaperFiguresPipeline:
 
     def lcdm_model(self):
         return Cosmology(
-            "H0*sqrt(Ωm*(1+z)**3 + ΩΛ)",
-            {"H0": 67.4, "Ωm": 0.315, "ΩΛ": 0.685}
+            "H0*sqrt(Ωm*(1+z)**3 + ΩΛ)", {"H0": 67.4, "Ωm": 0.315, "ΩΛ": 0.685}
         )
 
     # ---------------------------------------------------------
@@ -99,7 +97,10 @@ class PaperFiguresPipeline:
         """
         means = np.mean(self.chain, axis=0)
         stds = np.std(self.chain, axis=0)
-        return {name: f"{m:.4f} ± {s:.4f}" for name, m, s in zip(self.param_names, means, stds)}
+        return {
+            name: f"{m:.4f} ± {s:.4f}"
+            for name, m, s in zip(self.param_names, means, stds)
+        }
 
     # ---------------------------------------------------------
     # Main pipeline
@@ -111,7 +112,9 @@ class PaperFiguresPipeline:
         if "sn" in self.data_paths:
             df_sn = pd.DataFrame(self.data_paths["sn"])
         else:
-            raise RuntimeError("No SN data found for plotting. Provide 'sn' in data_paths.")
+            raise RuntimeError(
+                "No SN data found for plotting. Provide 'sn' in data_paths."
+            )
 
         # build models from chain
         lcdm = self.lcdm_model()

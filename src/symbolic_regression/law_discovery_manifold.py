@@ -15,6 +15,7 @@ Implements:
 import numpy as np
 from src.data.load_sky_surveys import load_sky_surveys
 
+
 def test_sky_surveys_load():
     df1, df2 = load_sky_surveys(downsample=100, validate_schema=True)
     assert len(df1) > 0
@@ -28,10 +29,7 @@ class LawDiscoveryManifold:
 
     def __init__(self, max_depth=6):
         self.max_depth = max_depth
-        self.primitives = [
-            "add", "sub", "mul", "div",
-            "log", "exp", "arctan"
-        ]
+        self.primitives = ["add", "sub", "mul", "div", "log", "exp", "arctan"]
 
     def lipschitz_penalty(self, f_values, x_values):
         """
@@ -71,7 +69,7 @@ class LawDiscoveryManifold:
         f_values = np.array([f(x) for x in data])
 
         return (
-            self.lipschitz_penalty(f_values, data) < 10.0 and
-            self.isogeny_invariant(f, isogeny_pairs) and
-            self.null_scramble(f, scrambled)
+            self.lipschitz_penalty(f_values, data) < 10.0
+            and self.isogeny_invariant(f, isogeny_pairs)
+            and self.null_scramble(f, scrambled)
         )

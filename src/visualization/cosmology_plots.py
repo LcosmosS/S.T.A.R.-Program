@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 
 def plot_H_of_z(models, labels, zmax=2, n=200):
     z = np.linspace(0, zmax, n)
-    plt.figure(figsize=(10,6))
+    plt.figure(figsize=(10, 6))
     for model, label in zip(models, labels):
         H = np.array([model.H(zi) for zi in z])
         plt.plot(z, H, label=label, lw=2)
@@ -26,7 +26,7 @@ def plot_H_of_z(models, labels, zmax=2, n=200):
 
 def plot_distance_modulus(models, labels, zmax=2, n=200):
     z = np.linspace(0, zmax, n)
-    plt.figure(figsize=(10,6))
+    plt.figure(figsize=(10, 6))
     for model, label in zip(models, labels):
         mu = np.array([model.distance_modulus(zi) for zi in z])
         plt.plot(z, mu, label=label, lw=2)
@@ -42,7 +42,7 @@ def plot_residuals(model1, model2, label1="Model 1", label2="Model 2", zmax=2, n
     z = np.linspace(0, zmax, n)
     mu1 = np.array([model1.distance_modulus(zi) for zi in z])
     mu2 = np.array([model2.distance_modulus(zi) for zi in z])
-    plt.figure(figsize=(10,6))
+    plt.figure(figsize=(10, 6))
     plt.plot(z, mu2 - mu1, lw=2)
     plt.axhline(0, color="black", lw=1)
     plt.xlabel("Redshift z")

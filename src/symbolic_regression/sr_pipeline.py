@@ -17,10 +17,12 @@ from .constrained_gp import ConstrainedGP
 from .law_discovery_manifold import LawDiscoveryManifold
 from src.data.load_sky_surveys import load_sky_surveys
 
+
 def test_sky_surveys_load():
     df1, df2 = load_sky_surveys(downsample=100, validate_schema=True)
     assert len(df1) > 0
     assert len(df2) > 0
+
 
 class SRPipeline:
     """
@@ -28,8 +30,7 @@ class SRPipeline:
     """
 
     def __init__(self, max_depth=6, population=50, generations=20):
-        self.gp = ConstrainedGP(max_depth=max_depth,
-                                population=population)
+        self.gp = ConstrainedGP(max_depth=max_depth, population=population)
         self.manifold = LawDiscoveryManifold(max_depth=max_depth)
         self.generations = generations
 
@@ -60,7 +61,7 @@ class SRPipeline:
             data=X,
             isogeny_pairs=isogeny_pairs,
             scrambled=scrambled,
-            generations=self.generations
+            generations=self.generations,
         )
 
         return best_tree

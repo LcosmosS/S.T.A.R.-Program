@@ -5,6 +5,7 @@ Sky Survey Schema Validator
 Ensures required columns exist and have correct dtypes.
 """
 
+
 def validate_sky_survey_schema(df):
     required = {
         "RAdeg": float,

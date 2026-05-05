@@ -95,7 +95,7 @@ class SymbolicCosmology:
     # ---------------------------------------------------------
     def ombh2(self):
         if "Ωb" in self.params:
-            return self.params["Ωb"] * (self.params["H0"] / 100)**2
+            return self.params["Ωb"] * (self.params["H0"] / 100) ** 2
         return 0.0224  # fallback
 
     def sound_horizon(self):

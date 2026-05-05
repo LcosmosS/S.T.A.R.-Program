@@ -31,9 +31,19 @@ class PlanckSH0ESJointLikelihood:
                 "R": df["R"].iloc[0],
                 "lA": df["lA"].iloc[0],
                 "ombh2": df["ombh2"].iloc[0],
-                "cov": df[["cov00", "cov01", "cov02",
-                           "cov10", "cov11", "cov12",
-                           "cov20", "cov21", "cov22"]].values.reshape(3, 3)
+                "cov": df[
+                    [
+                        "cov00",
+                        "cov01",
+                        "cov02",
+                        "cov10",
+                        "cov11",
+                        "cov12",
+                        "cov20",
+                        "cov21",
+                        "cov22",
+                    ]
+                ].values.reshape(3, 3),
             }
 
         self.H0_shoes = H0_shoes
@@ -55,11 +65,7 @@ class PlanckSH0ESJointLikelihood:
         cov = np.array(self.planck["cov"])
 
         # Residual vector
-        delta = np.array([
-            R_model - R_obs,
-            lA_model - lA_obs,
-            ombh2_model - ombh2_obs
-        ])
+        delta = np.array([R_model - R_obs, lA_model - lA_obs, ombh2_model - ombh2_obs])
 
         chi2 = delta.T @ np.linalg.inv(cov) @ delta
         return -0.5 * chi2
@@ -69,13 +75,10 @@ class PlanckSH0ESJointLikelihood:
     # -----------------------------
     def log_likelihood_shoes(self, model):
         H0_model = model.H(0)
-        return -0.5 * ((H0_model - self.H0_shoes) / self.sigma_shoes)**2
+        return -0.5 * ((H0_model - self.H0_shoes) / self.sigma_shoes) ** 2
 
     # -----------------------------
     # Total likelihood
     # -----------------------------
     def log_likelihood(self, model):
-        return (
-            self.log_likelihood_planck(model)
-            + self.log_likelihood_shoes(model)
-        )
+        return self.log_likelihood_planck(model) + self.log_likelihood_shoes(model)

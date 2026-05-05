@@ -33,7 +33,7 @@ class STARParameterInference:
     def neg_log_likelihood(self, theta, z, mu_obs, sigma_mu):
         model = self._make_model(theta)
         mu_model = np.array([model.distance_modulus(zi) for zi in z])
-        chi2 = np.sum(((mu_obs - mu_model) / sigma_mu)**2)
+        chi2 = np.sum(((mu_obs - mu_model) / sigma_mu) ** 2)
         return 0.5 * chi2
 
     def fit(self, z, mu_obs, sigma_mu, theta0):
@@ -41,7 +41,7 @@ class STARParameterInference:
             self.neg_log_likelihood,
             theta0,
             args=(z, mu_obs, sigma_mu),
-            method="Nelder-Mead"
+            method="Nelder-Mead",
         )
         best_params = dict(zip(self.param_names, result.x))
         return best_params, result

@@ -21,7 +21,7 @@ def plot_joint_corner(chain, param_names, save_path=None):
         title_kwargs={"fontsize": 12},
         label_kwargs={"fontsize": 12},
         smooth=1.0,
-        color="navy"
+        color="navy",
     )
 
     if save_path:

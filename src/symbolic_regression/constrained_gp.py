@@ -18,10 +18,12 @@ import random
 from .law_discovery_manifold import LawDiscoveryManifold
 from src.data.load_sky_surveys import load_sky_surveys
 
+
 def test_sky_surveys_load():
     df1, df2 = load_sky_surveys(downsample=100, validate_schema=True)
     assert len(df1) > 0
     assert len(df2) > 0
+
 
 class GPNode:
     """
@@ -93,8 +95,9 @@ class ConstrainedGP:
         op = random.choice(self.manifold.primitives)
         if op in ["log", "exp", "arctan"]:
             return GPNode(op, children=[self.random_tree(depth + 1)])
-        return GPNode(op, children=[self.random_tree(depth + 1),
-                                    self.random_tree(depth + 1)])
+        return GPNode(
+            op, children=[self.random_tree(depth + 1), self.random_tree(depth + 1)]
+        )
 
     def mutate(self, tree):
         """
@@ -114,8 +117,9 @@ class ConstrainedGP:
             return t2
         if t1.children and t2.children:
             idx = random.randint(0, len(t1.children) - 1)
-            t1.children[idx] = self.crossover(t1.children[idx],
-                                              random.choice(t2.children))
+            t1.children[idx] = self.crossover(
+                t1.children[idx], random.choice(t2.children)
+            )
         return t1
 
     def evolve(self, data, isogeny_pairs, scrambled, generations=20):

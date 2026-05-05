@@ -22,12 +22,12 @@ def compute_H0_tension(H0_lcdm, H0_star, sigma_lcdm, sigma_star):
 
 def chi2(model, z, mu_obs, sigma_mu):
     mu_model = np.array([model.distance_modulus(zi) for zi in z])
-    return np.sum(((mu_obs - mu_model) / sigma_mu)**2)
+    return np.sum(((mu_obs - mu_model) / sigma_mu) ** 2)
 
 
 def aic(chi2, k):
-    return chi2 + 2*k
+    return chi2 + 2 * k
 
 
 def bic(chi2, k, n):
-    return chi2 + k*np.log(n)
+    return chi2 + k * np.log(n)

@@ -1,5 +1,1 @@
-PANTHEON_PLUS_FULL = {
-    "z": [...],
-    "mu": [...],
-    "sigma_mu": [...]
-}
+PANTHEON_PLUS_FULL = {"z": [...], "mu": [...], "sigma_mu": [...]}

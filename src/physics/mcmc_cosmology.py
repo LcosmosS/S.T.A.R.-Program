@@ -26,14 +26,14 @@ class MCMCCosmologyFitter:
         lp = 0
         for val, name in zip(theta, self.param_names):
             mu, sigma = self.priors[name]
-            lp += -0.5 * ((val - mu) / sigma)**2
+            lp += -0.5 * ((val - mu) / sigma) ** 2
         return lp
 
     def _log_likelihood(self, theta, z, mu_obs, sigma_mu):
         params = dict(zip(self.param_names, theta))
         model = SymbolicCosmology(self.H_expr, params)
         mu_model = np.array([model.distance_modulus(zi) for zi in z])
-        chi2 = np.sum(((mu_obs - mu_model) / sigma_mu)**2)
+        chi2 = np.sum(((mu_obs - mu_model) / sigma_mu) ** 2)
         return -0.5 * chi2
 
     def _log_posterior(self, theta, z, mu_obs, sigma_mu):
@@ -45,10 +45,12 @@ class MCMCCosmologyFitter:
         logp = self._log_posterior(theta0, z, mu_obs, sigma_mu)
 
         for i in range(1, nsteps):
-            proposal = chain[i-1] + np.array([
-                np.random.normal(0, self.proposal_widths[name])
-                for name in self.param_names
-            ])
+            proposal = chain[i - 1] + np.array(
+                [
+                    np.random.normal(0, self.proposal_widths[name])
+                    for name in self.param_names
+                ]
+            )
 
             logp_new = self._log_posterior(proposal, z, mu_obs, sigma_mu)
             accept = np.random.rand() < np.exp(logp_new - logp)
@@ -57,6 +59,6 @@ class MCMCCosmologyFitter:
                 chain[i] = proposal
                 logp = logp_new
             else:
-                chain[i] = chain[i-1]
+                chain[i] = chain[i - 1]
 
         return chain

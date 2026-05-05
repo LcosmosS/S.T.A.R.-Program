@@ -32,13 +32,18 @@ class SkyProjector:
         if self.projection == "gnomonic":
             ra0 = 0
             dec0 = 0
-            denom = np.sin(dec0)*np.sin(dec) + np.cos(dec0)*np.cos(dec)*np.cos(ra-ra0)
-            x = np.cos(dec)*np.sin(ra-ra0) / denom
-            y = (np.cos(dec0)*np.sin(dec) - np.sin(dec0)*np.cos(dec)*np.cos(ra-ra0)) / denom
+            denom = np.sin(dec0) * np.sin(dec) + np.cos(dec0) * np.cos(dec) * np.cos(
+                ra - ra0
+            )
+            x = np.cos(dec) * np.sin(ra - ra0) / denom
+            y = (
+                np.cos(dec0) * np.sin(dec)
+                - np.sin(dec0) * np.cos(dec) * np.cos(ra - ra0)
+            ) / denom
             return np.vstack([x, y]).T
 
         if self.projection == "stereographic":
-            x = 2 * np.cos(dec) * np.sin(ra/2)
+            x = 2 * np.cos(dec) * np.sin(ra / 2)
             y = 2 * np.sin(dec)
             return np.vstack([x, y]).T
 

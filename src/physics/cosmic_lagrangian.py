@@ -17,10 +17,12 @@ from ..entropy.differential_forms import DifferentialForms
 from ..physics.scalar_coupling import ScalarCoupling
 from src.data.load_sky_surveys import load_sky_surveys
 
+
 def test_sky_surveys_load():
     df1, df2 = load_sky_surveys(downsample=100, validate_schema=True)
     assert len(df1) > 0
     assert len(df2) > 0
+
 
 class CosmicLagrangian:
     """
@@ -62,8 +64,5 @@ class CosmicLagrangian:
         """
         Compute action integral over a point cloud X.
         """
-        L_vals = [
-            self.lagrangian_density(x, inv)
-            for x, inv in zip(X, invariants_list)
-        ]
+        L_vals = [self.lagrangian_density(x, inv) for x, inv in zip(X, invariants_list)]
         return np.sum(L_vals)

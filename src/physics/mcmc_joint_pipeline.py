@@ -12,6 +12,7 @@ from __future__ import annotations
 import numpy as np
 from src.physics.symbolic_cosmology import SymbolicCosmology
 
+
 class JointMCMCPipeline:
     """
     Numerically stable Metropolis–Hastings MCMC for the S.T.A.R. Model.
@@ -70,6 +71,7 @@ class JointMCMCPipeline:
         # Build model safely
         try:
             from .symbolic_cosmology import SymbolicCosmology
+
             model = SymbolicCosmology(self.H_expr, dict(zip(self.param_names, theta)))
         except Exception:
             return -np.inf
@@ -104,10 +106,12 @@ class JointMCMCPipeline:
 
         for i in range(1, nsteps):
             # Propose new parameters
-            proposal = chain[i - 1] + np.array([
-                np.random.normal(0, self.proposal_widths[name])
-                for name in self.param_names
-            ])
+            proposal = chain[i - 1] + np.array(
+                [
+                    np.random.normal(0, self.proposal_widths[name])
+                    for name in self.param_names
+                ]
+            )
 
             logp_new = self._log_posterior(proposal)
 
@@ -130,7 +134,8 @@ class JointMCMCPipeline:
                 chain[i] = chain[i - 1]
 
         return chain
-        
+
+
 def _validate_inputs(self, theta0):
     if len(theta0) != len(self.param_names):
         raise ValueError(
@@ -143,6 +148,7 @@ def _validate_inputs(self, theta0):
 
         if p not in self.proposal_widths:
             raise KeyError(f"Missing proposal width for parameter '{p}'")
+
 
 def run(self, theta0, nsteps):
     self._validate_inputs(theta0)

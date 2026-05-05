@@ -5,22 +5,24 @@ import numpy as np
 import pandas as pd
 from src.data.load_sky_surveys import load_sky_surveys
 
+
 def test_sky_surveys_load():
     df1, df2 = load_sky_surveys(downsample=100, validate_schema=True)
     assert len(df1) > 0
     assert len(df2) > 0
 
+
 # ---------- User-editable parameters ----------
-aligned_csv = "derived/acsc_projected_cremona_ptd_aligned.csv"   # input aligned coords
-coords_npz = "derived/coords_ptd_al.npz"                         # saved coords file
+aligned_csv = "derived/acsc_projected_cremona_ptd_aligned.csv"  # input aligned coords
+coords_npz = "derived/coords_ptd_al.npz"  # saved coords file
 worker_script = "scripts/tda_worker.py"
 out_dir = "derived/tda_ptd_batches"
-chunk = 300                     # points per chunk (200-500 recommended)
-maxdim = 1                      # compute H0/H1 only
-sample_size_for_thresh = 2000   # sample size to estimate distance distribution
-thresh_factor = 0.3             # thresh = median(sampled_pairwise_distances) * thresh_factor
+chunk = 300  # points per chunk (200-500 recommended)
+maxdim = 1  # compute H0/H1 only
+sample_size_for_thresh = 2000  # sample size to estimate distance distribution
+thresh_factor = 0.3  # thresh = median(sampled_pairwise_distances) * thresh_factor
 max_workers = max(1, (os.cpu_count() or 2) - 1)  # concurrency bound
-timeout_seconds = 600           # per-job timeout in seconds (10 minutes)
+timeout_seconds = 600  # per-job timeout in seconds (10 minutes)
 # ------------------------------------------------
 
 Path("scripts").mkdir(parents=True, exist_ok=True)
@@ -28,7 +30,7 @@ Path("derived").mkdir(parents=True, exist_ok=True)
 Path(out_dir).mkdir(parents=True, exist_ok=True)
 
 # 1) Write worker script
-worker_code = r'''
+worker_code = r"""
 # scripts/tda_worker.py
 import sys, json, pickle, numpy as np
 from pathlib import Path
@@ -56,7 +58,7 @@ def main(coords_npz, out_dir, start, end, maxdim="1", thresh="None"):
 if __name__ == "__main__":
     # usage: python scripts/tda_worker.py coords.npz out_dir start end [maxdim] [thresh]
     main(*sys.argv[1:])
-'''
+"""
 Path(worker_script).write_text(worker_code)
 print("Wrote worker script:", worker_script)
 
@@ -65,15 +67,16 @@ if not Path(aligned_csv).exists():
     raise FileNotFoundError(f"Aligned CSV not found: {aligned_csv}")
 
 df = pd.read_csv(aligned_csv)
-if not {"x_ptd_al","y_ptd_al","z_ptd_al"}.issubset(df.columns):
+if not {"x_ptd_al", "y_ptd_al", "z_ptd_al"}.issubset(df.columns):
     raise ValueError("Aligned CSV must contain x_ptd_al,y_ptd_al,z_ptd_al columns")
 
-coords = df[["x_ptd_al","y_ptd_al","z_ptd_al"]].to_numpy()
+coords = df[["x_ptd_al", "y_ptd_al", "z_ptd_al"]].to_numpy()
 np.savez_compressed(coords_npz, coords=coords)
 print("Saved coords:", coords_npz, "shape:", coords.shape)
 
 # 3) Estimate a conservative threshold from sampled pairwise distances
 from scipy.spatial.distance import pdist
+
 n = coords.shape[0]
 sample_n = min(sample_size_for_thresh, n)
 rng = np.random.RandomState(42)
@@ -82,7 +85,9 @@ sample_coords = coords[sample_idx]
 d = pdist(sample_coords)
 median_d = float(np.median(d))
 thresh = float(median_d * thresh_factor)
-print(f"Sampled {sample_n} points; median pairwise distance {median_d:.6g}; chosen thresh {thresh:.6g}")
+print(
+    f"Sampled {sample_n} points; median pairwise distance {median_d:.6g}; chosen thresh {thresh:.6g}"
+)
 
 # 4) Build job list
 jobs = []
@@ -98,7 +103,7 @@ jobs_meta = {
     "maxdim": int(maxdim),
     "thresh": float(thresh),
     "jobs_total": len(jobs),
-    "created_at": time.time()
+    "created_at": time.time(),
 }
 Path(out_dir, "jobs.json").write_text(json.dumps(jobs_meta, indent=2))
 print("Prepared", len(jobs), "jobs; chunk size:", chunk, "max_workers:", max_workers)
@@ -109,11 +114,22 @@ completed = []
 failed = []
 job_index = 0
 
+
 def launch_job(job):
     start, end = job["start"], job["end"]
-    cmd = [sys.executable, worker_script, coords_npz, out_dir, str(start), str(end), str(maxdim), str(thresh)]
+    cmd = [
+        sys.executable,
+        worker_script,
+        coords_npz,
+        out_dir,
+        str(start),
+        str(end),
+        str(maxdim),
+        str(thresh),
+    ]
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     return {"proc": p, "start": start, "end": end, "launched_at": time.time()}
+
 
 print("Launching jobs...")
 try:
@@ -124,8 +140,10 @@ try:
             handle = launch_job(job)
             active.append(handle)
             job_index += 1
-            print(f"Launched job {handle['start']}:{handle['end']} (active {len(active)})")
-            time.sleep(0.05)   # use float sleep
+            print(
+                f"Launched job {handle['start']}:{handle['end']} (active {len(active)})"
+            )
+            time.sleep(0.05)  # use float sleep
 
         # poll active processes
         for handle in active[:]:
@@ -139,11 +157,19 @@ try:
                 except Exception:
                     stdout, stderr = "", ""
                 if ret == 0:
-                    completed.append((int(handle['start']), int(handle['end'])))
+                    completed.append((int(handle["start"]), int(handle["end"])))
                     print(f"Completed {handle['start']}:{handle['end']}")
                 else:
-                    failed.append((int(handle['start']), int(handle['end']), (stderr or "").strip()[:200]))
-                    print(f"Failed {handle['start']}:{handle['end']} ret={ret} err={(stderr or '').strip()[:200]}")
+                    failed.append(
+                        (
+                            int(handle["start"]),
+                            int(handle["end"]),
+                            (stderr or "").strip()[:200],
+                        )
+                    )
+                    print(
+                        f"Failed {handle['start']}:{handle['end']} ret={ret} err={(stderr or '').strip()[:200]}"
+                    )
                 active.remove(handle)
             elif elapsed > timeout_seconds:
                 # timeout: kill process
@@ -151,7 +177,7 @@ try:
                     p.kill()
                 except Exception:
                     pass
-                failed.append((int(handle['start']), int(handle['end']), "timeout"))
+                failed.append((int(handle["start"]), int(handle["end"]), "timeout"))
                 print(f"Timeout killed job {handle['start']}:{handle['end']}")
                 active.remove(handle)
         # brief sleep to avoid busy loop
@@ -167,6 +193,8 @@ except KeyboardInterrupt:
 
 # helper: sanitize objects for JSON
 import numpy as _np
+
+
 def _to_py(obj):
     if obj is None or isinstance(obj, (str, bool, int, float)):
         return obj
@@ -188,21 +216,24 @@ def _to_py(obj):
         pass
     return str(obj)
 
+
 def write_json_safe(path, obj, indent=2):
     Path(path).write_text(json.dumps(_to_py(obj), indent=indent))
+
 
 # 6) Summary and write status (sanitized)
 status = {
     "completed_count": int(len(completed)),
     "failed_count": int(len(failed)),
     "completed": completed[:20],
-    "failed": failed[:20]
+    "failed": failed[:20],
 }
 write_json_safe(Path(out_dir, "jobs_status.json"), status, indent=2)
 print("All jobs processed. Completed:", len(completed), "Failed:", len(failed))
 
 # 7) Aggregate results (load pickles)
 import glob
+
 pkl_files = sorted(glob.glob(os.path.join(out_dir, "dgms_*.pkl")))
 print("Found pkl result files:", len(pkl_files))
 all_results = []
@@ -226,7 +257,12 @@ manifest = {
     "n_chunks": len(pkl_files),
     "completed": len(completed),
     "failed": len(failed),
-    "params": {"chunk": chunk, "max_workers": max_workers, "thresh": thresh, "maxdim": maxdim}
+    "params": {
+        "chunk": chunk,
+        "max_workers": max_workers,
+        "thresh": thresh,
+        "maxdim": maxdim,
+    },
 }
 write_json_safe(Path(out_dir, "aggregate_manifest.json"), manifest, indent=2)
 print("Wrote aggregate manifest:", Path(out_dir, "aggregate_manifest.json"))
