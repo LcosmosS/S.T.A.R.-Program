@@ -15,11 +15,16 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: sagemath/sagemath:latest
-      options: --user root
+      options: --user root          
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+         python-version: '3.12'
 
     - name: Detect project root
       id: root
