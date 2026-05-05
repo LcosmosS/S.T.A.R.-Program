@@ -13,6 +13,7 @@ Generates:
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 def _ensure_outdir(output_dir):
     if output_dir:
@@ -48,35 +49,46 @@ def plot_hubble_diagram(df, lcdm, star, output_dir="results"):
     plt.close()
 
 def plot_Hz(models, labels, output_dir="results"):
-    """Fixed plot_Hz with safe method calling"""
+    """Plot H(z) with robust method detection"""
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    
     zgrid = np.linspace(0, 2.5, 200)
     plt.figure(figsize=(8, 5))
     
     for model, lab in zip(models, labels):
         try:
-            # Try common method names
+            # Try different possible method names
             if hasattr(model, 'H'):
                 Hz = np.array([model.H(z) for z in zgrid])
             elif hasattr(model, 'hubble_parameter'):
                 Hz = np.array([model.hubble_parameter(z) for z in zgrid])
             elif hasattr(model, 'efunc'):
+                # Common in astropy.cosmology
                 Hz = np.array([model.efunc(z) * model.H0 for z in zgrid])
+            elif hasattr(model, 'H0'):
+                # Fallback: constant H(z) = H0 (temporary)
+                Hz = np.full_like(zgrid, float(model.H0))
+                print(f"Warning: Using constant H(z) = H0 for {lab}")
             else:
-                # Fallback: assume it has .H0 and a simple model
-                Hz = np.full_like(zgrid, model.H0)   # temporary placeholder
-                print(f"Warning: No H(z) method found for {lab}, using placeholder")
+                # Last resort
+                Hz = np.full_like(zgrid, 70.0)
+                print(f"Warning: No H(z) method found for {lab}, using placeholder H0=70")
+                
         except Exception as e:
             print(f"Error computing H(z) for {lab}: {e}")
             Hz = np.full_like(zgrid, 70.0)
         
-        plt.plot(zgrid, Hz, label=lab)
+        plt.plot(zgrid, Hz, label=lab, lw=2)
     
     plt.xlabel("Redshift z")
     plt.ylabel("H(z) [km/s/Mpc]")
+    plt.title("Hubble Parameter Evolution")
     plt.legend()
     plt.grid(True, alpha=0.3)
-    plt.savefig(Path(output_dir) / "Hz_comparison.png")
+    plt.savefig(output_dir / "Hz_comparison.png", dpi=300, bbox_inches='tight')
     plt.close()
+    print(f" Saved H(z) plot to {output_dir}/Hz_comparison.png")
 
 def plot_residuals(df, lcdm, star, output_dir=None):
     """
