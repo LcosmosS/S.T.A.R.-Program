@@ -99,3 +99,4 @@ class PlanckSH0ESJointLikelihood:
     # -----------------------------
     def log_likelihood(self, model):
         return self.log_likelihood_planck(model) + self.log_likelihood_shoes(model)
+        
