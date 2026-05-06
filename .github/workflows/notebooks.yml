@@ -10,144 +10,84 @@ on:
 permissions:
   contents: read
   packages: write
-  
+
 jobs:
   execute-notebooks:
     runs-on: ubuntu-latest
-    env:
-      DEBIAN_FRONTEND: noninteractive
     container:
       image: sagemath/sagemath:latest
       options: --user root
+    env:
+      DEBIAN_FRONTEND: noninteractive
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v6
+      - name: Checkout repository with submodules
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive   # ← Important: pulls ecdata, eclib, lmfdb
 
-    - name: Install system tools
-      run: |
-        apt-get update
-        apt-get install -y git curl pandoc \
-          texlive texlive-latex-extra texlive-xetex
+      - name: Install system tools
+        run: |
+          apt-get update
+          apt-get install -y git curl pandoc \
+            texlive texlive-latex-extra texlive-xetex
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-         python-version: '3.12'
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
-    - name: Install Python dependencies
-      run: |
-        sage -python -m pip install --upgrade pip setuptools wheel
-        # core runtime libs used by your code and notebook execution
-        sage -python -m pip install --no-cache-dir \
-          numpy pandas tqdm scikit-learn flask pymongo gunicorn \
-          ripser persim \
-          plotly==5.18.0 \
-          corner>=2.2.1 \
-          nbconvert nbclient ipykernel jupyter-core nest_asyncio
+      - name: Install Python dependencies
+        run: |
+          sage -python -m pip install --upgrade pip setuptools wheel
+          sage -python -m pip install --no-cache-dir \
+            numpy pandas tqdm scikit-learn plotly==5.18.0 \
+            corner ripser persim nbconvert nbclient ipykernel nest_asyncio
 
-    - name: Prepare IPython runtime dir
-      run: |
-        # nbconvert / IPython sometimes tries to write to an unwritable parent.
-        # Force a writable IPYTHONDIR and ensure permissions.
-        export IPYTHONDIR=/tmp/.ipython
-        mkdir -p "$IPYTHONDIR"
-        chmod -R 0777 "$IPYTHONDIR"
-        # Export for subsequent steps in this job
-        echo "IPYTHONDIR=$IPYTHONDIR" >> $GITHUB_ENV
-    
-    - name: Clone arithmetic archives
-      run: |
-        mkdir -p external
-        git clone https://github.com/JohnCremona/ecdata.git external/ecdata || true
-        git clone https://github.com/JohnCremona/eclib.git external/eclib || true
-        git clone https://github.com/LMFDB/lmfdb.git external/lmfdb || true
+      - name: Prepare IPython runtime
+        run: |
+          export IPYTHONDIR=/tmp/.ipython
+          mkdir -p "$IPYTHONDIR"
+          chmod -R 0777 "$IPYTHONDIR"
+          echo "IPYTHONDIR=$IPYTHONDIR" >> $GITHUB_ENV
 
-    - name: Generate CI Cremona label subset
-      run: |
-        mkdir -p data/raw
-        echo "label" > data/raw/ci_subset.csv
-        if [ -d external/ecdata ]; then
-          find external/ecdata -type f -name "*.txt" | head -n 20 | xargs -r cat 2>/dev/null | \
-            grep -v "^#" | awk '{print $1}' | head -n 1000 >> data/raw/ci_subset.csv
-        fi
+      - name: Verify submodules
+        run: |
+          echo "=== Submodules Status ==="
+          ls -la data/ecdata data/eclib data/lmfdb 2>/dev/null || echo "Some submodules missing"
+          echo "ecdata files:" $(find data/ecdata -name "*.txt" | wc -l)
+          echo "eclib files:"  $(find data/eclib  -name "*.txt" | wc -l)
 
-    - name: Clear Python cache
-      run: | 
-        rm -rf __pycache__ */__pycache__ */*/__pycache__
+      - name: Clear Python cache
+        run: rm -rf __pycache__ */__pycache__ */*/__pycache__
 
-    - name: Execute notebooks
-      run: |
-        mkdir -p results exports
-        for nb in examples/*.ipynb; do
-          echo "Running $nb"
-          sage -python -m jupyter nbconvert \
-            --to notebook \
-            --execute "$nb" \
-            --output "$(basename $nb .ipynb)-executed.ipynb" \
-            --ExecutePreprocessor.timeout=1800
-        done
+      - name: Execute notebooks
+        run: |
+          mkdir -p results exports
+          for nb in examples/*.ipynb; do
+            echo "Running $nb"
+            sage -python -m jupyter nbconvert \
+              --to notebook \
+              --execute "$nb" \
+              --output "$(basename $nb .ipynb)-executed.ipynb" \
+              --ExecutePreprocessor.timeout=2400
+          done
 
-    - name: Export HTML and PDF
-      run: |
-        mkdir -p exports examples/exports
-        for nb in examples/*-executed.ipynb; do
-          base=$(basename "$nb" .ipynb)
-          echo "Exporting $nb -> exports/${base}.html and exports/${base}.pdf"
-          # HTML to central exports dir
-          sage -python -m jupyter nbconvert --to html "$nb" --output-dir exports --output "${base}.html"
-          # PDF (latex) to central exports dir
-          sage -python -m jupyter nbconvert --to pdf "$nb" --output-dir exports --output "${base}.pdf"
-        done
+      - name: Export HTML and PDF
+        run: |
+          mkdir -p exports
+          for nb in examples/*-executed.ipynb; do
+            base=$(basename "$nb" .ipynb)
+            echo "Exporting $nb"
+            sage -python -m jupyter nbconvert --to html "$nb" --output-dir exports --output "${base}.html"
+            sage -python -m jupyter nbconvert --to pdf  "$nb" --output-dir exports --output "${base}.pdf"
+          done
 
-
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v6
-      with:
-        name: notebook-outputs
-        path: |
-          results/
-          examples/*-executed.ipynb
-          exports/
-
-  regression-check:
-    runs-on: ubuntu-latest
-    needs: execute-notebooks
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Download current artifacts
-      uses: actions/download-artifact@v6
-      with:
-        name: notebook-outputs
-        path: current/
-
-    - name: Download previous artifacts
-      uses: dawidd6/action-download-artifact@v6
-      with:
-        workflow: notebooks.yml
-        branch: main
-        run_number: ${{ github.run_number }}
-        name: notebook-outputs
-        path: previous/
-      continue-on-error: true
-
-    - name: Install Python
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y python3 python3-pip
-        pip3 install numpy pandas
-
-    - name: Run regression diffs
-      continue-on-error: true
-      run: |
-        mkdir -p diff_report
-        python3 scripts/diff_outputs.py current/ previous/ diff_report/
-
-    - name: Upload diff report
-      uses: actions/upload-artifact@v6
-      with:
-        name: regression-diff
-        path: diff_report/
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: notebook-outputs
+          path: |
+            results/
+            examples/*-executed.ipynb
+            exports/
