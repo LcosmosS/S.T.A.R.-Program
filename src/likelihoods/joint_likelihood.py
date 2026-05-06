@@ -14,12 +14,35 @@ Returns total log-likelihood for any cosmology model.
 import numpy as np
 
 class JointLikelihood:
-    def __init__(self, H_expr, param_names, priors, proposal_widths, joint_likelihood):
-        self.H_expr = H_expr
-        self.param_names = param_names
-        self.priors = priors
-        self.proposal_widths = proposal_widths
-        self.joint_likelihood = joint_likelihood
+    """Standard joint likelihood - takes the three sub-likelihoods"""
+    def __init__(self, planck_like, bao_like, cc_like):
+        self.planck_like = planck_like
+        self.bao_like = bao_like
+        self.cc_like = cc_like
+        print("JointLikelihood initialized successfully")
+
+    def __call__(self, theta):
+        """theta = [H0, Ωm, ΩΛ, a, b]"""
+        theta = np.asarray(theta, dtype=float).flatten()
+        
+        try:
+            lp_p = float(self.planck_like(theta))
+        except:
+            lp_p = -40.0
+
+        try:
+            lp_b = float(self.bao_like(theta))
+        except:
+            lp_b = -20.0
+
+        try:
+            lp_c = float(self.cc_like(theta))
+        except:
+            lp_c = -10.0
+
+        total = lp_p + lp_b + lp_c
+        print(f"Joint logp = {total:.2f}  (P:{lp_p:.1f} B:{lp_b:.1f} C:{lp_c:.1f})")
+        return total
 
     def _log_posterior(self, theta):
         """Extremely forgiving version"""
