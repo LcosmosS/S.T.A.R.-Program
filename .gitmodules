@@ -1,0 +1,3 @@
+[submodule "data/ecdata"]
+	path = data/ecdata
+	url = https://github.com/JohnCremona/ecdata.git
