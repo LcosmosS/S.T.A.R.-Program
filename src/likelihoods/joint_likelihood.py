@@ -13,7 +13,7 @@ Returns total log-likelihood for any cosmology model.
 
 import numpy as np
 
-class JointMCMCPipeline:
+class JointLikelihood:
     def __init__(self, H_expr, param_names, priors, proposal_widths, joint_likelihood):
         self.H_expr = H_expr
         self.param_names = param_names
