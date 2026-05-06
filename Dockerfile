@@ -30,7 +30,7 @@ RUN mkdir -p /usr/local/share/sage/databases && \
 RUN sage -python -m pip install --no-cache-dir /opt/eclib || true
 
 # Install LMFDB Python requirements (best-effort). LMFDB has many optional deps;
-# we install core packages commonly needed for local development.
+# we install core packages local development.
 RUN sage -python -m pip install --no-cache-dir \
     numpy pandas tqdm scikit-learn flask pymongo gunicorn \
     || true
@@ -44,19 +44,15 @@ RUN if [ -f /opt/lmfdb/setup.py ] || [ -f /opt/lmfdb/pyproject.toml ]; then \
     fi
 
 # copy and extract prebuilt cremona DB into Sage DB dir
-# commented out for Binder Launch. Extraction to sagemath is unnecessary.
 # Database used for csv creation.
-# (uncomment for local installation) 
-# COPY cremona_db.tar.gz /tmp/cremona_db.tar.gz
+COPY cremona_db.tar.gz /tmp/cremona_db.tar.gz
 
 # Extract it into Sage’s database directory
-# commented out for Binder Launch. Extraction to sagemath is unnecessary.
 # Database used for csv creation.
-# uncomment for local installation
-# RUN mkdir -p /usr/local/share/sage/databases && \
-#    tar -xzf /tmp/cremona_db.tar.gz -C /usr/local/share/sage/databases && \
-#    rm /tmp/cremona_db.tar.gz && \
-#    chmod -R a+rX /usr/local/share/sage/databases/cremona
+RUN mkdir -p /usr/local/share/sage/databases && \
+    tar -xzf /tmp/cremona_db.tar.gz -C /usr/local/share/sage/databases && \
+    rm /tmp/cremona_db.tar.gz && \
+    chmod -R a+rX /usr/local/share/sage/databases/cremona
 
 ENV SAGE_DATABASES=/usr/local/share/sage/databases
 ENV PYTHONNOUSERSITE=1
