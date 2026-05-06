@@ -19,7 +19,7 @@ jobs:
       options: --user root
 
     steps:
-      - name: Install Git inside container BEFORE checkout
+      - name: Install Git inside container 
         run: |
           apt-get update
           apt-get install -y git
