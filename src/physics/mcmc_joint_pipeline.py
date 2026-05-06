@@ -86,3 +86,4 @@ class JointMCMCPipeline:
                 chain[i] = chain[i-1]
 
         return chain
+
