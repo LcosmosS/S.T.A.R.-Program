@@ -98,7 +98,7 @@ class JointMCMCPipeline:
         ndim = len(theta0)
 
         chain = np.zeros((nsteps, ndim))
-        chain[0] = theta0
+        chain[0] = np.asarray(theta0, dtype=float).flatten()
 
         logp = self._log_posterior(theta0)
         if not np.isfinite(logp):
