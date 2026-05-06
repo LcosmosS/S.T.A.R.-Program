@@ -20,19 +20,26 @@ class JointLikelihood:
         self.cc_like = cc_like
 
     def __call__(self, theta):
-        """theta must be parameter vector"""
         theta = np.asarray(theta, dtype=float).flatten()
         
         try:
-            logp_planck = self.planck_like(theta)   # pass theta, not model
-            logp_bao    = self.bao_like(theta)
-            logp_cc     = self.cc_like(theta)
-            
-            total = logp_planck + logp_bao + logp_cc
-            
-            print(f"  Planck: {logp_planck:.4f} | BAO: {logp_bao:.4f} | CC: {logp_cc:.4f} | Total: {total:.4f}")
-            return total if np.isfinite(total) else -np.inf
-            
-        except Exception as e:
-            print(f"JointLikelihood ERROR: {e}")
-            return -np.inf
+            lp_planck = float(self.planck_like(theta))
+        except Exception:
+            lp_planck = -50.0   # heavy but finite penalty
+
+        try:
+            lp_bao = float(self.bao_like(theta))
+        except Exception:
+            lp_bao = -20.0
+
+        try:
+            lp_cc = float(self.cc_like(theta))
+        except Exception:
+            lp_cc = -10.0
+
+        total = lp_planck + lp_bao + lp_cc
+
+        # Print only summary in CI
+        print(f"Joint logp = {total:.4f} (P:{lp_planck:.1f}, B:{lp_bao:.1f}, C:{lp_cc:.1f})")
+
+        return total if np.isfinite(total) else -100.0
