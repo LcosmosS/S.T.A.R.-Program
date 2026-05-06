@@ -17,37 +17,25 @@ jobs:
     container:
       image: sagemath/sagemath:latest
       options: --user root
-    env:
-      DEBIAN_FRONTEND: noninteractive
-      REPO_PATH: /__w/S.T.A.R.-Program/S.T.A.R.-Program
 
     steps:
+      - name: Install Git inside container BEFORE checkout
+        run: |
+          apt-get update
+          apt-get install -y git
+          git --version
+
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: recursive
 
       - name: Debug paths
         run: |
           echo "PWD: $(pwd)"
           echo "Listing /__w:"
           ls -R /__w || true      
-          
-      - name: Install Git and update submodules
-        run: |
-          apt-get update && apt-get install -y git
-          git --version
-          
-          echo "Current directory: $(pwd)"
-          git status
-          
-          echo "Updating submodules..."
-          git submodule update --init --recursive
-          
-          echo "=== Submodule Status ==="
-          ls -la data/ecdata data/eclib data/lmfdb 2>/dev/null || echo "Submodules not found"
-          echo "ecdata files:" $(find data/ecdata -type f | wc -l 2>/dev/null || echo 0)
 
       - name: Install system tools
         run: |
