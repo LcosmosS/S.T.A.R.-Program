@@ -11,20 +11,21 @@ import sympy as sp
 import numpy as np
 from src.physics.cosmology import Cosmology
 
+
 class SymbolicCosmology:
     def __init__(self, H_expr, params):
         if isinstance(H_expr, sp.Expr):
             H_expr = str(H_expr)
-        
+
         self.H_expr = H_expr
         self.params = params.copy()  # Make a copy to be safe
-        
+
         # Core cosmology engine
         self.cosmo = Cosmology(H_expr, params)
-        
+
         # Build fast H(z) function
         self._build_symbolic_function()
-        
+
         print(f"SymbolicCosmology initialized with H_expr = {H_expr[:60]}...")
 
     def _build_symbolic_function(self):
@@ -39,11 +40,11 @@ class SymbolicCosmology:
         try:
             Hz = self._H_func(z)
             Hz = np.asarray(Hz, dtype=float)
-            Hz = np.where(Hz <= 0, 1e-8, Hz)          # Prevent negative/zero
-            Hz = np.where(~np.isfinite(Hz), 70.0, Hz) # Replace NaN/inf
+            Hz = np.where(Hz <= 0, 1e-8, Hz)  # Prevent negative/zero
+            Hz = np.where(~np.isfinite(Hz), 70.0, Hz)  # Replace NaN/inf
             return Hz
         except:
-            return np.full_like(z, 70.0) if hasattr(z, '__len__') else 70.0
+            return np.full_like(z, 70.0) if hasattr(z, "__len__") else 70.0
 
     def H0(self):
         """Direct H0 access - important for SH0ES"""
