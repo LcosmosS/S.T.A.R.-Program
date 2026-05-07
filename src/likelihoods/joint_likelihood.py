@@ -47,7 +47,7 @@ class JointLikelihood:
     def _log_posterior(self, theta):
         """Extremely forgiving version"""
         try:
-            lp = float(self(theta))
+            lp = float(self.__call__(theta))
             if np.isfinite(lp):
                 return lp
         except:
