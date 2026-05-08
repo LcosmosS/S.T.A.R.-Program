@@ -31,7 +31,7 @@ Contributions are welcome in several areas:
 git clone https://github.com/LcosmosS/S.T.A.R.-Program.git
 ```
 ```bash
-# checkout the repository
+# Checkout the repository
 cd S.T.A.R.-Program
 ```
 ```bash
@@ -115,11 +115,11 @@ git checkout -b feature/your-contribution-name
 
 #### PR Checklist
 ```
-[] Code passes Black formatting
-[] Notebooks run end-to-end without errors
-[] Appropriate docstrings and comments
-[] Follows SageMath compatibility practices (when applicable)
-[] Updates to documentation or citation files if relevant
+▢ Code passes Black formatting
+▢ Notebooks run end-to-end without errors
+▢ Appropriate docstrings and comments
+▢ Follows SageMath compatibility practices (when applicable)
+▢ Updates to documentation or citation files if relevant
 ```
 ### Style Guide
 
