@@ -1,3 +1,8 @@
+"""
+ACSC Projection Module -
+ArithmeticProjector class + low-level project function
+"""
+
 from typing import Sequence, List, Dict, Any, Optional, Tuple
 import numpy as np
 import pandas as pd
@@ -102,3 +107,15 @@ def project(
     coords = np.vstack([x, y, z]).T
     # If method variants are needed, you can branch here; for now return same coords
     return coords
+
+class ArithmeticProjector:
+    """Main class expected by notebooks"""
+    def __init__(self, method: str = "primary", Amax: float = 1.0, Nmax: float = 1.0, V0: float = 1.0):
+        self.method = method
+        self.Amax = Amax
+        self.Nmax = Nmax
+        self.V0 = V0
+
+    def project(self, records: Sequence[Dict[str, Any]]) -> np.ndarray:
+        """Project elliptic curve records to 3D coordinates"""
+        return project(records, method=self.method, Amax=self.Amax, Nmax=self.Nmax, V0=self.V0)
