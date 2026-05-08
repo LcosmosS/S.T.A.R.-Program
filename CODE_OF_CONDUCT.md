@@ -64,16 +64,3 @@ This Code of Conduct is adapted from the [Contributor Covenant](https://www.cont
 **Thank you for helping maintain a collegial and ethically sound research environment.**
 
 ---
-
-### How to Add This File
-
-```bash
-cd S.T.A.R.-Program
-
-cat > CODE_OF_CONDUCT.md << 'EOF'
-[paste the full content above]
-EOF
-
-git add CODE_OF_CONDUCT.md
-git commit -m "docs: add formal academic Code of Conduct with scientific integrity section"
-git push origin main
