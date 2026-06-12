@@ -3,7 +3,7 @@
 
 # **The S.T.A.R. Program**  
 ## **Symbolic–Topological–Arithmetic–Relativity**
-### **A Proposed Model for Mathematical & Theoretical Physics to Address the Hubble–Planck Tension**
+### **A Proposed Model for Mathematical & Theoretical Physics to Address Cosmic Expansion & the Hubble–Planck Tension**
 
 ---
 
