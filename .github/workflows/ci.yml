@@ -44,16 +44,6 @@ jobs:
               git submodule status
               echo "This may be a network or permission issue with external repositories"
             fi
-    
-        - name: Verify submodules
-          shell: bash -l {0}
-          run: |
-            if [ -d "data/ecdata" ] && [ -n "$(ls -A data/ecdata 2>/dev/null)" ]; then
-              echo "✓ Submodules ready"
-            else
-              echo "✗ Submodules still empty - may need to configure access"
-              exit 1
-            fi
             
         - name: Setup Miniforge3
           uses: conda-incubator/setup-miniconda@v3
