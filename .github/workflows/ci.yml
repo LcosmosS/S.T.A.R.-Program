@@ -18,11 +18,9 @@ jobs:
     steps:
         - name: Checkout repository
           uses: actions/checkout@v4
-
-        - name: Initialize submodules 
-          shell: bash -l {0}
-          run: |
-            git submodule update --init --recursive --depth 1 || true
+          with:
+            submodules: 'true'  # Enable submodule checkout
+            fetch-depth: 0
 
         - name: Cache submodules
           uses: actions/cache@v4
@@ -33,6 +31,19 @@ jobs:
               data/lmfdb
             key: submodules-${{ hashFiles('.gitmodules') }}
             restore-keys: submodules-
+
+        - name: Initialize submodules 
+          if: steps.cache.outputs.cache-hit != 'true'
+          shell: bash -l {0}
+          run: |
+            echo "Initializing submodules..."
+            git submodule update --init --recursive --depth 1
+            if [ ! -d "data/ecdata" ] || [ -z "$(ls -A data/ecdata 2>/dev/null)" ]; then
+              echo "WARNING: Could not initialize data/ecdata"
+              echo "Submodule details:"
+              git submodule status
+              echo "This may be a network or permission issue with external repositories"
+            fi
     
         - name: Verify submodules
           shell: bash -l {0}
@@ -85,11 +96,17 @@ jobs:
           shell: bash -l {0}
           run: |
             mkdir -p data/raw results
-            python scripts/generate_cremona_subset.py --max-labels 1000 > data/raw/ci_subset.csv
+            if [ -d "data/ecdata" ] && [ -n "$(ls -A data/ecdata 2>/dev/null)" ]; then
+              python scripts/generate_cremona_subset.py --max-labels 1000 > data/raw/ci_subset.csv
+            else
+              echo "WARNING: data/ecdata is empty - generating fallback subset"
+            fi
+            
             # Add CSV header
-            sed -i '1s/^/label\n/' data/raw/ci_subset.csv
-            if [ ! -s data/raw/ci_subset.csv ]; then
-              echo "ERROR: ci_subset.csv is empty or was not generated"
+            if [ -s data/raw/ci_subset.csv ]; then
+              echo "✓ Subset file generated"
+            else
+              echo "ERROR: ci_subset.csv is empty"
               exit 1
             fi
 
