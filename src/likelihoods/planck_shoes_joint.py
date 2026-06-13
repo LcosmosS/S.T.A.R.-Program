@@ -29,8 +29,6 @@ class PlanckSH0ESJointLikelihood:
                 ].values.reshape(3, 3),
             }
         self.cov_inv = np.linalg.inv(np.array(self.planck["cov"]))
-        # Then in log_likelihood_planck:
-        chi2 = delta.T @ self.cov_inv @ delta  # Only 1 matrix mult
         self.H0_shoes = H0_shoes
         self.sigma_shoes = sigma_shoes
         print(f"PlanckSH0ESJointLikelihood initialized (H0_SH0ES = {H0_shoes})")
@@ -52,7 +50,7 @@ class PlanckSH0ESJointLikelihood:
             delta = np.array(
                 [R_model - R_obs, lA_model - lA_obs, ombh2_model - ombh2_obs]
             )
-            chi2 = delta.T @ np.linalg.inv(cov) @ delta.T
+            chi2 = delta.T @ self.cov_inv @ delta
 
             logp = -0.5 * chi2
             print(
@@ -101,4 +99,3 @@ class PlanckSH0ESJointLikelihood:
     # -----------------------------
     def log_likelihood(self, model):
         return self.log_likelihood_planck(model) + self.log_likelihood_shoes(model)
-        
