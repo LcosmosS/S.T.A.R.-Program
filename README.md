@@ -18,8 +18,8 @@
 
 This repository is the **primary research archive** for the **S.T.A.R. Program** — the *Symbolic–Topological–Arithmetic–Relativity Model* — a proposed theoretical physics framework that couples:
 
-- **ACSC** — *Arithmetic–Cosmic Structure Conjecture*  
-- **ECC** — *Entropy Cohomology Conjecture*
+- **ACSC** — *Arithmetic–Cosmic Structure Conjecture* *( `/docs/The Arithmetic–Cosmic Structure Conjecture (ACSC) Monograph.pdf`)*
+- **ECC** — *Entropy Cohomology Conjecture*  *( `/docs/The Entropy Cohomology Conjecture (ECC).pdf`)*
 
 Together, these form a dual‑layer architecture:
 
@@ -36,7 +36,7 @@ The S.T.A.R. Program proposes that the **large‑scale structure of the universe
 
 This repository contains the **full theoretical monographs**, **computational toolkit**, **TDA stability pipeline**, and **symbolic regression engine** that define the S.T.A.R. Program.
 
-(See [OVERVIEW.md](OVERVIEW.md) for a more in depth overview.)
+*(See [OVERVIEW.md](OVERVIEW.md) for a more in depth overview, & `/docs/_Arithmetic Invariants and Cosmological Geometry in Cartography_.pdf` for project details.)*
 
 
 ---
@@ -102,7 +102,7 @@ Combines ACSC + ECC into a full cosmological model with:
 - scalar‑field coupling  
 - symbolic Sachs–Wolfe transfer  
 - cosmic‑web alignment  
-- symbolic regression law discovery (See [/docs/Symbolic_Action_Principle.md](Symbolic_Action_Principle.md) and [/docs/STAR.ipynb](STAR.ipynb))
+- symbolic regression law discovery *(See [/docs/Symbolic_Action_Principle.md](Symbolic_Action_Principle.md),  [/docs/STAR.ipynb](STAR.ipynb), & `/docs/Appendices for Arithmetic Invariants and Cosmological Geometry in Cartography.pdf`)*
 
 This repository is the **central hub** of the S.T.A.R. Program, and ultimately proposes the introduction of a **Symbolic Field-Theory** paradigm.
 
