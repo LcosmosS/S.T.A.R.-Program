@@ -24,7 +24,7 @@ def compute_persistence(point_cloud, max_dim=2):
         result = ripser(point_cloud, maxdim=max_dim)
         diagrams = result['dgms']
         _persistence_cache[key] = result
-            return result
+        return result
         print(f" Computed persistence with ripser (dim 0-{max_dim})")
     except ImportError:
         try:
