@@ -13,106 +13,98 @@ jobs:
       DEBIAN_FRONTEND: noninteractive
 
     steps:
-      - name: Checkout repository with submodules
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+        - name: Checkout repository with submodules
+          uses: actions/checkout@v4
+          with:
+            submodules: 'true'  # Use string 'true' instead of recursive for better control
+            fetch-depth: 0
+            token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Initialize submodules with timeout
-        shell: bash -l {0}
-        run: |
-          timeout 300 git submodule update --init --recursive || {
-            echo "WARNING: Submodule initialization timed out or failed"
-            echo "Continuing without submodules..."
-          }
+        - name: Initialize submodules recursively
+          shell: bash -l {0}
+          run: |
+            git config --global url."https://${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
+            git submodule update --init --recursive --depth 1
+            git config --global --unset url."https://${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf
 
-      - name: Check submodule status
-        shell: bash -l {0}
-        run: |
-          if [ -d "data/ecdata" ] && [ -s "data/ecdata" ]; then
-            echo "Submodules initialized successfully"
-          else
-            echo "WARNING: data/ecdata is empty - CI will use fallback data"
-          fi
+        - name: Verify submodules initialized
+          shell: bash -l {0}
+          run: |
+            echo "Checking data/ecdata..."
+            if [ -d "data/ecdata" ] && [ "$(ls -A data/ecdata 2>/dev/null)" ]; then
+              echo "✓ data/ecdata is populated"
+            else
+              echo "✗ data/ecdata is empty"
+              echo "Submodule status:"
+              git submodule status
+              exit 1
+            fi
+            
+        - name: Setup Miniforge3
+          uses: conda-incubator/setup-miniconda@v3
+          with:
+            auto-update-conda: true
+            python-version: "3.12"
+            environment-file: environment.yml
+            activate-environment: star-env
+            channels: conda-forge
+            use-mamba: true
+            conda-solver: libmamba
 
-      - name: Verify submodules initialized
-        shell: bash -l {0}
-        run: |
-          if [ ! -d "data/ecdata" ] || [ -z "$(ls -A data/ecdata)" ]; then
-            echo "WARNING: data/ecdata is empty or missing"
-            echo "Submodule status:"
-            git submodule status
-            echo "This will cause generate_cremona_subset.py to produce empty output"
-            exit 1
-          fi
+        - name: Install additional dependencies
+          shell: bash -l {0}
+          run: |
+            conda install -y joblib
 
-      - name: Setup Miniforge3
-        uses: conda-incubator/setup-miniconda@v3
-        with:
-          auto-update-conda: true
-          python-version: "3.12"
-          environment-file: environment.yml
-          activate-environment: star-env
-          channels: conda-forge
-          use-mamba: true
-          conda-solver: libmamba
+        - name: Add src to PYTHONPATH
+          shell: bash -l {0}
+          run: |
+            echo "PYTHONPATH=${GITHUB_WORKSPACE}/src:${PYTHONPATH}" >> $GITHUB_ENV
 
-      - name: Install additional dependencies
-        shell: bash -l {0}
-        run: |
-          conda install -y joblib
-
-      - name: Add src to PYTHONPATH
-        shell: bash -l {0}
-        run: |
-          echo "PYTHONPATH=${GITHUB_WORKSPACE}/src:${PYTHONPATH}" >> $GITHUB_ENV
-
-      - name: Verify environment and submodules
-        shell: bash -l {0}
-        run: |
-          echo "=== Python & Conda ==="
-          python --version
-          which python
-          conda list | grep -E "sage|joblib|mamba|conda" || true
+        - name: Verify environment and submodules
+          shell: bash -l {0}
+          run: |
+            echo "=== Python & Conda ==="
+            python --version
+            which python
+            conda list | grep -E "sage|joblib|mamba|conda" || true
           
-          echo "=== Submodules Status ==="
-          ls -la data/ecdata data/eclib data/lmfdb || echo "Warning: Some submodules missing"
-          git submodule status
+            echo "=== Submodules Status ==="
+            ls -la data/ecdata data/eclib data/lmfdb || echo "Warning: Some submodules missing"
+            git submodule status
 
-      - name: Run tests
-        shell: bash -l {0}
-        run: pytest -q
+        - name: Run tests
+          shell: bash -l {0}
+          run: pytest -q
 
-      - name: Generate small CI Cremona subset
-        shell: bash -l {0}
-        run: |
-          mkdir -p data/raw results
-          python scripts/generate_cremona_subset.py --max-labels 1000 > data/raw/ci_subset.csv
-          # Add CSV header
-          sed -i '1s/^/label\n/' data/raw/ci_subset.csv
-          if [ ! -s data/raw/ci_subset.csv ]; then
-            echo "ERROR: ci_subset.csv is empty or was not generated"
-            exit 1
-          fi
+        - name: Generate small CI Cremona subset
+          shell: bash -l {0}
+          run: |
+            mkdir -p data/raw results
+            python scripts/generate_cremona_subset.py --max-labels 1000 > data/raw/ci_subset.csv
+            # Add CSV header
+            sed -i '1s/^/label\n/' data/raw/ci_subset.csv
+            if [ ! -s data/raw/ci_subset.csv ]; then
+              echo "ERROR: ci_subset.csv is empty or was not generated"
+              exit 1
+            fi
 
-      - name: Build dataset on CI subset
-        shell: bash -l {0}
-        run: |
-          if [ -f scripts/build_ec_dataset_parallel.sage ]; then
-            sage -python scripts/build_ec_dataset_parallel.sage \
-              --labels-file data/raw/ci_subset.csv \
-              --output results/ci_ec_subset.csv \
-              --workers 2 \
-              --batch-size 10
-          else
-            echo "Dataset builder script not found - skipping"
-          fi
+        - name: Build dataset on CI subset
+          shell: bash -l {0}
+          run: |
+            if [ -f scripts/build_ec_dataset_parallel.sage ]; then
+              sage -python scripts/build_ec_dataset_parallel.sage \
+                --labels-file data/raw/ci_subset.csv \
+                --output results/ci_ec_subset.csv \
+                --workers 2 \
+                --batch-size 10
+            else
+              echo "Dataset builder script not found - skipping"
+            fi
 
-      - name: Upload CI artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: ci-results
-          path: results/
-          retention-days: 7
+        - name: Upload CI artifacts
+          uses: actions/upload-artifact@v4
+          with:
+            name: ci-results
+            path: results/
+            retention-days: 7
