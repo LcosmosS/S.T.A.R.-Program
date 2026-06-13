@@ -18,6 +18,18 @@ jobs:
         with:
           submodules: recursive
           fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify submodules initialized
+        shell: bash -l {0}
+        run: |
+          if [ ! -d "data/ecdata" ] || [ -z "$(ls -A data/ecdata)" ]; then
+            echo "WARNING: data/ecdata is empty or missing"
+            echo "Submodule status:"
+            git submodule status
+            echo "This will cause generate_cremona_subset.py to produce empty output"
+            exit 1
+          fi
 
       - name: Setup Miniforge3
         uses: conda-incubator/setup-miniconda@v3
