@@ -54,17 +54,17 @@ class EntropyField:
         return -(logp + 1 - np.sum(p * (logp + 1)))
 
     def hessian(self, x):
-    p = self.normalize(x)
-    n = len(p)
-    p_inv = 1.0 / (p + self.eps)
+        p = self.normalize(x)
+        n = len(p)
+        p_inv = 1.0 / (p + self.eps)
     
-    # Vectorized: H[i,i] = -(1/p_i)(p_i(1-p_i))
-    diag = -(p_inv * p * (1 - p))
+         # Vectorized: H[i,i] = -(1/p_i)(p_i(1-p_i))
+        diag = -(p_inv * p * (1 - p))
     
-    # Vectorized: H[i,j] = (p_i*p_j)/p_i for i≠j
-    H = np.outer(p_inv * p, p)
-    np.fill_diagonal(H, diag)
-    return H
+        # Vectorized: H[i,j] = (p_i*p_j)/p_i for i≠j
+        H = np.outer(p_inv * p, p)
+        np.fill_diagonal(H, diag)
+        return H
 
     def differential_form(self, x):
         """
