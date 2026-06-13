@@ -1,6 +1,6 @@
 # S.T.A.R. Program — Overview
 ---
-## S.T.A.R. — Symbolic Topoloical Arithmetic Reletivity
+## S.T.A.R. — Symbolic Topoloical Arithmetic Relativity
 ---
 
 A unified mathematical and theoretical physics framework that proposes the large-scale structure of the cosmos is predetermined by the arithmetic invariants of elliptic curves over ℚ, dynamically conserved through entropy cohomology, and realized as an effective relativistic cosmology.
