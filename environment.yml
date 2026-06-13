@@ -2,7 +2,7 @@ name: star-env
 channels:
   - conda-forge
 dependencies:
-  - python=3.11
+  - python=3.12
   - sage=10.7
   - numpy
   - pandas
