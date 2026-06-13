@@ -19,7 +19,7 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
-      - name: Setup Miniconda with Mamba
+      - name: Setup Miniforge3
         uses: conda-incubator/setup-miniconda@v3
         with:
           auto-update-conda: true
@@ -27,8 +27,9 @@ jobs:
           environment-file: environment.yml
           activate-environment: star-env
           channels: conda-forge
-          installer-url: "https://github.com/conda-forge/miniforge/releases/download/24.11.1-0/Mambaforge-Linux-x86_64.sh"
+          installer-url: "https://github.com/conda-forge/miniforge/releases/download/24.11.1-0/Miniforge3-Linux-x86_64.sh"
           use-mamba: true
+          conda-solver: libmamba
 
       - name: Install additional dependencies
         shell: bash -l {0}
@@ -46,7 +47,7 @@ jobs:
           echo "=== Python & Conda ==="
           python --version
           which python
-          conda list | grep -E "sage|joblib|mamba" || true
+          conda list | grep -E "sage|joblib|mamba|conda" || true
           
           echo "=== Submodules Status ==="
           ls -la data/ecdata data/eclib data/lmfdb || echo "Warning: Some submodules missing"
