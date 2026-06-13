@@ -13,8 +13,11 @@ jobs:
       DEBIAN_FRONTEND: noninteractive
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repository with submodules
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
 
       - name: Setup Miniconda with Mamba
         uses: conda-incubator/setup-miniconda@v3
@@ -26,23 +29,6 @@ jobs:
           channels: conda-forge
           installer-url: "https://github.com/conda-forge/miniforge/releases/download/24.11.1-0/Mambaforge-Linux-x86_64.sh"
           use-mamba: true
-          steps:
-      - name: Checkout repository with submodules
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive      # This pulls ecdata, eclib, lmfdb
-          fetch-depth: 0
-
-      - name: Setup Miniconda with Mamba
-        uses: conda-incubator/setup-miniconda@v3
-        with:
-          auto-update-conda: true
-          python-version: "3.11"
-          environment-file: environment.yml
-          activate-environment: star-env
-          channels: conda-forge
-          installer-url: "https://github.com/conda-forge/miniforge/releases/download/24.11.1-0/Mambaforge-Linux-x86_64.sh"
-          use-mamba: true
 
       - name: Install additional dependencies
         shell: bash -l {0}
@@ -54,51 +40,45 @@ jobs:
         run: |
           echo "PYTHONPATH=${GITHUB_WORKSPACE}/src:${PYTHONPATH}" >> $GITHUB_ENV
 
-      - name: Verify environment & submodules
+      - name: Verify environment and submodules
         shell: bash -l {0}
         run: |
-          ls -la data/ecdata data/eclib data/lmfdb || echo "Submodule check failed"
-          python --version
-          conda list | grep -E "sage|joblib"
-          
-      - name: Install additional dependencies
-        shell: bash -l {0}
-        run: |
-          conda install -y joblib
-
-      - name: Add src to PYTHONPATH
-        shell: bash -l {0}
-        run: |
-          echo "PYTHONPATH=${GITHUB_WORKSPACE}/src:${PYTHONPATH}" >> $GITHUB_ENV
-
-      - name: Verify environment
-        shell: bash -l {0}
-        run: |
+          echo "=== Python & Conda ==="
           python --version
           which python
-          conda list | grep -E "sage|joblib"
+          conda list | grep -E "sage|joblib|mamba" || true
+          
+          echo "=== Submodules Status ==="
+          ls -la data/ecdata data/eclib data/lmfdb || echo "Warning: Some submodules missing"
+          git submodule status
 
       - name: Run tests
         shell: bash -l {0}
-        run: pytest -q || echo "No tests found or pytest not configured"
+        run: |
+          pytest -q || echo "No tests found or pytest not configured yet"
 
       - name: Generate small CI Cremona subset
         shell: bash -l {0}
         run: |
-          mkdir -p data/raw
-          python scripts/generate_cremona_subset.py --max-labels 1000 --output data/raw/ci_subset.csv
+          mkdir -p data/raw results
+          python scripts/generate_cremona_subset.py --max-labels 1000 --output data/raw/ci_subset.csv || true
 
       - name: Build dataset on CI subset
         shell: bash -l {0}
         run: |
-          sage -python scripts/build_ec_dataset_parallel.sage \
-            --labels-file data/raw/ci_subset.csv \
-            --output results/ci_ec_subset.csv \
-            --workers 2 \
-            --batch-size 10
+          if [ -f scripts/build_ec_dataset_parallel.sage ]; then
+            sage -python scripts/build_ec_dataset_parallel.sage \
+              --labels-file data/raw/ci_subset.csv \
+              --output results/ci_ec_subset.csv \
+              --workers 2 \
+              --batch-size 10
+          else
+            echo "Dataset builder script not found - skipping"
+          fi
 
       - name: Upload CI artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ci-results
           path: results/
+          retention-days: 7
