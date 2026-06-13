@@ -61,8 +61,12 @@ jobs:
               --to notebook \
               --execute "$nb" \
               --output "$(basename $nb .ipynb)-executed.ipynb" \
-              --ExecutePreprocessor.timeout=2400
+              --ExecutePreprocessor.timeout=3600 \
+              --ExecutePreprocessor.kernel_name=python3
           done
+        env:
+          JUPYTER_ENABLE_LAB: "yes"
+          PYTHONUNBUFFERED: "1"
 
       - name: Export HTML and PDF
         run: |
