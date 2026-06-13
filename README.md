@@ -65,11 +65,19 @@ The weight function $\(w_E(z)\)$ is constructed from the model’s natural mecha
 
 This formulation produces regime-dependent values consistent with current observations:
 
-$\left. \frac{\dot{a}}{a} \right|_{\rm local\ (low\ z)} \approx H_0 \cdot \langle \Omega_E \rangle_{\rm late} \quad (\sim 72{-}74\ \rm km/s/Mpc),$
+$$
+\frac{\dot{a}}{a}\bigg|_{\text{local (low } z)}
+\approx H_0 \cdot \langle \Omega_E \rangle_{\text{late}}
+\quad (\sim 72{-}74\ \text{km/s/Mpc})
+$$
 
-$\left. \frac{\dot{a}}{a} \right|_{\rm CMB\ (high\ z)} \approx H_0 \cdot \langle \Omega_E \rangle_{\rm early} \quad (\sim 67.4\ \rm km/s/Mpc).$
+$$
+\frac{\dot{a}}{a}\bigg|_{\text{CMB (high } z)}
+\approx H_0 \cdot \langle \Omega_E \rangle_{\text{early}}
+\quad (\sim 67.4\ \text{km/s/Mpc})
+$$
 
-The precise functional form of the weights \(w_E(z)\) (including any tunable parameters) is **not imposed a priori**. Instead, the symbolic regression engine in `/src/symbolic_regression/` is trained on the full projected point cloud to discover the optimal weighting that best reconciles the projected arithmetic structure with observed cosmological data. This allows the model to learn the natural mapping from arithmetic invariants to effective expansion history without manual fine-tuning.
+The precise functional form of the weights $\(w_E(z)\)$ (including any tunable parameters) is **not imposed a priori**. Instead, the symbolic regression engine in `/src/symbolic_regression/` is trained on the full projected point cloud to discover the optimal weighting that best reconciles the projected arithmetic structure with observed cosmological data. This allows the model to learn the natural mapping from arithmetic invariants to effective expansion history without manual fine-tuning.
 
 ## **The S.T.A.R. Trilogy Architecture**
 
