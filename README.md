@@ -36,6 +36,9 @@ The S.T.A.R. Program proposes that the **large‑scale structure of the universe
 
 This repository contains the **full theoretical monographs**, **computational toolkit**, **TDA stability pipeline**, and **symbolic regression engine** that define the S.T.A.R. Program.
 
+(See [OVERVIEW.md](OVERVIEW.md) for a more in depth overview.)
+
+
 ---
 
 ## **Core Idea**
