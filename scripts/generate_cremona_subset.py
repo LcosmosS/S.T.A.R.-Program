@@ -36,15 +36,19 @@ def extract_labels_from_ecdata():
 
 
 def main():
+    if not os.path.isdir(ECDATA_ROOT):
+        print("ERROR: ECDATA_ROOT not found at:", ECDATA_ROOT, file=sys.stderr)
+        sys.exit(1)
+    
     labels = extract_labels_from_ecdata()
-
+    
+    if not labels:
+        print("ERROR: No labels found in ecdata directory", file=sys.stderr)
+        sys.exit(1)
+    
     # Sort lexicographically for reproducibility
     labels = sorted(labels)
-
+    
     # Print first 1000 labels
     for L in labels[:1000]:
         print(L)
-
-
-if __name__ == "__main__":
-    main()
