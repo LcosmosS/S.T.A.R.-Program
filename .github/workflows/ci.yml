@@ -32,6 +32,12 @@ jobs:
           conda activate star-env
           pip install -e ".[dev,tda]"
 
+      - name: Set PYTHONPATH explicitly
+        shell: bash -l {0}
+        run: |
+          conda activate star-env
+          echo "PYTHONPATH=$GITHUB_WORKSPACE/src:$PYTHONPATH" >> $GITHUB_ENV
+
       - name: Run tests
         shell: bash -l {0}
         run: |
