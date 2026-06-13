@@ -3,11 +3,11 @@
 ## S.T.A.R. — Symbolic Topoloical Arithmetic Relativity
 ---
 
-A unified mathematical and theoretical physics framework that proposes the large-scale structure of the cosmos is predetermined by the arithmetic invariants of elliptic curves over ℚ, dynamically conserved through entropy cohomology, and realized as an effective relativistic cosmology.
+A unified mathematical and theoretical physics framework that proposes the large-scale structure of the cosmos is predetermined by the arithmetic invariants of elliptic curves over ℚ, dynamically conserved through entropy cohomology, and realized as an effective relativity-cosmology model.
 
 ### Core Idea
 
-The physical universe operates as the ultimate Symbolic Field: a self-consistent projection of deep number-theoretic structures. Fundamental physical constants and the geometry of the cosmic web emerge not from chance or anthropic selection, but from number-theoretic necessity.
+The physical universe operates as the ultimate **Symbolic Field**: a self-consistent projection of deep number-theoretic structures. Fundamental physical constants and the geometry of the cosmic web emerge not from chance or anthropic selection, but from a number-theoretic necessity.
 
 ### Trilogy Architecture
 
@@ -15,12 +15,11 @@ The physical universe operates as the ultimate Symbolic Field: a self-consistent
 A metric-preserving projection map $\Phi: \mathcal{E} \to M_{\rm cosmo}$ from elliptic curves $E/\mathbb{ℚ}$ to 3D cosmic geometry.
 Uses bounded normalizations of the discriminant $\Delta_E$, conductor $N_E$, rank $r_E$, regulator, and real period $\Omega_E$.
 
-- **ECC — Entropy Cohomology Conjecture (Dynamics)**
+- **ECC — Entropy Cohomology Conjecture (Dynamics & Field Theory)**
 Introduces an entropy field $\mathcal{M}(x)$ and cohomology framework that enforces conservation laws and provides the dynamical stability for the arithmetic projection.
 
-- **S.T.A.R. — Unified Cosmology**
-Synthesizes the above into an effective relativistic theory. Key innovation:
-Scale-dependent effective Hubble parameter $H_{\rm eff}(z) = H_0 \cdot \langle \Omega_E \rangle_z$ where $\langle \Omega_E \rangle_z$ is a weighted average over the projected point cloud $\{\Phi(E)\}$, with weights determined by projection distortions, isogeny class density, and local-versus-global sampling.
+- **S.T.A.R. — Combined Cosmology**
+Synthesizes the above into an effective relativity theory with *Scale-dependent* effective Hubble parameter $H_{\rm eff}(z) = H_0 \cdot \langle \Omega_E \rangle_z$ where $\langle \Omega_E \rangle_z$ is a weighted average over the projected point cloud $\{\Phi(E)\}$, with weights determined by projection distortions, isogeny class density, and local-versus-global sampling.
 This naturally produces different effective expansion rates at late times (local distance ladder, $\sim 72{-}74$ km/s/Mpc) versus early times (CMB, $\sim 67.4$ km/s/Mpc), offering a potential resolution to the Hubble tension through arithmetic self-tuning.
 
 ### Key Innovations
@@ -47,14 +46,15 @@ This naturally produces different effective expansion rates at late times (local
  docker/ & environment.yml — Reproducible environments
 ```
 ### How to Get Started
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/LcosmosS/S.T.A.R.-Program)
 
-```Copy
+```
 git clone https://github.com/LcosmosS/S.T.A.R.-Program.git
 cd S.T.A.R.-Program
 conda env create -f environment.yml
 conda activate star-env
 ```
-See notebooks/hubble_tension_fit.ipynb and scripts/ for quick starts.
+See `notebooks/hubble_tension_fit.ipynb` and `scripts/` for quick starts.
 
 ### Status
 
