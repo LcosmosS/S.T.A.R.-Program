@@ -14,8 +14,6 @@ LMFDB_ROOT  = os.path.join(REPO_ROOT, "data", "lmfdb")
 # ----------------------------------------------------------------------
 def init_pari():
     pari.default('two_seconds', 10**9)
-    pari.default('primelimit', 10**7)
-    pari.default('seriesprecision', 50)
 
 # ----------------------------------------------------------------------
 # Load Cremona ecdata
@@ -229,7 +227,8 @@ def main():
                 delayed(compute_one)(lab) for lab in batch
             )
             writer.writerows(results)
-            fout.flush()
+            if (processed + batch_size) % (args.batch_size * 10) == 0:
+                fout.flush()
             processed += len(batch)
             dt = time.time() - t0
             print(f"[{processed}/{len(labels)}] processed in {dt:.1f}s")
