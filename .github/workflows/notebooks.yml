@@ -64,7 +64,6 @@ jobs:
               --ExecutePreprocessor.timeout=7200 \
               --ExecutePreprocessor.kernel_name=python3
             # Clear memory between notebooks
-            gc.collect()
             sleep 5
           done
         env:
