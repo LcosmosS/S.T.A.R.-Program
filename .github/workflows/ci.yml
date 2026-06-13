@@ -52,7 +52,7 @@ jobs:
           ls -la data/ecdata data/eclib data/lmfdb || echo "Warning: Some submodules missing"
           git submodule status
 
-            - name: Run tests
+      - name: Run tests
         shell: bash -l {0}
         run: pytest -q
 
