@@ -1,3 +1,5 @@
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/LcosmosS/S.T.A.R.-Program)
+
 # Contributing to S.T.A.R. Program
 
 **S.T.A.R. Program** (Symbolic–Topological–Arithmetic–Relativity) is an open research project exploring a novel framework for mathematical and theoretical physics. Contributions are welcome from researchers, developers, and enthusiasts committed to rigorous, reproducible, and innovative work at the intersection of mathematical-physics and number theory, topology, symbolic computation, theroetical-physics, and cosmology.
