@@ -13,30 +13,31 @@ jobs:
       DEBIAN_FRONTEND: noninteractive
 
     steps:
-        - name: Checkout repository with submodules
+        - name: Checkout repository
           uses: actions/checkout@v4
+
+        - name: Cache submodules
+          uses: actions/cache@v4
           with:
-            submodules: 'true'  # Use string 'true' instead of recursive for better control
-            fetch-depth: 0
-            token: ${{ secrets.GITHUB_TOKEN }}
+            path: |
+              data/ecdata
+              data/eclib
+              data/lmfdb
+            key: submodules-${{ hashFiles('.gitmodules') }}
+            restore-keys: submodules-
 
-        - name: Initialize submodules recursively
+        - name: Initialize submodules (if not cached)
           shell: bash -l {0}
           run: |
-            git config --global url."https://${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
-            git submodule update --init --recursive --depth 1
-            git config --global --unset url."https://${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf
-
-        - name: Verify submodules initialized
+            git submodule update --init --recursive --depth 1 || true
+    
+        - name: Verify submodules
           shell: bash -l {0}
           run: |
-            echo "Checking data/ecdata..."
-            if [ -d "data/ecdata" ] && [ "$(ls -A data/ecdata 2>/dev/null)" ]; then
-              echo "✓ data/ecdata is populated"
+            if [ -d "data/ecdata" ] && [ -n "$(ls -A data/ecdata 2>/dev/null)" ]; then
+              echo "✓ Submodules ready"
             else
-              echo "✗ data/ecdata is empty"
-              echo "Submodule status:"
-              git submodule status
+              echo "✗ Submodules still empty - may need to configure access"
               exit 1
             fi
             
