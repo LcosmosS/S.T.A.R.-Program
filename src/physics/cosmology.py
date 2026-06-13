@@ -75,9 +75,7 @@ def _comoving_scalar(self, zi: float) -> float:
             )
             z = np.array([0.01, 0.5, 1.0])
 
-        z = np.asarray(z, dtype=float)
-        z = np.nan_to_num(z, nan=0.0, posinf=2.0, neginf=0.0)
-        z = np.clip(z, 1e-6, 10.0)  # avoid z=0 problems
+        z = np.asarray(z, dtype=float), np.nan_to_num(z, nan=0.0, posinf=2.0, neginf=0.0), np.clip(z, 1e-6, 10.0)  # avoid z=0 problems
 
         if z.ndim == 0 or z.size == 1:
             return self._comoving_scalar(float(z.ravel()[0]))
