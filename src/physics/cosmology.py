@@ -44,7 +44,10 @@ class Cosmology:
             b = self.params.get("b", 0.0)
             inside = Om * (1 + z) ** 3 + OL + a * z + b * z**2
             return H0 * np.sqrt(np.maximum(inside, 1e-10))
+   
+    from functools import lru_cache
 
+    @lru_cache(maxsize=1024)
     def _comoving_scalar(self, zi: float) -> float:
         """Comoving distance for single scalar redshift."""
         if not np.isfinite(zi) or zi < 0:
@@ -59,10 +62,6 @@ class Cosmology:
         result, _ = quad(integrand, 0.0, float(zi), limit=300, epsabs=1e-9, epsrel=1e-9)
         return max(float(result), 0.0)
 
-from functools import lru_cache
-
-@lru_cache(maxsize=1024)
-def _comoving_scalar(self, zi: float) -> float:
     def comoving_distance(self, z):
         # Catch ellipsis and other garbage early
         if (
