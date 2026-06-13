@@ -28,7 +28,9 @@ class PlanckSH0ESJointLikelihood:
                     [f"cov{i}{j}" for i in range(3) for j in range(3)]
                 ].values.reshape(3, 3),
             }
-
+        self.cov_inv = np.linalg.inv(np.array(self.planck["cov"]))
+        # Then in log_likelihood_planck:
+        chi2 = delta.T @ self.cov_inv @ delta  # Only 1 matrix mult
         self.H0_shoes = H0_shoes
         self.sigma_shoes = sigma_shoes
         print(f"PlanckSH0ESJointLikelihood initialized (H0_SH0ES = {H0_shoes})")
