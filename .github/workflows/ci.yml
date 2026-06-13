@@ -20,6 +20,23 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Initialize submodules with timeout
+        shell: bash -l {0}
+        run: |
+          timeout 300 git submodule update --init --recursive || {
+            echo "WARNING: Submodule initialization timed out or failed"
+            echo "Continuing without submodules..."
+          }
+
+      - name: Check submodule status
+        shell: bash -l {0}
+        run: |
+          if [ -d "data/ecdata" ] && [ -s "data/ecdata" ]; then
+            echo "Submodules initialized successfully"
+          else
+            echo "WARNING: data/ecdata is empty - CI will use fallback data"
+          fi
+
       - name: Verify submodules initialized
         shell: bash -l {0}
         run: |
