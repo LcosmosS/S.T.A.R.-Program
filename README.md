@@ -186,7 +186,7 @@ Researchers are encouraged to:
 - inspect the manuscript and thesis pdf's in `/docs`
 - run the full validation pipeline in `/scripts`  
 - explore the symbolic regression manifold in `/examples/exports`  
-
+- [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/LcosmosS/S.T.A.R.-Program)
 ---
 
 ## **Installation**
