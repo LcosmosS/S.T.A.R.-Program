@@ -129,7 +129,6 @@ jobs:
               433a1
               433c1
               EOF
-            fi
             
             if [ -s data/raw/ci_subset.csv ]; then
               echo "✓ Subset file generated successfully"
