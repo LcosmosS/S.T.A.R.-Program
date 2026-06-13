@@ -16,6 +16,11 @@ jobs:
         - name: Checkout repository
           uses: actions/checkout@v4
 
+        - name: Initialize submodules 
+          shell: bash -l {0}
+          run: |
+            git submodule update --init --recursive --depth 1 || true
+
         - name: Cache submodules
           uses: actions/cache@v4
           with:
@@ -25,11 +30,6 @@ jobs:
               data/lmfdb
             key: submodules-${{ hashFiles('.gitmodules') }}
             restore-keys: submodules-
-
-        - name: Initialize submodules (if not cached)
-          shell: bash -l {0}
-          run: |
-            git submodule update --init --recursive --depth 1 || true
     
         - name: Verify submodules
           shell: bash -l {0}
