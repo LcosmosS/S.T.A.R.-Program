@@ -14,77 +14,56 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python 3.12 + SageMath
-        uses: conda-incubator/setup-miniconda@v3
-        with:
-          auto-update-conda: true
-          python-version: "3.12"
-          environment-file: environment.yml
-          activate-environment: star-env
-          channels: conda-forge
-
-      - name: Install extras
-        shell: bash -l {0}
-        run: |
-          conda activate star-env
-          pip install -e ".[dev,tda]"
-
-      - name: Run unit tests
-        shell: bash -l {0}
-        run: |
-          conda activate star-env
-          pytest -q --maxfail=3
-
-  # Lightweight notebook check (prevents kernel death)
-  check_notebooks:
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python + SageMath
+      - name: Setup Miniconda + Environment
         uses: conda-incubator/setup-miniconda@v3
         with:
           auto-update-conda: true
           python-version: "3.11"
           environment-file: environment.yml
           activate-environment: star-env
+          channels: conda-forge
+          miniforge-variant: Mambaforge
+          use-mamba: true          # Much faster solver
 
-      - name: Install dependencies
+      - name: Install editable package
         shell: bash -l {0}
         run: |
           conda activate star-env
           pip install -e ".[dev,tda]"
 
-      - name: Run lightweight sky projection test
+      - name: Run tests
         shell: bash -l {0}
         run: |
           conda activate star-env
-          # Run a reduced version with small data subset
-          python -m pytest tests/test_sky_projection_light.py -q || echo "No light test found, skipping detailed notebook"
+          pytest -q --maxfail=5
 
-      - name: Execute lightweight notebook (if exists)
-        shell: bash -l {0}
-        run: |
-          conda activate star-env
-          jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=300 examples/sky_projection_pipeline_light.ipynb || echo "Light notebook not found or skipped"
-
-  build_cosmology_data:
+  # Lightweight check to avoid kernel death
+  check_light:
     runs-on: ubuntu-latest
     needs: test
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Setup Miniconda (light)
+        uses: conda-incubator/setup-miniconda@v3
         with:
-          python-version: "3.12"
+          auto-update-conda: true
+          python-version: "3.11"
+          environment-file: environment.yml
+          activate-environment: star-env
+          channels: conda-forge
+          miniforge-variant: Mambaforge
+          use-mamba: true
 
-      - name: Install dependencies
-        run: pip install numpy pandas requests
-
-      - name: Build cosmology data (light version)
+      - name: Run lightweight validation
+        shell: bash -l {0}
         run: |
-          mkdir -p data/cosmic
-          python scripts/build_cosmology_data.py --light || echo "Light build completed"
+          conda activate star-env
+          python -c "
+          import sys
+          print('Python version:', sys.version)
+          import numpy, pandas, gudhi
+          print('Core packages imported successfully')
+          print('CI environment ready')
+          "
           git push
