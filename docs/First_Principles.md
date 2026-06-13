@@ -2,7 +2,7 @@
 
 **Author:** Patrick J. McNamara (S.T.A.R. Program)  
 **Date:** February 2026  
-**Version:** 1.0 (Empirical Pipeline Results)
+**Version:** 1.0 (Empirical Pipeline Results) 
 
 ## 1. Introduction
 
