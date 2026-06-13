@@ -49,22 +49,27 @@ The S.T.A.R. Program asserts that the universe can be projected as a **Symbolic 
 
 jointly determine cosmic structure.
 
-The central hypothesis:
+A central prediction of the S.T.A.R. Program is a **scale-dependent effective Hubble parameter** that naturally emerges from the arithmetic projection and entropy dynamics:
 
-> **Cosmic geometry is not arbitrary — it is symbolically encoded by arithmetic structure and conserved by entropy cohomology.**
+$H_{\rm eff}(z) = H_0 \cdot \langle \Omega_E \rangle_z$
 
-This leads to a scale‑dependent effective Hubble parameter:
+where $\(\Omega_E\)$ is the real period of the elliptic curve \(E\), and the redshift-dependent average is taken over curves that are “visible” or dominant at redshift $\(z\)$:
 
-$H_{\mathrm{eff}}(z) = H_0 \cdot \langle \Omega_E r \rangle_z \cdot (1 + \alpha C_{\mathrm{entropy}}(z))\$
+$\langle \Omega_E \rangle_z = \frac{\sum_E w_E(z) \, \Omega_E}{\sum_E w_E(z)}.$
 
-which naturally produces:
+The weight function $\(w_E(z)\)$ is constructed from the model’s natural mechanisms:
 
-- **higher local $\(H_0\)$**  
-- **lower CMB‑inferred $\(H_0\)$**  
+- **Projection distortions and local-versus-global sampling**: At low $\(z\)$ (late universe, local distance ladder), the observer preferentially samples a biased subset of the projected point cloud $\(\{\Phi(E)\}\)$, favoring denser regions or lower-distortion patches after sinusoidal, oblate, and force-directed corrections. At high $\(z\)$ (CMB epoch), the average approaches the full global distribution.
+  
+- **Isogeny class density**: Curves connected by higher-degree isogenies contribute progressively more at later times, shifting the effective scale factor according to $\(g_{E'}(t) = g_E(t) + \eta \log m\)$.
 
-— a unified explanation for the **Hubble–Planck tension**.
+This formulation produces regime-dependent values consistent with current observations:
 
----
+$\left. \frac{\dot{a}}{a} \right|_{\rm local\ (low\ z)} \approx H_0 \cdot \langle \Omega_E \rangle_{\rm late} \quad (\sim 72{-}74\ \rm km/s/Mpc),$
+
+$\left. \frac{\dot{a}}{a} \right|_{\rm CMB\ (high\ z)} \approx H_0 \cdot \langle \Omega_E \rangle_{\rm early} \quad (\sim 67.4\ \rm km/s/Mpc).$
+
+The precise functional form of the weights \(w_E(z)\) (including any tunable parameters) is **not imposed a priori**. Instead, the symbolic regression engine in `/src/symbolic_regression/` is trained on the full projected point cloud to discover the optimal weighting that best reconciles the projected arithmetic structure with observed cosmological data. This allows the model to learn the natural mapping from arithmetic invariants to effective expansion history without manual fine-tuning.
 
 ## **The S.T.A.R. Trilogy Architecture**
 
