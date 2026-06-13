@@ -119,16 +119,17 @@ class ArithmeticProjector:
     def project(self, records: Sequence[Dict[str, Any]]) -> np.ndarray:
         """Project elliptic curve records to 3D coordinates"""
         return project(records, method=self.method, Amax=self.Amax, Nmax=self.Nmax, V0=self.V0)
-
+    
     def embed_to_cosmic(self, coords: np.ndarray) -> np.ndarray:
         """
         Simple embedding from projected coordinates into 'cosmic' space.
         You can expand this with redshift scaling, distance modulus, etc.
         """
         # Basic version: add a small noise + scale
-        embedded = coords.copy().astype(float)
+        embedded = np.asarray(coords, dtype=float).copy()
         embedded += np.random.normal(0, 0.05, embedded.shape)
         # Optional: scale Z by a mock distance factor
         if embedded.shape[1] >= 3:
-            embedded[:, 2] *= 1.5
+            embedded[:, 2] *= 1.8   # mock "depth" scaling
+        embedded += np.random.normal(0, 0.03, embedded.shape)
         return embedded
