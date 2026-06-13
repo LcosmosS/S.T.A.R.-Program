@@ -59,6 +59,10 @@ class Cosmology:
         result, _ = quad(integrand, 0.0, float(zi), limit=300, epsabs=1e-9, epsrel=1e-9)
         return max(float(result), 0.0)
 
+from functools import lru_cache
+
+@lru_cache(maxsize=1024)
+def _comoving_scalar(self, zi: float) -> float:
     def comoving_distance(self, z):
         # Catch ellipsis and other garbage early
         if (
