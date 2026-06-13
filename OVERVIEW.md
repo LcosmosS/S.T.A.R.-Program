@@ -12,7 +12,7 @@ The physical universe operates as the ultimate Symbolic Field: a self-consistent
 ### Trilogy Architecture
 
 - **ACSC — Arithmetic–Cosmic Structure Conjecture (Geometry)**
-A metric-preserving projection map $\Phi: \mathcal{E} \to M_{\rm cosmo}$ from elliptic curves $E/\mathbb{Q}$ to 3D cosmic geometry.
+A metric-preserving projection map $\Phi: \mathcal{E} \to M_{\rm cosmo}$ from elliptic curves $E/\mathbb{ℚ}$ to 3D cosmic geometry.
 Uses bounded normalizations of the discriminant $\Delta_E$, conductor $N_E$, rank $r_E$, regulator, and real period $\Omega_E$.
 
 - **ECC — Entropy Cohomology Conjecture (Dynamics)**
@@ -20,7 +20,7 @@ Introduces an entropy field $\mathcal{M}(x)$ and cohomology framework that enfor
 
 - **S.T.A.R. — Unified Cosmology**
 Synthesizes the above into an effective relativistic theory. Key innovation:
-Scale-dependent effective Hubble parameter $H_{\rm eff}(z) = H_0 \cdot \langle \Omega_E \rangle_z$$where $\langle \Omega_E \rangle_z$ is a weighted average over the projected point cloud $\{\Phi(E)\}$, with weights determined by projection distortions, isogeny class density, and local-versus-global sampling.
+Scale-dependent effective Hubble parameter $H_{\rm eff}(z) = H_0 \cdot \langle \Omega_E \rangle_z$ where $\langle \Omega_E \rangle_z$ is a weighted average over the projected point cloud $\{\Phi(E)\}$, with weights determined by projection distortions, isogeny class density, and local-versus-global sampling.
 This naturally produces different effective expansion rates at late times (local distance ladder, $\sim 72{-}74$ km/s/Mpc) versus early times (CMB, $\sim 67.4$ km/s/Mpc), offering a potential resolution to the Hubble tension through arithmetic self-tuning.
 
 ### Key Innovations
@@ -35,7 +35,7 @@ This naturally produces different effective expansion rates at late times (local
     Persistent homology of the arithmetic point cloud compared to CMB anomalies (low quadrupole suppression, hemispherical asymmetry, low-multipole alignment).
 
 - **Inverse Mapping:**
-    Recover arithmetic rank from cosmological observables via $  \rho_{\rm obs} \to r_E  $.
+    Recover arithmetic rank from cosmological observables via $\rho_{\rm obs} \to r_E$.
 
 ### Repository Structure
 ```
