@@ -180,9 +180,9 @@ on synthetic cosmic structures, validated through:
 
 Researchers are encouraged to:
 
-- inspect the LaTeX monograph in `/manuscript`  
+- inspect the manuscript and thesis pdf's in `/docs`
 - run the full validation pipeline in `/scripts`  
-- explore the symbolic regression manifold in `/src/symbolic_regression`  
+- explore the symbolic regression manifold in `/examples/exports`  
 
 ---
 
