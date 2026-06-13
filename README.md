@@ -102,7 +102,7 @@ Combines ACSC + ECC into a full cosmological model with:
 - scalar‑field coupling  
 - symbolic Sachs–Wolfe transfer  
 - cosmic‑web alignment  
-- symbolic regression law discovery  
+- symbolic regression law discovery (See [/docs/Symbolic_Action_Principle.md](Symbolic_Action_Principle.md) and [/docs/STAR.ipynb](STAR.ipynb))
 
 This repository is the **central hub** of the S.T.A.R. Program, and ultimately proposes the introduction of a **Symbolic Field-Theory** paradigm.
 
