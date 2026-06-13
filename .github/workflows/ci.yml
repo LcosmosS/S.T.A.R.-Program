@@ -22,8 +22,9 @@ jobs:
           environment-file: environment.yml
           activate-environment: star-env
           channels: conda-forge
-          miniforge-variant: Mambaforge
-          use-mamba: true          # Much faster solver
+          miniforge-variant: Miniforge3
+          use-mamba: true 
+          conda-solver: libmamba
 
       - name: Install editable package
         shell: bash -l {0}
