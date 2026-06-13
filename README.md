@@ -36,7 +36,9 @@ The S.T.A.R. Program proposes that the **large‑scale structure of the universe
 
 This repository contains the **full theoretical monographs**, **computational toolkit**, **TDA stability pipeline**, and **symbolic regression engine** that define the S.T.A.R. Program.
 
-*(See [OVERVIEW.md](OVERVIEW.md) for a more in depth overview, & `/docs/_Arithmetic Invariants and Cosmological Geometry in Cartography_.pdf` for project details.)*
+- *(See [OVERVIEW.md](OVERVIEW.md) for a more in depth overview.)* 
+- *(See  `/docs/_Arithmetic Invariants and Cosmological Geometry in Cartography_.pdf` for project details.)* 
+- *(See [First_Principles.md](First_Principles.md), `/docs/first_principals.py` & `/docs/first_principals_results.txt` for evidance towards Hubble-Planck Tension resolution.)*
 
 
 ---
