@@ -27,7 +27,6 @@ jobs:
           environment-file: environment.yml
           activate-environment: star-env
           channels: conda-forge
-          installer-url: "https://github.com/conda-forge/miniforge/releases/download/24.11.1-0/Miniforge3-Linux-x86_64.sh"
           use-mamba: true
           conda-solver: libmamba
 
