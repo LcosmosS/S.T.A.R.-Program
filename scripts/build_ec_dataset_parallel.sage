@@ -1,6 +1,6 @@
 import sys, os, csv, json, argparse, time
 from joblib import Parallel, delayed
-from sageall import EllipticCurve, pari
+from sage.all import EllipticCurve, QQ, pari
 
 # ----------------------------------------------------------------------
 # Submodule paths
