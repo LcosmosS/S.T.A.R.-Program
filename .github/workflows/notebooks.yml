@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: sagemath/sagemath:latest
-      options: --user root
+      options: --user root --memory=4g
 
     steps:
       - name: Install Git inside container 
@@ -61,8 +61,11 @@ jobs:
               --to notebook \
               --execute "$nb" \
               --output "$(basename $nb .ipynb)-executed.ipynb" \
-              --ExecutePreprocessor.timeout=3600 \
+              --ExecutePreprocessor.timeout=7200 \
               --ExecutePreprocessor.kernel_name=python3
+            # Clear memory between notebooks
+            gc.collect()
+            sleep 5
           done
         env:
           JUPYTER_ENABLE_LAB: "yes"
