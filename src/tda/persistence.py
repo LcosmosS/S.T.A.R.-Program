@@ -5,11 +5,17 @@ from __future__ import annotations
 import numpy as np
 from typing import Dict, Any
 
-def compute_persistence(point_cloud: np.ndarray, max_dim: int = 2) -> Dict[str, Any]:
+_persistence_cache = {}
+
+def compute_persistence(point_cloud, max_dim=2):
     """
     Compute persistence diagrams from a point cloud.
     Uses ripser → gudhi → placeholder fallback.
     """
+    key = (tuple(point_cloud.flatten()), max_dim)
+    if key in _persistence_cache:
+        return _persistence_cache[key]
+    
     point_cloud = np.asarray(point_cloud, dtype=float)
 
     try:
@@ -40,7 +46,7 @@ def compute_persistence(point_cloud: np.ndarray, max_dim: int = 2) -> Dict[str, 
                 [(0.0, 1.0 + np.random.rand()) for _ in range(n//3)],   # H0
                 [(0.3, 0.8) for _ in range(n//10)] if max_dim >= 1 else []   # H1
             ]
-
+    
     return {
         "dgms": diagrams,
         "betti": [len(d) for d in diagrams],
@@ -49,3 +55,5 @@ def compute_persistence(point_cloud: np.ndarray, max_dim: int = 2) -> Dict[str, 
 
 # Alias for backward compatibility
 compute_persistence_diagrams = compute_persistence
+_persistence_cache[key] = result
+    return result
