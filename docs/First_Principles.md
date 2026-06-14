@@ -40,7 +40,7 @@ An entropy field ℳ(x) is defined over the projected manifold, with differentia
 
 ### Pipeline Overview
 1. **Input**: Supercluster parameters (`r`, `ρ`).
-2. **Curve Generation**: Derive Weierstrass coefficients → minimal model via SageMath.
+2. **Curve Generation**: `Derive Weierstrass coefficients → minimal model` via SageMath.
 3. **Robust Arithmetic Computation**: High-limit `two_descent(second_limit=10000)` + fallback rank bounds, using local LMFDB and Cremona/ecdata databases.
 4. **Projection**: Apply full ACSC + ECC logic from `STAR.ipynb`.
 5. **Parallel Execution**: 6-core `ProcessPoolExecutor` for efficiency.
