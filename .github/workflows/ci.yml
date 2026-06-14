@@ -108,15 +108,17 @@ jobs:
 
         - name: Generate small CI Cremona subset
           shell: bash -l {0}
+          env:
+            # Disable joblib parallel processing in CI to avoid pickling issues
+            JOBLIB_START_METHOD: sequential
+            PYTHONUNBUFFERED: 1
           run: |
             mkdir -p data/raw results
             
             if [ -d "data/ecdata" ] && [ -n "$(ls -A data/ecdata 2>/dev/null)" ]; then
               echo "✓ Using ecdata for Cremona subset generation..."
               python scripts/generate_cremona_subset.py --max-labels 1000 > data/raw/ci_subset.csv 2>&1 || {
-                echo "⚠ Script failed, checking ecdata structure..."
-                ls -la data/ecdata/ 2>/dev/null | head -20
-                echo "Falling back to test subset..."
+                echo "⚠ Script failed, falling back to test subset..."
                 cat > data/raw/ci_subset.csv << EOF
             label
             11a1
