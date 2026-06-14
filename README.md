@@ -84,6 +84,8 @@ $$
 
 The precise functional form of the weights $\(w_E(z)\)$ (including any tunable parameters) is **not imposed a priori**. Instead, the symbolic regression engine in `/src/symbolic_regression/` is trained on the full projected point cloud to discover the optimal weighting that best reconciles the projected arithmetic structure with observed cosmological data. This allows the model to learn the natural mapping from arithmetic invariants to effective expansion history without manual fine-tuning.
 
+- *(See [/docs/Symbolic_Action_Principle.md](/docs/Symbolic_Action_Principle.md), `/docs/star_v3.1.py`, `/docs/star_v3.1 output.pdf`, & `/docs/STAR.ipynb`)*
+
 ## **The S.T.A.R. Trilogy Architecture**
 
 This repository represents the **theory layering** of a three‑part research program:
@@ -104,7 +106,8 @@ Combines ACSC + ECC into a full cosmological model with:
 - scalar‑field coupling  
 - symbolic Sachs–Wolfe transfer  
 - cosmic‑web alignment  
-- symbolic regression law discovery *(See [/docs/Symbolic_Action_Principle.md](/docs/Symbolic_Action_Principle.md),  [/docs/STAR.ipynb](/docs/STAR.ipynb), & `/docs/Appendices for Arithmetic Invariants and Cosmological Geometry in Cartography.pdf`)*
+- symbolic regression law discovery
+- *(See [/docs/Symbolic_Action_Principle.md](/docs/Symbolic_Action_Principle.md), `/docs/star_v3.1.py`, `star_v3.1 output.pdf`  [/docs/STAR.ipynb](/docs/STAR.ipynb), `/docs/_Arithmetic Invariants and Cosmological Geometry in Cartography_.pdf` & `/docs/Appendices for Arithmetic Invariants and Cosmological Geometry in Cartography.pdf`)*
 
 This repository is the **central hub** of the S.T.A.R. Program, and ultimately proposes the introduction of a **Symbolic Field-Theory** paradigm.
 
