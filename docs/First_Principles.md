@@ -4,15 +4,15 @@
 **Date:** February 2026  
 **Version:** 1.0 (Empirical Pipeline Results) 
 
-## 1. Introduction
+## Introduction
 
 The S.T.A.R. Program pursues a **first-principles** unification of number theory (elliptic curves over ℚ), topology, symbolic computation, and cosmology. At its core is the **Arithmetic–Cosmic Structure Conjecture (ACSC)** and the **Entropy Cohomology Conjecture (ECC)**, synthesized through the **Unified Cosmic Framework (UCF)**.
 
 This document outlines the foundational philosophy, the computational pipeline, and the results of the latest expansion using local Cremona/ecdata databases on eight major superclusters. The approach is deliberately grounded in **observable astrophysical quantities** mapped directly into arithmetic invariants, avoiding ad-hoc dark energy fields or modified gravity postulates.
 
-## 2. First Principles Foundations
+## First Principles Foundations
 
-### 2.1 Arithmetic–Cosmic Structure Conjecture (ACSC)
+### 1. Arithmetic–Cosmic Structure Conjecture (ACSC)
 Elliptic curves encode deep arithmetic information (rank, conductor, real period Ω, regulator, discriminant Δ, Tamagawa numbers, etc.). The ACSC posits that these invariants can be **projected** via a map Φ onto cosmological manifolds, such that:
 
 - Local large-scale structure (superclusters) corresponds to specific elliptic curves.
@@ -25,10 +25,10 @@ Elliptic curves encode deep arithmetic information (rank, conductor, real period
   - `b = ρ`
 - `κ ≈ 31.5926` (data-driven from prior symbolic regression).
 
-### 2.2 Entropy Cohomology Conjecture (ECC)
+### 2 Entropy Cohomology Conjecture (ECC)
 An entropy field ℳ(x) is defined over the projected manifold, with differential forms and cohomology classes enforcing **symbolic information conservation**. The discriminant |Δ| serves as a natural entropy proxy, while rank-weighted cohomology classes capture topological complexity of the cosmic web (filaments, voids, clusters).
 
-### 2.3 Projection Φ and Cosmological Quantities
+### 3. Projection Φ and Cosmological Quantities
 - Dynamic `COSMO_SCALE` anchored on Virgo (54 Mly) and `√κ`.
 - Rank-specific volume divisors and regulator factors.
 - Effective Hubble parameter:
@@ -36,9 +36,9 @@ An entropy field ℳ(x) is defined over the projected manifold, with differentia
 - Entropy proxy: `log(|Δ|)`
 - Cohomology class: entropy × (rank + 1) / √r (topological dilution)
 
-## 3. Computational Methodology
+## Computational Methodology
 
-### 3.1 Pipeline Overview
+### Pipeline Overview
 1. **Input**: Supercluster parameters (`r`, `ρ`).
 2. **Curve Generation**: Derive Weierstrass coefficients → minimal model via SageMath.
 3. **Robust Arithmetic Computation**: High-limit `two_descent(second_limit=10000)` + fallback rank bounds, using local LMFDB and Cremona/ecdata databases.
@@ -46,13 +46,13 @@ An entropy field ℳ(x) is defined over the projected manifold, with differentia
 5. **Parallel Execution**: 6-core `ProcessPoolExecutor` for efficiency.
 6. **Output**: Rich CSV for downstream TDA, symbolic regression, and Hubble tension fitting.
 
-### 3.2 Local Database Integration
+### Local Database Integration
 - `CREMONA_DATABASE_PATH = ~/ecdata`
 - `LMFDB_DATABASE_PATH = ~/lmfdb`
 - `elliptic_curves` interface for fast label lookup and validation.
 - Fully offline, reproducible, and scalable.
 
-## 4. Results
+## Results
 
 **Run Summary** (February 2026, Sage + local DB, `second_limit=10000`):
 
@@ -74,25 +74,25 @@ An entropy field ℳ(x) is defined over the projected manifold, with differentia
 - Higher-rank curves (Virgo, Shapley) yield significantly larger comoving volumes — supporting structure formation tied to arithmetic rank.
 - Entropy increases with conductor/mass; cohomology class exhibits inverse distance dependence.
 
-## 5. Analysis and Implications
+## Analysis and Implications
 
-### 5.1 Strengths of the First-Principles Approach
+###  Strengths of the First-Principles Approach
 - **Direct Empirical Grounding**: Starts from real astronomical catalogs rather than theoretical speculation.
 - **Computational Tractability**: Local DB + parallelism makes large-scale exploration feasible.
 - **Falsifiability**: Generates concrete, testable predictions (ranks, periods, topological signatures) that can be compared to observations or mocks.
 - **Unification Power**: Bridges pure number theory (BSD conjecture elements) with cosmology without intermediate ad-hoc fields.
 - **Scale-Dependence**: Naturally produces varying effective expansion rates, offering a geometric explanation for the Hubble tension.
 
-### 5.2 Challenges and Edge Cases
+### Challenges and Edge Cases
 - **High-Conductor Behavior**: Curves with |a|, |b| ≫ 10⁴ demand heavy computational resources for full BSD data (Sha, L-functions).
 - **Rank Ambiguity**: Persistent Sha[2] obstructions may themselves carry cosmological meaning within ECC.
 - **Mapping Justification**: The linear UCF scaling, while data-driven, needs further symbolic regression and inverse-mapping validation.
 - **Statistical Power**: Eight clusters provide proof-of-concept; expansion to 50–100 structures (from DESI, SDSS, etc.) is essential.
 
-### 5.3 Relation to Hubble Tension and Cosmic Web
+### Relation to Hubble Tension and Cosmic Web
 The ensemble ⟨Ω_E⟩_z and entropy-weighted projections suggest a **self-organizing arithmetic cosmology** where local over-densities (high-rank curves) correspond to faster apparent expansion, while global averaging recovers Planck-like values. The cohomology classes may correspond to observed Betti numbers in cosmic web TDA analyses.
 
-## 6. Future Directions
+## Future Directions
 
 1. Extend to 30+ superclusters and high-z structures.
 2. Full integration with TDA pipeline (`persistent_homology` on projected invariants).
@@ -101,7 +101,7 @@ The ensemble ⟨Ω_E⟩_z and entropy-weighted projections suggest a **self-orga
 5. Parallelization scaling + GPU-accelerated descent for ultra-large conductors.
 6. Publication of results + open invitation for number theorists and cosmologists.
 
-## 7. Conclusion
+## Conclusion
 
 This first-principles pipeline demonstrates that elliptic curve arithmetic, when projected through a carefully constructed UCF scaling and entropy cohomology framework, can generate non-trivial cosmological structure and scale-dependent dynamics. The successful computation of invariants and projections for major local superclusters marks a concrete milestone in the S.T.A.R. Program after more than a year of development.
 
