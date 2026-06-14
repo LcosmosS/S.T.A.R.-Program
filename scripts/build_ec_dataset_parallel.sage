@@ -212,6 +212,12 @@ def main():
 
     write_header = not os.path.exists(out_path)
 
+    # Use 'threading' backend (much safer with Sage) or sequential
+    backend = "threading" if args.workers > 1 else "sequential"
+    n_jobs = args.workers if backend == "threading" else 1
+
+    print(f"Using backend: {backend} with {n_jobs} workers")
+
     t0 = time.time()
     processed = 0
 
@@ -220,21 +226,22 @@ def main():
         if write_header:
             writer.writeheader()
 
-        # Parallel processing in batches
         for i in range(0, len(labels), args.batch_size):
-            batch = labels[i:i+args.batch_size]
-            results = Parallel(n_jobs=args.workers, backend="loky")(
-                delayed(compute_one)(lab) for lab in batch
-            )
+            batch = labels[i:i + args.batch_size]
+            
+            if backend == "sequential" or n_jobs == 1:
+                results = [compute_one(lab) for lab in batch]
+            else:
+                results = Parallel(n_jobs=n_jobs, backend=backend)(
+                    delayed(compute_one)(lab) for lab in batch
+                )
+
             writer.writerows(results)
-            if (processed + batch_size) % (args.batch_size * 10) == 0:
-                fout.flush()
+            fout.flush()
             processed += len(batch)
-            dt = time.time() - t0
-            print(f"[{processed}/{len(labels)}] processed in {dt:.1f}s")
+            print(f"[{processed}/{len(labels)}] processed in {time.time()-t0:.1f}s")
 
     print(f"Done. Total time: {time.time()-t0:.1f}s")
-    print(f"Output written to {out_path}")
 
 if __name__ == "__main__":
     main()
