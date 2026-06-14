@@ -88,7 +88,7 @@ The precise functional form of the weights $\(w_E(z)\)$ (including any tunable p
 
 ---
 
-*Another goal within this program is an evolution into a "**S**ymbolic-**T**opological-**A**rithemetic-**R**elativity-**M**ission-**A**nalysis-**P**rogram (**S.T.A.R.M.A.P.**) for a **"topographical map"** of cosmic radiation, gravitational density, clusters, voids, and filiments; and a **S.T.A.R**-**M**ission-**A**nalysis-**T**ool (**S.M.A.T.**) akin to NASA'S **G**eneral-**M**ission-**A**nalysis-**T**ool (**G.M.A.T.**) for interplanetary and interstellar mission planning and communication.* 
+*Another goal within this program is an evolution into a "**S**ymbolic-**T**opological-**A**rithemetic-**R**elativity-**M**ission-**A**nalysis-**P**rogram (**S.T.A.R.M.A.P.**) for a **"topographical map"** of cosmic radiation, gravitational density, clusters, voids, and filiments; and a **S.T.A.R**-**M**ission-**A**nalysis-**T**ool (**S.M.A.T.**) akin to NASA'S **G**eneral-**M**ission-**A**nalysis-**T**ool (**G.M.A.T.**) for interplanetary and interstellar mission planning, simulations, and communication.* 
 
 ---
 
