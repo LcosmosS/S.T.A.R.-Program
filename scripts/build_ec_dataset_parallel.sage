@@ -1,6 +1,8 @@
 import sys, os, csv, json, argparse, time
-from joblib import Parallel, delayed
 from sage.all import EllipticCurve, QQ, pari
+from joblib import Parallel, delayed
+import warnings
+warnings.filterwarnings("ignore")
 
 # ----------------------------------------------------------------------
 # Submodule paths
@@ -13,7 +15,12 @@ LMFDB_ROOT  = os.path.join(REPO_ROOT, "data", "lmfdb")
 # PARI defaults for each worker
 # ----------------------------------------------------------------------
 def init_pari():
-    pari.default('two_seconds', 10**9)
+    from sage.all import pari
+    pari.default("threads", 1)           # Force single thread
+    pari.default("two_seconds", 10**8)   # Lower timeout for CI
+    pari.default("realprecision", 50)
+
+init_pari()
 
 # ----------------------------------------------------------------------
 # Load Cremona ecdata
@@ -84,7 +91,10 @@ def load_curve_data(label):
 # Compute invariants for a single label
 # ----------------------------------------------------------------------
 def compute_one(label):
-    init_pari()
+    """Single curve processing - must be self-contained."""
+    try:
+        from sage.all import EllipticCurve, cremona_curvedata
+        E = EllipticCurve(label)
 
     row = {
         "label": label,
@@ -101,6 +111,16 @@ def compute_one(label):
         "heegner_height": None,
         "error": None,
     }
+    return {
+            'label': label,
+            'conductor': int(E.conductor()),
+            'rank': int(E.rank()),
+            'real_period': float(E.period_lattice().real_period()),
+            # add other fields you need
+            'status': 'success'
+        }
+    except Exception as e:
+        return {'label': label, 'status': f'error: {str(e)[:100]}'}
 
     # Load from submodules
     data = load_curve_data(label)
@@ -175,24 +195,16 @@ def compute_one(label):
 # ----------------------------------------------------------------------
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--labels-file", required=True)
-    parser.add_argument("--output", required=True)
-    parser.add_argument("--workers", type=int, default=4)
-    parser.add_argument("--batch-size", type=int, default=500)
+    parser.add_argument('--labels-file', required=True)
+    parser.add_argument('--output', required=True)
+    parser.add_argument('--workers', type=int, default=1)      # Default safe for CI
+    parser.add_argument('--batch-size', type=int, default=10)
     args = parser.parse_args()
 
-    # Load labels
-    labels = []
     with open(args.labels_file) as f:
-        reader = csv.DictReader(f)
-        for r in reader:
-            labels.append(r["label"].strip())
+        labels = [row['label'].strip() for row in csv.DictReader(f) if row.get('label')]
 
-    print(f"Loaded {len(labels)} labels")
-
-    # Prepare output
-    out_path = args.output
-    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    print(f"Loaded {len(labels)} labels. Using {args.workers} worker(s).")
 
     fieldnames = [
         "label",
@@ -210,38 +222,26 @@ def main():
         "error",
     ]
 
-    write_header = not os.path.exists(out_path)
+    with open(args.output, 'w', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
 
-    # Use 'threading' backend (much safer with Sage) or sequential
-    backend = "threading" if args.workers > 1 else "sequential"
-    n_jobs = args.workers if backend == "threading" else 1
-
-    print(f"Using backend: {backend} with {n_jobs} workers")
-
-    t0 = time.time()
-    processed = 0
-
-    with open(out_path, "a", newline="") as fout:
-        writer = csv.DictWriter(fout, fieldnames=fieldnames)
-        if write_header:
-            writer.writeheader()
-
-        for i in range(0, len(labels), args.batch_size):
-            batch = labels[i:i + args.batch_size]
-            
-            if backend == "sequential" or n_jobs == 1:
-                results = [compute_one(lab) for lab in batch]
-            else:
-                results = Parallel(n_jobs=n_jobs, backend=backend)(
-                    delayed(compute_one)(lab) for lab in batch
-                )
-
+        # === SAFE PARALLELISM ===
+        if args.workers <= 1:
+            # Sequential (safest for CI and heavy Sage)
+            for label in labels:
+                result = compute_one(label)
+                writer.writerow(result)
+                print(f"Processed {label}: rank={result.get('rank')}")
+        else:
+            # Threading only for small batches + low worker count
+            print("Using threading backend (limited workers)")
+            results = Parallel(n_jobs=min(args.workers, 2), backend="threading")(
+                delayed(compute_one)(lab) for lab in labels
+            )
             writer.writerows(results)
-            fout.flush()
-            processed += len(batch)
-            print(f"[{processed}/{len(labels)}] processed in {time.time()-t0:.1f}s")
 
-    print(f"Done. Total time: {time.time()-t0:.1f}s")
+    print(f" Dataset build complete: {args.output}")
 
 if __name__ == "__main__":
     main()
