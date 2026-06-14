@@ -111,7 +111,7 @@ Combines ACSC + ECC into a full cosmological model with:
 
 This repository is the **central hub** of the S.T.A.R. Program, and ultimately proposes the introduction of a **Symbolic Field-Theory** paradigm.
 
-*Future exploration and refinement to include a Symbolic-Topological-Arithemetic-Relativity-Mission-Analysis-Program (S.T.A.R.M.A.P.) for a **"topographical map"** of cosmic radiation and gravitational density, and S.T.A.R-Mission-Analysis-Tool (S.M.A.T.) akin to NASA'S General-Mission-Analysis-Tool (G.M.A.T.)* 
+*Another goal within this program is an evolution into a "**S**ymbolic-**T**opological-**A**rithemetic-**R**elativity-**M**ission-**A**nalysis-**P**rogram (**S.T.A.R.M.A.P.**) for a **"topographical map"** of cosmic radiation, gravitational density, clusters, voids, and filiments; and a **S.T.A.R**-**M**ission-**A**nalysis-**T**ool (**S.M.A.T.**) akin to NASA'S **G**eneral-**M**ission-**A**nalysis-**T**ool (**G.M.A.T.**) for interplanetary and interstellar mission planning and communication.* 
 
 ---
 
