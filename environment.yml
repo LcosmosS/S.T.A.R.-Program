@@ -16,3 +16,5 @@ dependencies:
       - notebook
       - nbconvert
       - nbformat
+      - joblib
+      - psutil
