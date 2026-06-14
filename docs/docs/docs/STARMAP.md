@@ -1,4 +1,4 @@
-# S.T.A.R.M.A.P. 
+# S.T.A.R.M.A.P.
 # Symbolic-Topological-Arithmetic-Relativity-Mission-Analysis-Program
 
 ## Vision
