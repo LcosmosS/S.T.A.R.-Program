@@ -38,7 +38,7 @@ This repository contains the **full theoretical monographs**, **computational to
 
 - *(See [OVERVIEW.md](OVERVIEW.md) for a more in depth overview.)* 
 - *(See  `/docs/_Arithmetic Invariants and Cosmological Geometry in Cartography_.pdf` for project details.)* 
-- *(See [/docs/First_Principles.md](/docs/First_Principles.md), `/docs/first_principals.py` & `/docs/first_principals_results.txt` for evidance towards Hubble-Planck Tension resolution.)*
+- *(See [First_Principles.md](First_Principles.md), `/docs/first_principals.py` & `/docs/first_principals_results.txt` for evidance towards Hubble-Planck Tension resolution.)*
 
 
 ---
@@ -84,7 +84,7 @@ $$
 
 The precise functional form of the weights $\(w_E(z)\)$ (including any tunable parameters) is **not imposed a priori**. Instead, the symbolic regression engine in `/src/symbolic_regression/` is trained on the full projected point cloud to discover the optimal weighting that best reconciles the projected arithmetic structure with observed cosmological data. This allows the model to learn the natural mapping from arithmetic invariants to effective expansion history without manual fine-tuning.
 
-- *(See [1_STAR_Model.md](1_STAR_Model.md), [/docs/Symbolic_Action_Principle.md](/docs/Symbolic_Action_Principle.md), `/docs/star_v3.1.py`, `/docs/star_v3.1 output.pdf`, & `/docs/STAR.ipynb`)*
+- *(See [1_STAR_Model.md](1_STAR_Model.md), [Symbolic_Action_Principle.md](Symbolic_Action_Principle.md), `/docs/star_v3.1.py`, `/docs/star_v3.1 output.pdf`, & `/docs/STAR.ipynb`)*
 
 ---
 ## Future Directions 
@@ -131,7 +131,7 @@ Combines ACSC + ECC into a full cosmological model with:
 - symbolic Sachs–Wolfe transfer  
 - cosmic‑web alignment  
 - symbolic regression law discovery
-- *(See [/docs/Symbolic_Action_Principle.md](/docs/Symbolic_Action_Principle.md), `/docs/star_v3.1.py`, `star_v3.1 output.pdf`  [/docs/STAR.ipynb](/docs/STAR.ipynb), `/docs/_Arithmetic Invariants and Cosmological Geometry in Cartography_.pdf` & `/docs/Appendices for Arithmetic Invariants and Cosmological Geometry in Cartography.pdf`)*
+- *(See [/docs/Symbolic_Action_Principle.md](Symbolic_Action_Principle.md), `/docs/star_v3.1.py`, `star_v3.1 output.pdf`  [/docs/STAR.ipynb](/docs/STAR.ipynb), `/docs/_Arithmetic Invariants and Cosmological Geometry in Cartography_.pdf` & `/docs/Appendices for Arithmetic Invariants and Cosmological Geometry in Cartography.pdf`)*
 
 This repository is the **central hub** of the S.T.A.R. Program, and ultimately proposes the introduction of a **Symbolic Field-Theory** paradigm.
  
