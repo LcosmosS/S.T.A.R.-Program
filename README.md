@@ -38,7 +38,7 @@ This repository contains the **full theoretical monographs**, **computational to
 
 - *(See [OVERVIEW.md](OVERVIEW.md) for a more in depth overview.)* 
 - *(See  `/docs/_Arithmetic Invariants and Cosmological Geometry in Cartography_.pdf` for project details.)* 
-- *(See [First_Principles.md](First_Principles.md), `/docs/first_principals.py` & `/docs/first_principals_results.txt` for evidance towards Hubble-Planck Tension resolution.)*
+- *(See [/docs/First_Principles.md](/docs/First_Principles.md), `/docs/first_principals.py` & `/docs/first_principals_results.txt` for evidance towards Hubble-Planck Tension resolution.)*
 
 
 ---
