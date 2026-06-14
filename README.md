@@ -86,6 +86,12 @@ The precise functional form of the weights $\(w_E(z)\)$ (including any tunable p
 
 - *(See [/docs/Symbolic_Action_Principle.md](/docs/Symbolic_Action_Principle.md), `/docs/star_v3.1.py`, `/docs/star_v3.1 output.pdf`, & `/docs/STAR.ipynb`)*
 
+---
+
+*Another goal within this program is an evolution into a "**S**ymbolic-**T**opological-**A**rithemetic-**R**elativity-**M**ission-**A**nalysis-**P**rogram (**S.T.A.R.M.A.P.**) for a **"topographical map"** of cosmic radiation, gravitational density, clusters, voids, and filiments; and a **S.T.A.R**-**M**ission-**A**nalysis-**T**ool (**S.M.A.T.**) akin to NASA'S **G**eneral-**M**ission-**A**nalysis-**T**ool (**G.M.A.T.**) for interplanetary and interstellar mission planning and communication.* 
+
+---
+
 ## **The S.T.A.R. Trilogy Architecture**
 
 This repository represents the **theory layering** of a three‑part research program:
@@ -110,9 +116,7 @@ Combines ACSC + ECC into a full cosmological model with:
 - *(See [/docs/Symbolic_Action_Principle.md](/docs/Symbolic_Action_Principle.md), `/docs/star_v3.1.py`, `star_v3.1 output.pdf`  [/docs/STAR.ipynb](/docs/STAR.ipynb), `/docs/_Arithmetic Invariants and Cosmological Geometry in Cartography_.pdf` & `/docs/Appendices for Arithmetic Invariants and Cosmological Geometry in Cartography.pdf`)*
 
 This repository is the **central hub** of the S.T.A.R. Program, and ultimately proposes the introduction of a **Symbolic Field-Theory** paradigm.
-
-*Another goal within this program is an evolution into a "**S**ymbolic-**T**opological-**A**rithemetic-**R**elativity-**M**ission-**A**nalysis-**P**rogram (**S.T.A.R.M.A.P.**) for a **"topographical map"** of cosmic radiation, gravitational density, clusters, voids, and filiments; and a **S.T.A.R**-**M**ission-**A**nalysis-**T**ool (**S.M.A.T.**) akin to NASA'S **G**eneral-**M**ission-**A**nalysis-**T**ool (**G.M.A.T.**) for interplanetary and interstellar mission planning and communication.* 
-
+ 
 ---
 
 ## **Repository Structure**
