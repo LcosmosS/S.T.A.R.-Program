@@ -84,7 +84,7 @@ $$
 
 The precise functional form of the weights $\(w_E(z)\)$ (including any tunable parameters) is **not imposed a priori**. Instead, the symbolic regression engine in `/src/symbolic_regression/` is trained on the full projected point cloud to discover the optimal weighting that best reconciles the projected arithmetic structure with observed cosmological data. This allows the model to learn the natural mapping from arithmetic invariants to effective expansion history without manual fine-tuning.
 
-- *(See [/docs/Symbolic_Action_Principle.md](/docs/Symbolic_Action_Principle.md), `/docs/star_v3.1.py`, `/docs/star_v3.1 output.pdf`, & `/docs/STAR.ipynb`)*
+- *(See [1_STAR_Model.md](1_STAR_Model.md), [/docs/Symbolic_Action_Principle.md](/docs/Symbolic_Action_Principle.md), `/docs/star_v3.1.py`, `/docs/star_v3.1 output.pdf`, & `/docs/STAR.ipynb`)*
 
 ---
 ## Future Directions 
@@ -105,6 +105,8 @@ Complementing this is the **S.M.A.T.** (**S.T.A.R.**-**M**ission-**A**nalysis-**
 - Mission risk assessment via topological stability metrics.
 
 Together, S.T.A.R.M.A.P. and S.M.A.T. bridge fundamental theory with applied space exploration, turning number-theoretic insights into operational tools for humanity’s expansion into the cosmos.
+
+*(See [2_STARMAP.md](2_STARMAP.md), & [3_SMAT.md](3_SMAT.md) for more details.)*
 
 ---
 
