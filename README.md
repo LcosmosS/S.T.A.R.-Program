@@ -87,8 +87,24 @@ The precise functional form of the weights $\(w_E(z)\)$ (including any tunable p
 - *(See [/docs/Symbolic_Action_Principle.md](/docs/Symbolic_Action_Principle.md), `/docs/star_v3.1.py`, `/docs/star_v3.1 output.pdf`, & `/docs/STAR.ipynb`)*
 
 ---
+## Future Directions 
 
-*Another goal within this program is an evolution into a "**S**ymbolic-**T**opological-**A**rithemetic-**R**elativity-**M**ission-**A**nalysis-**P**rogram (**S.T.A.R.M.A.P.**) for a **"topographical map"** of cosmic radiation, gravitational density, clusters, voids, and filiments; and a **S.T.A.R**-**M**ission-**A**nalysis-**T**ool (**S.M.A.T.**) akin to NASA'S **G**eneral-**M**ission-**A**nalysis-**T**ool (**G.M.A.T.**) for interplanetary and interstellar mission planning, simulations, and communication.* 
+### Program Evolution: S.T.A.R.M.A.P. & S.M.A.T.
+
+A key goal of the S.T.A.R. Program is its development into the **S.T.A.R.M.A.P.** — the **S**ymbolic-**T**opological-**A**rithmetic-**R**elativity-**M**ission-**A**nalysis-**P**rogram — which aims to produce high-fidelity topographical maps of the observable universe. These maps will integrate:
+
+- Arithmetic projections of elliptic curve invariants onto cosmic geometry,
+- Entropy cohomology fields for density and radiation structure,
+- Persistent homology for filaments, voids, clusters, and gravitational density variations.
+
+Complementing this is the **S.M.A.T.** (**S.T.A.R.**-**M**ission-**A**nalysis-**T**ool), a practical software framework inspired by *NASA’s General Mission Analysis Tool (GMAT)*. S.M.A.T. will leverage the underlying symbolic model for:
+
+- Interplanetary and interstellar trajectory optimization,
+- Communication window prediction using entropy-weighted propagation,
+- Gravitational assist planning informed by the arithmetic skeleton of spacetime,
+- Mission risk assessment via topological stability metrics.
+
+Together, S.T.A.R.M.A.P. and S.M.A.T. bridge fundamental theory with applied space exploration, turning number-theoretic insights into operational tools for humanity’s expansion into the cosmos.
 
 ---
 
