@@ -114,4 +114,4 @@ The results are encouraging, reproducible, and open new avenues for "arithmetic 
 - `STAR.ipynb` (core computational laboratory)  
 - Cremona Database & SageMath elliptic curve machinery
 
-*This document will be auto-generated and updated with new runs.*
+*This document will be auto-generated and updated with new runs.* 
