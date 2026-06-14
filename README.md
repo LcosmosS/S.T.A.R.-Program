@@ -10,7 +10,7 @@
 **Author:** Patrick J. McNamara  
 **ORCiD:** 0009‑0002‑8978‑5563  
 **Project Start:** March 2025 — Active  
-**Keywords:** Number Theory, Cosmology, Entropy Cohomology, Persistent Homology, Elliptic Curves, Symbolic Regression, Mathematical Physics, Theoretical Physics 
+**Keywords:** Number Theory, Cosmology, Entropy Cohomology, Persistent Homology, Elliptic Curves, Symbolic Regression, Mathematical Physics, Theoretical Physics, Holography 
 
 ---
 
