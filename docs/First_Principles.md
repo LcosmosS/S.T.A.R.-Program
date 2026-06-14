@@ -34,7 +34,7 @@ An entropy field ℳ(x) is defined over the projected manifold, with differentia
 - Effective Hubble parameter:
   $$H_{\rm eff}(z) \propto \langle \Omega_E \rangle_z \quad \text{(scale-dependent via projection)}$$
 - Entropy proxy: `log(|Δ|)`
-- Cohomology class: entropy × (rank + 1) / √r (topological dilution)
+- Cohomology class: `entropy × (rank + 1) / √r` (topological dilution)
 
 ## Computational Methodology
 
