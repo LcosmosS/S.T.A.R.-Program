@@ -46,6 +46,12 @@ def extract_labels_from_ecdata():
 
 
 def main():
+    import argparse
+    
+    parser = argparse.ArgumentParser(description='Generate Cremona subset')
+    parser.add_argument('--max-labels', type=int, default=1000, help='Maximum number of labels to generate')
+    args = parser.parse_args()
+    
     labels = extract_labels_from_ecdata()
     
     if not labels:
@@ -54,14 +60,17 @@ def main():
         print(f"Path exists: {os.path.exists(ECDATA_ROOT)}", file=sys.stderr)
         print(f"Is directory: {os.path.isdir(ECDATA_ROOT)}", file=sys.stderr)
         if os.path.isdir(ECDATA_ROOT):
-            print(f"Contents: {os.listdir(ECDATA_ROOT)}", file=sys.stderr)
+            try:
+                print(f"Contents: {os.listdir(ECDATA_ROOT)}", file=sys.stderr)
+            except Exception as e:
+                print(f"Error listing contents: {e}", file=sys.stderr)
         sys.exit(1)
     
     # Sort lexicographically for reproducibility
     labels = sorted(labels)
     
-    # Print first 1000 labels
-    for L in labels[:1000]:
+    # Print first N labels (default 1000)
+    for L in labels[:args.max_labels]:
         print(L)
 
 
