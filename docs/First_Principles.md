@@ -90,7 +90,7 @@ An entropy field ℳ(x) is defined over the projected manifold, with differentia
 - **Statistical Power**: Eight clusters provide proof-of-concept; expansion to 50–100 structures (from DESI, SDSS, etc.) is essential.
 
 ### Relation to Hubble Tension and Cosmic Web
-The ensemble ⟨Ω_E⟩_z and entropy-weighted projections suggest a **self-organizing arithmetic cosmology** where local over-densities (high-rank curves) correspond to faster apparent expansion, while global averaging recovers Planck-like values. The cohomology classes may correspond to observed Betti numbers in cosmic web TDA analyses.
+The ensemble $⟨Ω_E⟩_z$ and entropy-weighted projections suggest a **self-organizing arithmetic cosmology** where local over-densities (high-rank curves) correspond to faster apparent expansion, while global averaging recovers Planck-like values. The cohomology classes may correspond to observed Betti numbers in cosmic web TDA analyses.
 
 ## Future Directions
 
