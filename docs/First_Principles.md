@@ -12,7 +12,7 @@ This document outlines the foundational philosophy, the computational pipeline, 
 
 ## First Principles Foundations
 
-### 1. Arithmetic–Cosmic Structure Conjecture (ACSC)
+### Arithmetic–Cosmic Structure Conjecture (ACSC)
 Elliptic curves encode deep arithmetic information (rank, conductor, real period Ω, regulator, discriminant Δ, Tamagawa numbers, etc.). The ACSC posits that these invariants can be **projected** via a map Φ onto cosmological manifolds, such that:
 
 - Local large-scale structure (superclusters) corresponds to specific elliptic curves.
@@ -25,10 +25,10 @@ Elliptic curves encode deep arithmetic information (rank, conductor, real period
   - `b = ρ`
 - `κ ≈ 31.5926` (data-driven from prior symbolic regression).
 
-### 2 Entropy Cohomology Conjecture (ECC)
+### Entropy Cohomology Conjecture (ECC)
 An entropy field ℳ(x) is defined over the projected manifold, with differential forms and cohomology classes enforcing **symbolic information conservation**. The discriminant |Δ| serves as a natural entropy proxy, while rank-weighted cohomology classes capture topological complexity of the cosmic web (filaments, voids, clusters).
 
-### 3. Projection Φ and Cosmological Quantities
+### Projection Φ and Cosmological Quantities
 - Dynamic `COSMO_SCALE` anchored on Virgo (54 Mly) and `√κ`.
 - Rank-specific volume divisors and regulator factors.
 - Effective Hubble parameter:
