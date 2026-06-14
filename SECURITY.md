@@ -19,13 +19,13 @@ We take the security of this project seriously. If you discover a security vulne
 ### How to Report
 - Email: security@ LcosmosS@pm.me (or open a **private** vulnerability report on GitHub if you prefer).
  
-Please include "S.T.A.R. Program Security Report" in the subject line and provide as much detail as possible, including:
+Please include **"S.T.A.R. Program Security Report"** in the subject line and provide as much detail as possible, including:
   - Description of the vulnerability
   - Steps to reproduce
   - Potential impact
   - Any suggested mitigation
 
-We aim to acknowledge receipt within **48 hours** and provide a full response (including estimated timeline for a fix) within **7 days**.
+We aim to acknowledge receipt within **48 hours** and provide a full response (including estimated timeline for a fix) within **ASAP**.
 
 ## Scope
 
