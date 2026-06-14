@@ -116,19 +116,20 @@ jobs:
               python scripts/generate_cremona_subset.py --max-labels 1000 > data/raw/ci_subset.csv 2>&1
             else
               echo "⚠ data/ecdata not available - generating fallback test subset"
-              cat > data/raw/ci_subset.csv << 'EOF'
-              label
-              11a1
-              37b1
-              37b2
-              431b1
-              37b3
-              389a1
-              389b1
-              389c1
-              433a1
-              433c1
-              EOF
+              cat > data/raw/ci_subset.csv << EOF
+            label
+            11a1
+            37b1
+            37b2
+            431b1
+            37b3
+            389a1
+            389b1
+            389c1
+            433a1
+            433c1
+            EOF
+            fi
             
             if [ -s data/raw/ci_subset.csv ]; then
               echo "✓ Subset file generated successfully"
@@ -137,7 +138,7 @@ jobs:
             else
               echo "ERROR: ci_subset.csv is empty"
               exit 1
-            fi
+            fi 
 
         - name: Build dataset on CI subset
           shell: bash -l {0}
