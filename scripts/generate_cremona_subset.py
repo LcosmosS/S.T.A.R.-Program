@@ -16,35 +16,45 @@ def extract_labels_from_ecdata():
     """
     labels = []
 
-    for N in sorted(
-        os.listdir(ECDATA_ROOT), key=lambda x: int(x) if x.isdigit() else x
-    ):
-        N_path = os.path.join(ECDATA_ROOT, N)
-        if not os.path.isdir(N_path):
-            continue
-
-        for iso in sorted(os.listdir(N_path)):
-            iso_path = os.path.join(N_path, iso)
-            if not os.path.isdir(iso_path):
+    # Check if directory exists and has content
+    if not os.path.isdir(ECDATA_ROOT):
+        print(f"ERROR: ECDATA_ROOT not found at: {ECDATA_ROOT}", file=sys.stderr)
+        return labels
+    
+    try:
+        for N in sorted(
+            os.listdir(ECDATA_ROOT), key=lambda x: int(x) if x.isdigit() else float('inf')
+        ):
+            N_path = os.path.join(ECDATA_ROOT, N)
+            if not os.path.isdir(N_path):
                 continue
 
-            for fname in sorted(os.listdir(iso_path)):
-                # Expect filenames like "11a1", "37b2", etc.
-                if LABEL_RE.match(fname):
-                    labels.append(fname)
+            for iso in sorted(os.listdir(N_path)):
+                iso_path = os.path.join(N_path, iso)
+                if not os.path.isdir(iso_path):
+                    continue
+
+                for fname in sorted(os.listdir(iso_path)):
+                    # Expect filenames like "11a1", "37b2", etc.
+                    if LABEL_RE.match(fname):
+                        labels.append(fname)
+    except Exception as e:
+        print(f"ERROR: Failed to extract labels from ecdata: {e}", file=sys.stderr)
+        return []
 
     return labels
 
 
 def main():
-    if not os.path.isdir(ECDATA_ROOT):
-        print("ERROR: ECDATA_ROOT not found at:", ECDATA_ROOT, file=sys.stderr)
-        sys.exit(1)
-    
     labels = extract_labels_from_ecdata()
     
     if not labels:
         print("ERROR: No labels found in ecdata directory", file=sys.stderr)
+        print(f"Checked path: {ECDATA_ROOT}", file=sys.stderr)
+        print(f"Path exists: {os.path.exists(ECDATA_ROOT)}", file=sys.stderr)
+        print(f"Is directory: {os.path.isdir(ECDATA_ROOT)}", file=sys.stderr)
+        if os.path.isdir(ECDATA_ROOT):
+            print(f"Contents: {os.listdir(ECDATA_ROOT)}", file=sys.stderr)
         sys.exit(1)
     
     # Sort lexicographically for reproducibility
@@ -53,3 +63,7 @@ def main():
     # Print first 1000 labels
     for L in labels[:1000]:
         print(L)
+
+
+if __name__ == "__main__":
+    main()
