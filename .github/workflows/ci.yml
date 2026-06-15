@@ -102,7 +102,7 @@ jobs:
             which python
             conda list | grep -E "sage|joblib|mamba|conda" || true
 
-        - name: Generate & Commit CI Subset (Cremona)
+        - name: Generate CI Subset (Cremona)
           shell: bash -l {0}
           run: |
             mkdir -p data/raw results
