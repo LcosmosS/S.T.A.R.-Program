@@ -163,13 +163,14 @@ jobs:
             if [ -f data/raw/ci_subset.csv ]; then
               git add data/raw/ci_subset.csv
               if git diff --staged --quiet; then
-                echo "No changes to ci_subset.csv"
+                echo "No changes to ci_subset.csv - skipping commit"
               else
-                git commit -m "ci: update ci_subset.csv (auto-generated)" || echo "Nothing new to commit"
+                git commit -m "ci: update ci_subset.csv (auto-generated from ecdata)"
                 git push
+                echo "Successfully committed and pushed updated ci_subset.csv"
               fi
             else
-              echo "ERROR: ci_subset.csv not generated!"
+              echo "ERROR: ci_subset.csv was not generated!"
               exit 1
             fi
 
