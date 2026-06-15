@@ -1,26 +1,28 @@
-#!/bin/bash
-
 """
-ACSC: Arithmetic–Cosmic Structure Conjecture computational framework.
+Top‑level package initializer for the S.T.A.R. model.
 
-A reproducible pipeline for testing the correspondence between topological features
-of elliptic-curve arithmetic clouds and cosmic structure.
+This file exists so that imports like:
+    from src.entropy.entropy_field import EntropyField
+    from src.physics.hubble_tension_fit import HubbleTensionFit
+    from src.tda.bootstrap_stability import BootstrapStability
+    from src.symbolic_regression.sr_pipeline import SRPipeline
+    from src.acsc.tda_pipeline import persistence_wasserstein
+
+work correctly inside CI, notebooks, and the container.
 """
 
-__version__ = "0.1.0"
-__author__ = "Patrick J. McNamara"
-
-# Core exports for convenient access
-from .projection import project
-from .quantile import QuantileAligner
-from .tda_pipeline import compute_persistence
-from .statistics import w2_between_diagrams, empirical_p_value
+# Re-export subpackages for convenience (optional)
+from . import entropy
+from . import physics
+from . import tda
+from . import symbolic_regression
+from . import acsc
 
 __all__ = [
-    "project",
-    "QuantileAligner",
-    "compute_persistence",
-    "w2_between_diagrams",
-    "empirical_p_value",
+    "entropy",
+    "physics",
+    "tda",
+    "symbolic_regression",
+    "acsc",
 ]
 
