@@ -148,6 +148,8 @@ jobs:
 
             print("CI subset saved to data/raw/ci_subset.csv")
             print("First 10 labels:", labels[:10] if labels else "None")
+            echo "=== Subset Contents ==="
+            head -n 20 data/raw/ci_subset.csv
             EOF
 
         - name: Build EC Dataset (Safe Sequential in CI)
