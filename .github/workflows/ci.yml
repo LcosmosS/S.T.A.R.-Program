@@ -106,35 +106,77 @@ jobs:
           shell: bash -l {0}
           run: pytest -q
 
-        - name: Generate CI subset of Cremona labels (Hardcoded Fallback)
+        - name: Generate & Commit CI Subset (Cremona)
           shell: bash -l {0}
           run: |
             mkdir -p data/raw results
-            echo "=== Generating CI subset (Hardcoded Fallback) ==="
+            echo "=== Generating CI subset from ecdata ==="
 
-            cat > data/raw/ci_subset.csv << 'EOF'
-            label
-            11a1
-            14a1
-            15a1
-            17a1
-            19a1
-            20a1
-            21a1
-            24a1
-            26a1
-            37a1
-            37b1
-            43a1
+            cat > generate_ci_subset.sage << 'EOF'
+            from sage.all import *
+            import csv
+
+            print("Loading Cremona Database...")
+            db = CremonaDatabase()
+
+            # Force initialization
+            try:
+                db._init()
+            except:
+                pass
+
+            labels = []
+            max_labels = 800
+            max_conductor = 2500
+
+            for N in range(1, max_conductor + 1):
+                try:
+                    for label in db.labels(N):
+                        labels.append(str(label))
+                        if len(labels) >= max_labels:
+                             break
+                except:
+                    continue
+                if len(labels) >= max_labels:
+                    break
+
+            print(f"Collected {len(labels)} labels.")
+
+            with open("data/raw/ci_subset.csv", "w", newline="") as f:
+                writer = csv.writer(f)
+                writer.writerow(["label"])
+                for label in labels:
+                    writer.writerow([label])
+
+            print("First 10 labels:", labels[:10] if labels else "None")
             EOF
 
-                      echo "Created fallback CI subset with 12 known good labels."
-                      cat data/raw/ci_subset.csv
+                      echo "=== Subset Contents ==="
+                      head -n 15 data/raw/ci_subset.csv
 
-        - name: Build EC Dataset (Safe Sequential in CI)
+        - name: Commit CI Subset to Repository
           shell: bash -l {0}
           run: |
-            echo "=== Running dataset builder ==="
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+            if [ -f data/raw/ci_subset.csv ]; then
+              git add data/raw/ci_subset.csv
+              if git diff --staged --quiet; then
+                echo "No changes to ci_subset.csv"
+              else
+                git commit -m "ci: update ci_subset.csv (auto-generated)" || echo "Nothing new to commit"
+                git push
+              fi
+            else
+              echo "ERROR: ci_subset.csv not generated!"
+              exit 1
+            fi
+
+        - name: Build EC Dataset from Committed Subset
+          shell: bash -l {0}
+          run: |
+            echo "=== Running dataset builder on committed subset ==="
             sage -python scripts/build_ec_dataset_parallel.sage \
             --labels-file data/raw/ci_subset.csv \
             --output results/ci_ec_subset.csv \
