@@ -102,55 +102,67 @@ jobs:
             which python
             conda list | grep -E "sage|joblib|mamba|conda" || true
 
-        - name: Generate CI subset from ecdata (Robust)
+        - name: Generate CI subset from ecdata submodule (Direct)
           shell: bash -l {0}
           run: |
             mkdir -p data/raw results
-            echo "=== Generating CI subset from ecdata ==="
+            echo "=== Generating CI subset directly from ecdata submodule ==="
 
+            # Use the raw ecdata files for reliability
             cat > generate_ci_subset.sage << 'EOF'
             from sage.all import *
             import csv
+            import os
 
-            print("Loading Cremona Database...")
-            db = CremonaDatabase()
+            print("Using raw ecdata submodule...")
 
-            # Force initialization
-            try:
-                db._init()
-            except:
-                pass
+            # Path to the submodule
+            ecdata_path = "data/ecdata"
 
+            # Try to get labels from alllabels or curves directory
             labels = []
-            max_labels = 600
-            max_conductor = 2000
 
-            for N in range(1, max_conductor + 1):
-                try:
-                    for label in db.labels(N):
-                        labels.append(str(label))
-                        if len(labels) >= max_labels:
+            # Method 1: alllabels file (fastest)
+            alllabels_file = os.path.join(ecdata_path, "alllabels")
+            if os.path.exists(alllabels_file):
+                print("Reading from alllabels file...")
+                with open(alllabels_file) as f:
+                    for line in f:
+                        label = line.strip()
+                          if label:
+                            labels.append(label)
+                        if len(labels) >= 800:
                             break
-                except:
-                    continue
-                if len(labels) >= max_labels:
-                    break
 
-            print(f"Collected {len(labels)} labels dynamically.")
+            # Method 2: Fallback to curves directory
+            if len(labels) < 100:
+                print("Falling back to curves directory...")
+                curves_dir = os.path.join(ecdata_path, "curves")
+                if os.path.exists(curves_dir):
+                    for root, dirs, files in os.walk(curves_dir):
+                        for file in files:
+                            if file.endswith(".csv") or file.startswith("label"):
+                                labels.append(file.split('.')[0])
+                                if len(labels) >= 800:
+                                    break
+                        if len(labels) >= 800:
+                            break
 
-            # Write clean CSV
-            with open("data/raw/ci_subset.csv", "w", newline="") as f:
-                writer = csv.writer(f)
-                writer.writerow(["label"])
-                for label in labels:
-                    writer.writerow([label])
+            print(f"Collected {len(labels)} labels from ecdata submodule.")
 
-            print("CI subset written successfully.")
-            print("First 10 labels:", labels[:10])
-            EOF
+                        # Write clean CSV
+                        with open("data/raw/ci_subset.csv", "w", newline="") as f:
+                             writer = csv.writer(f)
+                            writer.writerow(["label"])
+                            for label in labels:
+                                writer.writerow([label])
 
-                      echo "=== Final Subset Contents ==="
-                      cat data/raw/ci_subset.csv
+                        print("CI subset written successfully.")
+                        print("First 10 labels:", labels[:10])
+                        EOF
+
+                                  echo "=== Final Subset Contents ==="
+                                  cat data/raw/ci_subset.csv
 
         - name: Commit CI Subset to Repository
           shell: bash -l {0}
