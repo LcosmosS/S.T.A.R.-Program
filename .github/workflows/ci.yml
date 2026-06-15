@@ -118,6 +118,12 @@ jobs:
 
             print("Loading Cremona Database...")
             db = CremonaDatabase()
+            
+            # Force index reload if needed
+            try:
+                db._init()
+            except:
+                pass
 
             labels = []
             max_labels = 800
