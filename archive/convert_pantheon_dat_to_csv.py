@@ -10,11 +10,10 @@ if not RAW.exists():
     print(f"Error: {RAW} not found. Place the Pantheon+ .dat file in data/raw/", file=sys.stderr)
     sys.exit(1)
 
-# Read using regex whitespace separator
-# Use header=0 if the file has a header line; use header=None and provide names if not.
-df = pd.read_csv(RAW, sep=r'\s+', comment="#", header=int(0), engine="python")
+# Read using regex whitespace separator (robust to variable spacing)
+df = pd.read_csv(RAW, sep=r'\s+', comment="#", header=0, engine="python")
 
-# Map common column names to canonical names
+# Map common column names to canonical names used by your pipeline
 rename_map = {
     "zHD": "z", "zCMB": "z", "zHEL": "z",
     "m_b_corr": "mu", "MU_SH0ES": "mu",
@@ -23,6 +22,7 @@ rename_map = {
 }
 df = df.rename(columns=rename_map)
 
+# Collapse duplicate columns that may have been renamed to the same key
 def collapse_duplicates(df, key):
     cols = [c for c in df.columns if c == key]
     if not cols:
@@ -30,13 +30,13 @@ def collapse_duplicates(df, key):
     if len(cols) == 1:
         return df[cols[0]]
     sub = df[cols]
-    return sub.bfill(axis=int(1)).iloc[:, int(0)]
+    return sub.bfill(axis=1).iloc[:, 0]
 
 z = collapse_duplicates(df, "z")
 mu = collapse_duplicates(df, "mu")
 sigma = collapse_duplicates(df, "sigma_mu")
 
-# Fallbacks
+# Fallbacks if collapse found nothing
 if z is None:
     for alt in ("zHD", "zCMB", "zHEL"):
         if alt in df.columns:
@@ -57,7 +57,7 @@ if z is None or mu is None or sigma is None:
 
 clean = pd.DataFrame({"z": z, "mu": mu, "sigma_mu": sigma})
 
-# Coerce to numeric and drop invalid rows
+# Coerce to numeric and drop rows with invalid values
 clean = clean.replace([None, ""], pd.NA)
 for col in ["z", "mu", "sigma_mu"]:
     clean[col] = pd.to_numeric(clean[col], errors="coerce")
