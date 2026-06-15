@@ -57,12 +57,12 @@ jobs:
                 git clone --depth 1 https://github.com/JohnCremona/ecdata.git data/ecdata || {
                   echo "Failed to clone ecdata - will use fallback data"
                 }
-              fi
             
             echo "=== Submodule Status After Initialization ==="
             echo "ecdata: $([ -d data/ecdata ] && [ -n "$(ls -A data/ecdata)" ] && echo 'populated' || echo 'empty')"
             echo "eclib: $([ -d data/eclib ] && [ -n "$(ls -A data/eclib)" ] && echo 'populated' || echo 'empty')"
             echo "lmfdb: $([ -d data/lmfdb ] && [ -n "$(ls -A data/lmfdb)" ] && echo 'populated' || echo 'empty')"
+            fi
 
         - name: Cache submodules
           id: cache
