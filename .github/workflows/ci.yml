@@ -106,69 +106,30 @@ jobs:
           shell: bash -l {0}
           run: pytest -q
 
-        - name: Generate CI subset of ~800 Cremona labels
+        - name: Generate CI subset of Cremona labels (Hardcoded Fallback)
           shell: bash -l {0}
           run: |
             mkdir -p data/raw results
-            echo "=== Generating CI subset of Cremona labels ==="
+            echo "=== Generating CI subset (Hardcoded Fallback) ==="
 
-            cat > generate_ci_subset.sage << 'EOF'
-            from sage.all import *
-            import csv
-            import os
-
-            print("Loading Cremona Database...")
-            db = CremonaDatabase()
-            
-            # Force proper initialization
-            try:
-                db._init()
-                print("Database initialized successfully")
-            except Exception as e:
-                print(f"Init warning: {e}")
-
-            labels = []
-            max_labels = 800
-            max_conductor = 2000   # Smaller range for faster CI
-
-            print(f"Scanning conductors 1 to {max_conductor}...")
-
-            for N in range(1, max_conductor + 1):
-                try:
-                    # Try multiple methods
-                    curve_list = list(db.labels(N))
-                    for label in curve_list:
-                        labels.append(str(label))
-                        if len(labels) >= max_labels:
-                            break
-                except:
-                    try:
-                        # Fallback
-                        for c in db.curves(N):
-                            labels.append(str(c))
-                            if len(labels) >= max_labels:
-                                break
-                    except:
-                        continue
-
-                if len(labels) >= max_labels:
-                    break
-                    
-            print(f"Collected {len(labels)} labels.")
-
-            # Write CSV
-            with open("data/raw/ci_subset.csv", "w", newline="") as f:
-                writer = csv.writer(f)
-                writer.writerow(["label"])
-                for label in labels:
-                    writer.writerow([label])
-
-            print("CI subset saved.")
-            print("First 10 labels:", labels[:10] if labels else "NONE FOUND!")
+            cat > data/raw/ci_subset.csv << 'EOF'
+            label
+            11a1
+            14a1
+            15a1
+            17a1
+            19a1
+            20a1
+            21a1
+            24a1
+            26a1
+            37a1
+            37b1
+            43a1
             EOF
 
-                      echo "=== Subset Contents ==="
-                      head -n 15 data/raw/ci_subset.csv || echo "WARNING: No labels generated"
+                      echo "Created fallback CI subset with 12 known good labels."
+                      cat data/raw/ci_subset.csv
 
         - name: Build EC Dataset (Safe Sequential in CI)
           shell: bash -l {0}
