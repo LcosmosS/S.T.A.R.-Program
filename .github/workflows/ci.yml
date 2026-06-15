@@ -62,7 +62,6 @@ jobs:
             echo "ecdata: $([ -d data/ecdata ] && [ -n "$(ls -A data/ecdata)" ] && echo 'populated' || echo 'empty')"
             echo "eclib: $([ -d data/eclib ] && [ -n "$(ls -A data/eclib)" ] && echo 'populated' || echo 'empty')"
             echo "lmfdb: $([ -d data/lmfdb ] && [ -n "$(ls -A data/lmfdb)" ] && echo 'populated' || echo 'empty')"
-            fi
 
         - name: Cache submodules
           id: cache
