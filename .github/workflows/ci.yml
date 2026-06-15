@@ -22,6 +22,27 @@ jobs:
             submodules: 'true'
             fetch-depth: 0
 
+        - name: Setup Miniforge3
+          uses: conda-incubator/setup-miniconda@v3
+          with:
+            auto-update-conda: true
+            python-version: "3.12"
+            environment-file: environment.yml
+            activate-environment: star-env
+            channels: conda-forge
+            use-mamba: true
+            conda-solver: libmamba
+
+        - name: Install additional dependencies
+          shell: bash -l {0}
+          run: |
+            conda install -y joblib
+
+        - name: Add src to PYTHONPATH
+          shell: bash -l {0}
+          run: |
+            echo "PYTHONPATH=${GITHUB_WORKSPACE}/src:${PYTHONPATH}" >> $GITHUB_ENV
+            
         - name: Cache submodules
           id: cache
           uses: actions/cache@v4
@@ -72,27 +93,6 @@ jobs:
             echo "ecdata: $([ -d data/ecdata ] && [ -n "$(ls -A data/ecdata)" ] && echo 'populated' || echo 'empty')"
             echo "eclib: $([ -d data/eclib ] && [ -n "$(ls -A data/eclib)" ] && echo 'populated' || echo 'empty')"
             echo "lmfdb: $([ -d data/lmfdb ] && [ -n "$(ls -A data/lmfdb)" ] && echo 'populated' || echo 'empty')"
-
-        - name: Setup Miniforge3
-          uses: conda-incubator/setup-miniconda@v3
-          with:
-            auto-update-conda: true
-            python-version: "3.12"
-            environment-file: environment.yml
-            activate-environment: star-env
-            channels: conda-forge
-            use-mamba: true
-            conda-solver: libmamba
-
-        - name: Install additional dependencies
-          shell: bash -l {0}
-          run: |
-            conda install -y joblib
-
-        - name: Add src to PYTHONPATH
-          shell: bash -l {0}
-          run: |
-            echo "PYTHONPATH=${GITHUB_WORKSPACE}/src:${PYTHONPATH}" >> $GITHUB_ENV
 
         - name: Verify environment
           shell: bash -l {0}
