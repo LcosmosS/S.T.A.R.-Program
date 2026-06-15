@@ -96,7 +96,7 @@ jobs:
         run: |
           pytest -q
 
-      - name: Generate CI subset from ecdata submodule (Robust)
+      - name: Generate CI subset from ecdata submodule (Robust + No LFS)
         shell: bash -l {0}
         run: |
           mkdir -p data/raw results
@@ -112,42 +112,26 @@ jobs:
           ecdata_path = "data/ecdata"
           labels = []
 
-          # Method 1: alllabels file
+          # Method 1: alllabels file (best)
           alllabels_file = os.path.join(ecdata_path, "alllabels")
           if os.path.exists(alllabels_file):
               print("Reading from alllabels file...")
               with open(alllabels_file) as f:
                   for line in f:
                       label = line.strip()
-                      if label:
+                      if label and not label.startswith('#'):
                           labels.append(label)
-                      if len(labels) >= 800:
+                      if len(labels) >= 600:
                           break
 
-          # Method 2: Fallback
-          if len(labels) < 100:
-              print("Falling back to curves directory...")
-              curves_dir = os.path.join(ecdata_path, "curves")
-              if os.path.exists(curves_dir):
-                  for root, dirs, files in os.walk(curves_dir):
-                      for file in files:
-                          if file.endswith((".csv", ".txt")) or "label" in file.lower():
-                              base = file.split('.')[0]
-                              if base and base not in labels:
-                                  labels.append(base)
-                              if len(labels) >= 800:
-                                  break
-                      if len(labels) >= 800:
-                          break
+          # Fallback if needed
+          if len(labels) < 50:
+              print("Using hardcoded fallback labels")
+              labels = ["11a1","14a1","15a1","17a1","19a1","20a1","21a1","24a1","26a1","37a1","37b1","43a1","53a1","61a1"]
 
-          print(f"Collected {len(labels)} labels from ecdata submodule.")
+          print(f"Collected {len(labels)} labels.")
 
-          # Hard fallback if empty
-          if len(labels) == 0:
-              print("WARNING: Using hardcoded fallback")
-              labels = ["11a1","14a1","15a1","17a1","19a1","20a1","21a1","24a1","26a1","37a1","37b1","43a1"]
-
-          # Write CSV
+          # Write plain text CSV (force no LFS)
           with open("data/raw/ci_subset.csv", "w", newline="") as f:
               writer = csv.writer(f)
               writer.writerow(["label"])
@@ -158,9 +142,9 @@ jobs:
           print("First 10 labels:", labels[:10])
           EOF
 
-                    echo "=== Final Subset Contents ==="
-                    cat data/raw/ci_subset.csv
-
+          echo "=== Final Subset Contents ==="
+          cat data/raw/ci_subset.csv
+          
       - name: Commit CI Subset to Repository
         shell: bash -l {0}
         run: |
