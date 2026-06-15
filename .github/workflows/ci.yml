@@ -182,13 +182,13 @@ jobs:
             --workers 2 \
             --batch-size 50
 
+        - name: Run tests
+          shell: bash -l {0}
+          run: pytest -q
+
         - name: Upload CI artifacts
           uses: actions/upload-artifact@v4
           with:
             name: ci-results
             path: results/
             retention-days: 7
-
-        - name: Run tests
-          shell: bash -l {0}
-          run: pytest -q
