@@ -102,10 +102,6 @@ jobs:
             which python
             conda list | grep -E "sage|joblib|mamba|conda" || true
 
-        - name: Run tests
-          shell: bash -l {0}
-          run: pytest -q
-
         - name: Generate & Commit CI Subset (Cremona)
           shell: bash -l {0}
           run: |
@@ -190,3 +186,7 @@ jobs:
             name: ci-results
             path: results/
             retention-days: 7
+
+        - name: Run tests
+          shell: bash -l {0}
+          run: pytest -q
