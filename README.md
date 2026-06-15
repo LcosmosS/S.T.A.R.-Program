@@ -18,8 +18,8 @@
 
 This repository is the **primary research archive** for the **S.T.A.R. Program** — the *Symbolic–Topological–Arithmetic–Relativity Model* — a proposed theoretical physics framework that couples:
 
-- **ACSC** — *Arithmetic–Cosmic Structure Conjecture* *( `/docs/The Arithmetic–Cosmic Structure Conjecture (ACSC) Monograph.pdf`)*
-- **ECC** — *Entropy Cohomology Conjecture*  *( `/docs/The Entropy Cohomology Conjecture (ECC).pdf`)*
+- **ACSC** — *Arithmetic–Cosmic Structure Conjecture* *( [/docs/The Arithmetic–Cosmic Structure Conjecture (ACSC) Monograph.pdf](/docs/The_Arithmetic–Cosmic_Structure_Conjecture_(ACSC)_Monograph.pdf)`)*
+- **ECC** — *Entropy Cohomology Conjecture*  *( [/docs/The Entropy Cohomology Conjecture (ECC).pdf](/docs/The_Entropy_Cohomology_Conjecture_(ECC).pdf))*
 
 Together, these form a dual‑layer architecture:
 
@@ -37,8 +37,8 @@ The S.T.A.R. Program proposes that the **large‑scale structure of the universe
 This repository contains the **full theoretical monographs**, **computational toolkit**, **TDA stability pipeline**, and **symbolic regression engine** that define the S.T.A.R. Program.
 
 - *(See [OVERVIEW.md](OVERVIEW.md) for a more in depth overview.)* 
-- *(See  `/docs/_Arithmetic Invariants and Cosmological Geometry in Cartography_.pdf` for project details.)* 
-- *(See [First_Principles.md](First_Principles.md), `/docs/first_principals.py` & `/docs/first_principals_results.txt` for evidance towards Hubble-Planck Tension resolution.)*
+- *(See  [/docs/_Arithmetic Invariants and Cosmological Geometry in Cartography_.pdf](/docs/_Arithmetic_Invariants_and_Cosmological_Geometry_in_Cartography_.pdf) for project details.)* 
+- *(See [First_Principles.md](First_Principles.md), [/docs/first_principals.py](/docs/first_principals.py) & [/docs/first_principals_results.txt](/docs/first_principals_results.txt) for evidance towards Hubble-Planck Tension resolution.)*
 
 
 ---
@@ -82,9 +82,9 @@ $$
 \quad (\sim 67.4\ \text{km/s/Mpc})
 $$
 
-The precise functional form of the weights $\(w_E(z)\)$ (including any tunable parameters) is **not imposed a priori**. Instead, the symbolic regression engine in `/src/symbolic_regression/` is trained on the full projected point cloud to discover the optimal weighting that best reconciles the projected arithmetic structure with observed cosmological data. This allows the model to learn the natural mapping from arithmetic invariants to effective expansion history without manual fine-tuning.
+The precise functional form of the weights $\(w_E(z)\)$ (including any tunable parameters) is **not imposed a priori**. Instead, the symbolic regression engine in [/src/symbolic_regression/](/src/symbolic_regression/) is trained on the full projected point cloud to discover the optimal weighting that best reconciles the projected arithmetic structure with observed cosmological data. This allows the model to learn the natural mapping from arithmetic invariants to effective expansion history without manual fine-tuning.
 
-- *(See [1_STAR_Model.md](1_STAR_Model.md), [Symbolic_Action_Principle.md](Symbolic_Action_Principle.md), `/docs/star_v3.1.py`, `/docs/star_v3.1 output.pdf`, & `/docs/STAR.ipynb`)*
+- *(See [1_STAR_Model.md](1_STAR_Model.md), [Symbolic_Action_Principle.md](Symbolic_Action_Principle.md), [/docs/star_v3.1.py](/docs/star_v3.1.py), [/docs/star_v3.1 output.pdf](/docs/star_v3.1_output.pdf), & [/docs/STAR.ipynb](/docs/STAR.ipynb))*
 
 ---
 ## Future Directions 
@@ -132,7 +132,7 @@ Combines ACSC + ECC into a full cosmological model with:
 - cosmic‑web alignment  
 - symbolic regression law discovery
 
-*(See [Symbolic_Action_Principle.md](Symbolic_Action_Principle.md), `/docs/star_v3.1.py`, `star_v3.1 output.pdf`  [/docs/STAR.ipynb](/docs/STAR.ipynb), `/docs/_Arithmetic Invariants and Cosmological Geometry in Cartography_.pdf` & `/docs/Appendices for Arithmetic Invariants and Cosmological Geometry in Cartography.pdf`)*
+*(See [Symbolic_Action_Principle.md](Symbolic_Action_Principle.md), [/docs/star_v3.1.py](/docs/star_v3.1.py), [star_v3.1 output.pdf](star_v3.1_output.pdf)  [/docs/STAR.ipynb](/docs/STAR.ipynb), [/docs/_Arithmetic Invariants and Cosmological Geometry in Cartography_.pdf](/docs/_Arithmetic_Invariants_and_Cosmological_Geometry_in_Cartography_.pdf) & [/docs/Appendices for Arithmetic Invariants and Cosmological Geometry in Cartography.pdf](/docs/Appendices_for_Arithmetic_Invariants_and_Cosmological_Geometry_in_Cartography.pdf)`)*
 
 This repository is the **central hub** of the S.T.A.R. Program, and ultimately proposes the introduction of a **Symbolic Field-Theory** paradigm.
  
@@ -213,9 +213,9 @@ on synthetic cosmic structures, validated through:
 
 Researchers are encouraged to:
 
-- inspect the manuscript and thesis pdf's in `/docs`
-- run the full validation pipeline in `/scripts`  
-- explore the symbolic regression manifold in `/examples/exports`  
+- inspect the manuscript and thesis pdf's in [/docs](/docs)
+- run the full validation pipeline in [/scripts](/scripts)  
+- explore the symbolic regression manifold in [/examples/exports](/examples/exports)  
 - [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/LcosmosS/S.T.A.R.-Program)
 ---
 
