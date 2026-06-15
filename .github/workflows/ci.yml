@@ -96,26 +96,25 @@ jobs:
         run: |
           pytest -q
 
-      - name: Generate CI subset from ecdata submodule (Robust + No LFS)
+      - name: Generate CI subset from ecdata submodule (Clean)
         shell: bash -l {0}
         run: |
           mkdir -p data/raw results
-          echo "=== Generating CI subset from ecdata submodule ==="
+          echo "=== Generating clean CI subset ==="
 
           cat > generate_ci_subset.sage << 'EOF'
           from sage.all import *
           import csv
           import os
 
-          print("Using raw ecdata submodule...")
+          print("Generating clean CI subset...")
 
           ecdata_path = "data/ecdata"
           labels = []
 
-          # Method 1: alllabels file (best)
+          # Read from alllabels if available
           alllabels_file = os.path.join(ecdata_path, "alllabels")
           if os.path.exists(alllabels_file):
-              print("Reading from alllabels file...")
               with open(alllabels_file) as f:
                   for line in f:
                       label = line.strip()
@@ -124,26 +123,26 @@ jobs:
                       if len(labels) >= 600:
                           break
 
-          # Fallback if needed
-          if len(labels) < 50:
-              print("Using hardcoded fallback labels")
-              labels = ["11a1","14a1","15a1","17a1","19a1","20a1","21a1","24a1","26a1","37a1","37b1","43a1","53a1","61a1"]
+          # Hard fallback if needed
+          if len(labels) == 0:
+              print("Using hardcoded fallback")
+              labels = ["11a1","14a1","15a1","17a1","19a1","20a1","21a1","24a1","26a1","37a1","37b1","43a1"]
 
-          print(f"Collected {len(labels)} labels.")
-
-          # Write plain text CSV (force no LFS)
+          # Write clean CSV with proper header
           with open("data/raw/ci_subset.csv", "w", newline="") as f:
               writer = csv.writer(f)
               writer.writerow(["label"])
               for label in labels:
                   writer.writerow([label])
 
-          print("CI subset written successfully.")
-          print("First 10 labels:", labels[:10])
+          print(f"Written {len(labels)} labels to ci_subset.csv")
+          print("First 10:", labels[:10])
           EOF
 
-          echo "=== Final Subset Contents ==="
-          cat data/raw/ci_subset.csv
+                    sage generate_ci_subset.sage
+
+                    echo "=== Final ci_subset.csv ==="
+                    cat data/raw/ci_subset.csv
           
       - name: Commit CI Subset to Repository
         shell: bash -l {0}
