@@ -1,13 +1,13 @@
-label	conductor	discriminant	j_invariant	omega_real	torsion_order	tamagawa_product	rank_algebraic	rank_analytic_pari	selmer2_rank	sha_order  error
-11a1										
-14a1										
-15a1										
-17a1										
-19a1										
-20a1										
-21a1										
-24a1										
-26a1										
-37a1										
-37b1										
-43a1										
+label,	conductor,	discriminant,	j_invariant,	omega_real,	torsion_order,	tamagawa_product,	rank_algebraic,	rank_analytic_pari,	selmer2_rank,	sha_order,  error
+11a1,										
+14a1,										
+15a1,										
+17a1,										
+19a1,										
+20a1,										
+21a1,										
+24a1,										
+26a1,										
+37a1,										
+37b1,										
+43a1,										
