@@ -120,7 +120,7 @@ jobs:
             db = CremonaDatabase()
 
             labels = []
-            max_labels = 1000
+            max_labels = 800
             max_conductor = 5000
 
             print(f"Scanning conductors 1 to {max_conductor}...")
