@@ -2,9 +2,9 @@ name: Notebook Pipeline
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -12,32 +12,44 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-
+      packages: write
     container:
       image: sagemath/sagemath:latest
-      options: --user root --memory=6g
+      options: --user root --memory=4g
 
     steps:
-      - name: Install system tools
+      - name: Install Git inside container 
         run: |
           apt-get update
-          apt-get install -y git pandoc texlive texlive-latex-extra texlive-xetex
+          apt-get install -y git
+          git --version
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           submodules: recursive
 
-      - name: Install Python dependencies for notebooks
+      - name: Debug paths
+        run: |
+          echo "PWD: $(pwd)"
+          echo "Listing /__w:"
+          ls -R /__w || true      
+
+      - name: Install system tools
+        run: |
+          apt-get update
+          apt-get install -y pandoc texlive texlive-latex-extra texlive-xetex
+
+      - name: Install Python dependencies
         run: |
           sage -python -m pip install --upgrade pip
           sage -python -m pip install --no-cache-dir \
-            numpy pandas matplotlib plotly corner ripser persim tqdm \
+            numpy pandas tqdm plotly==5.18.0 corner ripser persim \
             nbconvert nbclient ipykernel nest_asyncio
 
-          # Register Sage kernel
-          sage -python -m ipykernel install --user --name sage --display-name "SageMath"
+      - name: Clear Python cache
+        run: rm -rf __pycache__ */__pycache__ */*/__pycache__
 
       - name: Add src to PYTHONPATH
         run: |
@@ -77,3 +89,25 @@ jobs:
             git push || echo "Push skipped (may need permissions)"
             echo "Successfully committed executed notebooks to examples/exports/"
           fi
+
+        env:
+          JUPYTER_ENABLE_LAB: "yes"
+          PYTHONUNBUFFERED: "1"
+
+      - name: Export HTML and PDF
+        run: |
+          mkdir -p exports
+          for nb in examples/*-executed.ipynb; do
+            base=$(basename "$nb" .ipynb)
+            sage -python -m jupyter nbconvert --to html "$nb" --output-dir exports --output "${base}.html"
+            sage -python -m jupyter nbconvert --to pdf  "$nb" --output-dir exports --output "${base}.pdf"
+          done
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: notebook-outputs
+          path: |
+            results/
+            examples/*-executed.ipynb
+            exports/
