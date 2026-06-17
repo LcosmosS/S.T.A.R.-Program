@@ -11,16 +11,21 @@ permissions:
   contents: write
 
 jobs:
-  notebooks:
+  execute-notebooks:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write  
-      packages: write
-
+    container:
+      image: sagemath/sagemath:latest
+      options: --user root --memory=4g
     env:
       DEBIAN_FRONTEND: noninteractive
 
     steps:
+      - name: Install Git inside container 
+        run: |
+          apt-get update
+          apt-get install -y git
+          git --version
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -36,6 +41,24 @@ jobs:
           activate-environment: star-env
           channels: conda-forge
           use-mamba: true
+
+      - name: Debug paths
+        run: |
+          echo "PWD: $(pwd)"
+          echo "Listing /__w:"
+          ls -R /__w || true      
+
+      - name: Install system tools
+        run: |
+          apt-get update
+          apt-get install -y pandoc texlive texlive-latex-extra texlive-xetex
+
+      - name: Install Python dependencies
+        run: |
+          sage -python -m pip install --upgrade pip
+          sage -python -m pip install --no-cache-dir \
+            numpy pandas tqdm plotly==5.18.0 corner ripser persim \
+            nbconvert nbclient ipykernel nest_asyncio
 
       - name: Add src to PYTHONPATH
         shell: bash -l {0}
