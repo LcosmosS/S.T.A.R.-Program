@@ -7,13 +7,12 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
-permissions:
-  contents: write
-  packages: write
-
 jobs:
   execute-notebooks:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
     container:
       image: sagemath/sagemath:latest
       options: --user root --memory=4g
@@ -50,6 +49,13 @@ jobs:
           sage -python -m pip install --no-cache-dir \
             numpy pandas tqdm plotly==5.18.0 corner ripser persim \
             nbconvert nbclient ipykernel nest_asyncio
+
+      - name: Clear Python cache
+        run: rm -rf __pycache__ */__pycache__ */*/__pycache__
+
+      - name: Add src to PYTHONPATH
+        shell: bash -l {0}
+        run: echo "PYTHONPATH=${GITHUB_WORKSPACE}/src:${PYTHONPATH}" >> $GITHUB_ENV
 
       - name: Execute All Notebooks and Commit Outputs
         shell: bash -l {0}
