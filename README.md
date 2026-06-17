@@ -134,7 +134,8 @@ Combines ACSC + ECC into a full cosmological model with:
 
 *(See [Symbolic_Action_Principle.md](Symbolic_Action_Principle.md), [/docs/star_v3.1.py](/docs/star_v3.1.py), [star_v3.1 output.pdf](star_v3.1_output.pdf)  [/docs/STAR.ipynb](/docs/STAR.ipynb), [/docs/_Arithmetic Invariants and Cosmological Geometry in Cartography_.pdf](/docs/_Arithmetic_Invariants_and_Cosmological_Geometry_in_Cartography_.pdf) & [/docs/Appendices for Arithmetic Invariants and Cosmological Geometry in Cartography.pdf](/docs/Appendices_for_Arithmetic_Invariants_and_Cosmological_Geometry_in_Cartography.pdf)`)*
 
-This repository is the **central hub** of the S.T.A.R. Program, and ultimately proposes the introduction of a **Symbolic Field-Theory** paradigm. (See [SFT.md](SFT.md))
+This repository is the **central hub** of the S.T.A.R. Program, and ultimately proposes the introduction of a **Symbolic Field-Theory** paradigm. 
+- *(See [SFT.md](SFT.md))*
  
 ---
 
