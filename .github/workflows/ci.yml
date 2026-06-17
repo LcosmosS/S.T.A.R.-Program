@@ -96,11 +96,11 @@ jobs:
         run: |
           pytest -q
 
-      - name: Generate CI subset from ecdata submodule (Corrected)
+      - name: Generate CI subset from ecdata submodule (Final Fixed)
         shell: bash -l {0}
         run: |
           mkdir -p data/raw results
-          echo "=== Generating clean CI subset from ecdata (Corrected) ==="
+          echo "=== Generating clean CI subset from ecdata (Final) ==="
 
           cat > generate_ci_subset.sage << 'EOF'
           from sage.all import *
@@ -112,29 +112,37 @@ jobs:
           ecdata_path = "data/ecdata"
           labels = []
 
-          # Target actual data files: alllabels, curves, curvedata, etc.
-          print("Looking for label data files...")
+          # Priority 1: alllabels directory
+          alllabels_dir = os.path.join(ecdata_path, "alllabels")
+          if os.path.isdir(alllabels_dir):
+              print("Reading from alllabels directory...")
+              for root, dirs, files in os.walk(alllabels_dir):
+                  for file in files:
+                      if file.endswith((".txt", ".csv")) or "alllabels" in file.lower():
+                          filepath = os.path.join(root, file)
+                          try:
+                              with open(filepath) as f:
+                                  for line in f:
+                                      label = line.strip()
+                                      if label and not label.startswith('#') and len(label) > 3:
+                                          labels.append(label)
+                                      if len(labels) >= 800:
+                                          break
+                          except:
+                              continue
+                          if len(labels) >= 800:
+                              break
+                  if len(labels) >= 800:
+                      break
 
-          # Priority 1: alllabels file
-          alllabels_file = os.path.join(ecdata_path, "alllabels")
-          if os.path.exists(alllabels_file):
-              print("Reading from alllabels file...")
-              with open(alllabels_file) as f:
-                  for line in f:
-                      label = line.strip()
-                      if label and not label.startswith('#') and len(label) > 3:
-                          labels.append(label)
-                      if len(labels) >= 800:
-                          break
-
-          # Priority 2: curves directory (most reliable)
+          # Priority 2: curves directory
           if len(labels) < 100:
               print("Falling back to curves directory...")
               curves_dir = os.path.join(ecdata_path, "curves")
-              if os.path.exists(curves_dir):
+              if os.path.isdir(curves_dir):
                   for root, dirs, files in os.walk(curves_dir):
                       for file in files:
-                          if file.endswith((".csv", ".txt")) and ("label" in file.lower() or file.startswith("a")):
+                          if file.endswith((".csv", ".txt")) and len(file) > 3:
                               base = file.split('.')[0]
                               if base and len(base) > 3 and base not in labels:
                                   labels.append(base)
@@ -145,7 +153,7 @@ jobs:
 
           print(f"Collected {len(labels)} labels.")
 
-          # Final fallback if still empty
+          # Final hardcoded fallback
           if len(labels) == 0:
               print("WARNING: Using hardcoded fallback")
               labels = ["11a1","14a1","15a1","17a1","19a1","20a1","21a1","24a1","26a1","37a1","37b1","43a1"]
