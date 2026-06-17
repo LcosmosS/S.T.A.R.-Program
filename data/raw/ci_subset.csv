@@ -1,3 +1,601 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:bed467fcbc85c7ce4ccaff5ed98db9d767d3ff9eb5e7ea86f66c361fad65f1c6
-size 1956
+label
+New (since December 2020) schema for ECQ:
+"Before this there was one table ec_curves with an ""extra"" table"
+(see below for the schema) and ec_padic.
+"New tables (since December 2020): 8 tables, the first of which will be"
+"the main search table, with ec_padic unchanged."
+ec_curvedata
+ec_localdata
+ec_classdata
+ec_mwbsd
+ec_galrep
+ec_2adic
+ec_torsion_growth [only has data for conductors up to 400000]
+ec_iwasawa        [only has data for conductors up to 150000]
+ec_padic          [only has data for conductors up to 130000]
+"NB (1) All curves have an 'lmfdb_label' (e.g. '11.a1'), with"
+"'lmfdb_iso' the isogeny class label (e.g. '11.a'), 'lmfdb_number' the"
+"number of the curve in its isogeny class (e.g. 1), 'iso_nlabel'"
+(numerical converson of the letter part of the label).  Curves of
+"conductor <500000 also have ""Cremona label"" columns 'Clabel'"
+(e.g. '11a1') and 'Ciso' (e.g.'11a').
+(2) The 'conductor' column is in all tables though apparently
+redundant in all but ec_curvedata.  This is fo ease of housekeeping
+operations such as deleteing/backup of curves by conductor range.
+schemas:
+"ec_curvedata: one row per curve, contains all columns used in search"
+"{'id': 'bigint',"
+"'Clabel': 'text',"
+"'lmfdb_label': 'text',"
+"'Ciso': 'text',"
+"'lmfdb_iso': 'text',"
+"'regulator': 'numeric',"
+"'ainvs': 'numeric[]',"
+"'jinv': 'numeric[]',"
+"'min_quad_twist_ainvs': 'numeric[]',"
+"'iso_nlabel': 'smallint',"
+"'Cnumber': 'smallint',"
+"'lmfdb_number': 'smallint',"
+"'cm': 'smallint',"
+"'num_bad_primes': 'smallint',"
+"'optimality': 'smallint',"
+"'manin_constant': 'smallint',"
+"'torsion': 'smallint',"
+"'rank': 'smallint',"
+"'analytic_rank': 'smallint',"
+"'signD': 'smallint',"
+"'class_deg': 'smallint',"
+"'class_size': 'smallint',"
+"'min_quad_twist_disc': 'smallint',"
+"'faltings_index': 'smallint',"
+"'faltings_ratio': 'smallint',"
+"'isogeny_degrees': 'smallint[]',"
+"'nonmax_primes': 'smallint[]',"
+"'torsion_structure': 'smallint[]',"
+"'torsion_primes': 'smallint[]',"
+"'sha_primes': 'smallint[]',"
+"'conductor': 'integer',"
+"'nonmax_rad': 'integer',"
+"'num_int_pts': 'integer',"
+"'sha': 'integer',"
+"'bad_primes': 'integer[]',"
+"'degree': 'bigint',"
+"'semistable': 'boolean',"
+"'potential_good_reduction': 'boolean',"
+'squarefree_disc': 'boolean'}
+NB (1) no 'equation' column: constructed on the fly from ainvs.
+(2) we store the ainvs of the minimal quadratic twist and look up its
+label on the fly.
+"ec_localdata: one row per (curve, bad prime)"
+"{'id': 'bigint',"
+"'lmfdb_label': 'text',"
+"'tamagawa_number': 'smallint',"
+"'kodaira_symbol': 'smallint',"
+"'reduction_type': 'smallint',"
+"'root_number': 'smallint',"
+"'conductor_valuation': 'smallint',"
+"'discriminant_valuation': 'smallint',"
+"'j_denominator_valuation': 'smallint',"
+"'prime': 'integer',"
+'conductor': 'integer'}
+NB kodaira_symbol uses the pari numerical encoding.  Sage has (thanks
+to David Roe) a suitable class to use to convert these to text via
+"latex(KodairaSymbol(n)), and K._pari_code() converts a Sage Kodaira"
+Symbol object K to its pari code.
+ec_mwbsd: one row per curve
+"{'id': 'bigint',"
+"'lmfdb_label': 'text',"
+"'special_value': 'numeric',"
+"'real_period': 'numeric',"
+"'area': 'numeric',"
+"'sha_an': 'numeric',"
+"'tamagawa_product': 'integer',"
+"'ngens': 'smallint',"
+"'rank_bounds': 'smallint[]',"
+"'torsion_generators': 'numeric[]',"
+"'xcoord_integral_points': 'numeric[]',"
+"'gens': 'numeric[]',"
+"'heights': 'numeric[]',"
+'conductor': 'integer'}
+ec_classdata: one row per isogeny class
+"{'id': 'bigint',"
+"'lmfdb_iso': 'text',"
+"'trace_hash': 'bigint',"
+"'class_size': 'smallint',"
+"'class_deg': 'smallint',"
+"'isogeny_matrix': 'smallint[]',"
+"'aplist': 'smallint[]',"
+"'anlist': 'smallint[]',"
+'conductor': 'integer'}
+ec_2adic: one row per curve (Rouse data)
+"{'id': 'bigint',"
+"'lmfdb_label': 'text',"
+"'twoadic_label': 'text',"
+"'twoadic_index': 'smallint',"
+"'twoadic_log_level': 'smallint',"
+"'twoadic_gens': 'smallint[]',"
+'conductor': 'integer'}
+"ec_galrep: one row per (curve, nonmaximal prime) (Sutherland data)"
+"{'id': 'bigint',"
+"'lmfdb_label': 'text',"
+"'image': 'text',"
+"'prime': 'smallint',"
+'conductor': 'integer'}
+"ec_torsion_growth: one row per (curve, extension field) (Gonzalez-Jimenez--Najman data)"
+[No data for conductors over 400000]
+"{'id': 'bigint',"
+"'lmfdb_label': 'text',"
+"'degree': 'smallint',"
+"'field': 'numeric[]',"
+"'torsion': 'smallint[]',"
+'conductor': 'integer'}
+ec_iwasawa: one row per curve (Pollack data)
+[No data for conductors over 4150000]
+"{'id': 'bigint',"
+"'lmfdb_label': 'text',"
+"'iwp0': 'smallint',"
+"'iwdata': 'jsonb',"
+'conductor': 'integer'}
+"NB Type jsonb is only used for ec_iwasawa.iwdata, which is a dict with"
+keys a variable number of primes.
+"ec_padic: one row per (curve, prime p) for p<100."
+"{'id': 'bigint',"
+"'lmfdb_iso': 'text',"
+"'p': 'smallint',"
+"'prec': 'smallint',"
+"'unit': 'numeric',"
+'val': 'smallint'}
+"See make_tables.py for commands used to create these tables, and also"
+the commands for creating indexes for them.
+======================= Old schemas =============================
+"Search table columns (* indicates ""used for searching Nov 2020""):"
+*'label'
+*'lmfdb_label'
+*'iso'
+*'lmfdb_iso'
+'iso_nlabel'
+*'number'
+'lmfdb_number'
+*'ainvs'
+*'jinv'
+*'conductor'
+*'torsion'
+*'rank'
+*'sha'
+*'torsion_structure'
+*'cm'
+*'isogeny_degrees'
+*'nonmax_primes'
+'nonmax_rad'
+'trace_hash'
+*'bad_primes'
+'class_size'
+'num_bad_primes'
+*'semistable'
+'optimality'
+'manin_constant'
+*'num_int_pts'
+*'regulator'
+*'isodeg'
+'torsion_growth'
+Extra table columns:
+'equation'
+'signD'
+'torsion_generators'
+'xcoord_integral_points'
+'gens'
+'heights'
+'tamagawa_product'
+'special_value'
+'real_period'
+'degree'
+'modp_images'
+'2adic_label'
+'2adic_index'
+'2adic_log_level'
+'2adic_gens'
+'isogeny_matrix'
+'class_deg'
+'sha_an'
+'sha_primes'
+'torsion_primes'
+'tor_degs'
+'tor_fields'
+'tor_gro'
+'local_data'
+'min_quad_twist'
+'aplist'
+'anlist'
+'iwdata'
+'iwp0'
+from sage.all import EllipticCurve
+from codec import parse_int_list
+"def make_alllabels(infilename, mode='w', pref='t', verbose=False):"
+infile = open(infilename)
+"_, suf = infilename.split(""."")"
+"alllabelsfile = open(pref+""alllabels.""+suf, mode=mode)"
+count = 0
+for L in open(infilename).readlines():
+count += 1
+if count % 1000 == 0:
+print(L)
+"N, cl, _, ainvs, _, _, _ = L.split()"
+E = EllipticCurve(parse_int_list(ainvs))
+"curves = E.isogeny_class(order=""sage"").curves"
+"reordered_curves = sorted(curves, key=lambda E: E.a_invariants())"
+"lab1 = range(1, len(curves)+1)"
+lab2 = [1 + reordered_curves.index(EE) for EE in curves]
+for j in range(len(curves)):
+"line = ' '.join([N, cl, str(lab1[j]), N, cl, str(lab2[j])])"
+alllabelsfile.write(line + '\n')
+if verbose:
+"print(""alllabelsfile:  "" + line)"
+infile.close()
+alllabelsfile.close()
+Documentation of the content of the different text files containing
+data for elliptic curves over Q and how these map to the columns of
+the LMFDB table ec_curves
+"Files not used for LMFDB data upload: curves, allcurves, aplist, allbigsha, degphi"
+"Files used: alllabels, allgens, allbsd, alldegphi, allisog, intpts,"
+"opt_man, 2adic, galreps."
+"Also: torsion growth, Iwasawa data"
+"Here we describe each field (column) in the data files, using the"
+column name from the LMFDB's ec_curves table where possible.  Some
+columns here are not LMFDB columns but are used for populating those;
+LMFDB columns which are not columns here are listed below as
+"""dependent columns"".  Some of these are trivially obtained (e.g. by"
+"concatenating strings), while others require constructing the curves."
+One day I will create extra text files for all these dependent columns
+so that reading the data in will be completely trivial.
+(0) 4 common fields in most files:
+1. conductor: int
+2. isoclass: string
+3. number: int
+4. ainvs: list of 5 ints
+"Dependent columns: iso (conductor+isoclass), label (iso+number)"
+"(1) alllabels files have the 3 label fields and 3 more, 6 in all:"
+4. conductor
+5. lmfdb_isoclass
+6. lmfdb_number
+"Dependent columns: lmfdb_label, lmfdb_iso, lmfdb_number (and iso_nlabel)"
+"(2) allgens files have 2+r+t more fields, 6+r+t in all, where r is the"
+rank and t the torsion rank:
+5. rank: int r
+"6. torsion_structure: list of t = 0, 1 or 2 ints"
+7..7+t-1. torsion_generators: point(s)
+7+t..7+t+r-1.  gens: point(s)
+"Here each point has the form [x:y:z] where x,y,z are coprime integers,"
+"z>0, unweighted projective coordinates."
+"Dependent columns: heights, torsion, torsion_primes, equation,"
+"num_bad_primes, bad_primes, jinv, min_quad_twist,"
+"signD, min_quad_twist, cm, trace_hash, local_data,"
+"semistable, squarefree_disc, aplist, anlist"
+NB (1) these require creating each curve and should not be done on the
+fly.  We should write and run a one-off script to create a new data
+file with these columns.
+NB1 local_data is now a list (of length num_bad_primes) of dicts with keys
+"'p', 'ord_cond', 'ord_disc', 'ord_den_j', 'red', 'rootno', 'kod', 'cp'"
+but will be replaced by 7 columns each containing a list of length
+num_bad_primes:
+'conductor_valuations': list of ints
+'discriminant_valuations': list of ints
+'j_denominator_valuations': list of ints
+'reduction_types': list of ints
+'root_numbers': list of ints
+'kodaira_symbols': list of strings (latex without math delims)
+'tamagawa_numbers': list of ints
+NB2 min_quad_twist is a dict with 3 keys:
+'label'
+'lmfdb_label'
+'disc'
+but could be 3 columns:
+'twist_label'
+'twist_lmfdb_label'
+'twist_discriminant'
+or 2 columns:
+'twist_discriminant'
+'twist_ainvs'
+"(3) allbsd files have 7 more fields, 11 in all:"
+5. rank: int
+6. torsion: int
+7. tamagawa_product: int
+8. real_perod: real
+9. special_value: real
+10. regulator: real (or 1 when r=0)
+11. sha_an: real (approximate positive int)
+"Dependent columns:  sha, sha_primes"
+"(4) alldegphi files have standard first 4 fields and 1 more, 5 in all:"
+5. degree: int
+"(5) allisog files only have one line per isogeny class.  Each line has 2 more fields, 6 in all:"
+5. all_ainvs:  list of n lists of 5 ints (all ainvs of curves in the isogeny class)
+6. isogeny_matrix: list of n lists of n ints (matrix of isogeny degrees)
+"- Here, n is the class size"
+- Field 4 is the ainvs for curve #1 in the class
+- NB before storing we sort all_ainvs (to get into the LMFDB order)
+and apply the correct permutations to the rows and columns of
+isogeny_matrix
+"Dependent columns:  class_size, class_deg, isodeg, isogeny_degrees"
+(6) intpts files 3 fields with label as one field:
+1. label: string
+2. ainvs
+3. xcoord_integral_points: list of ints
+Dependent columns:  num_int_pts
+"(7) opt_man files have 2 more fields, 6 in all:"
+"5. optimality: int (0=no, 1=yes, n>0 if one of n possibles)"
+6. manin_constant: int
+"(8) 2adic files  have 4 more fields, 8 in all:"
+"5. 2adic_index: int or ""inf"""
+"6. 2adic_level: int or ""inf"""
+7. 2adic_gens: list of lists of 4 ints
+8. 2adic_label: string
+Unused: 2adic_level
+Dependent columns:  2adic_log_level
+"(9) galreps files have label as one field, n+1 in all where n is the"
+number of non-maximal primes:
+1. label
+2..1+n. string
+"Dependent columns:  nonmax_primes, nonmax_rad, modp_images"
+----------------------------------------------------------------------
+New files with extra data
+-omit columns already in other easy tables:
+degree:                                                alldegphi
+"nonmax_primes, nonmax_rad, modp_images:                galrep"
+"optimality, manin_constant:                            opt_man"
+"num_int_pts, xcoord_integral_points:                   intpts"
+torsion_growth:                                        growth
+"2adic_label, 2adic_index, 2adic_log_level, 2adic_gens: 2adic"
+"iwp0, iwdata:                                          iwasawa"
+-omit columns trivially obtained from these:
+"lmfdb_iso, num_bad_primes, sha_primes, torsion_primes,"
+"-creating these requires reading of: allgens, alllabels, allisog,"
+which will then be no longer needed
+-here we store 'class' and 'lmfdb_class' which just give the isogeny
+"class letter code, and not 'iso' or 'lmfdb_iso' which concatenate"
+the conductor with this.
+-most data is in one file (curvedata.*) with a few columns which are
+class invariants in a classdata.* file
+"curvedata.*: label, isoclass, number, lmfdb_label, lmfdb_isoclass,"
+"lmfdb_number, iso_nlabel,"
+"conductor, ainvs, jinv, cm, isogeny_degrees, semistable, squarefree_disc,"
+"signD, min_quad_twist_ainvs, min_quad_twist_disc,"
+"bad_primes, tamagawa_numbers, kodaira_symbols,"
+"reduction_types, root_numbers, conductor_valuations,"
+"discriminant_valuations, j_denominator_valuations,"
+"rank, rank_bounds, analytic_rank, ngens, gens, heights,"
+"regulator, torsion, torsion_structure,"
+"torsion_generators, tamagawa_product, real_period, area,"
+"faltings_height, special_value, sha_an, sha"
+"classdata.*: iso, trace_hash, class_size, class_deg, isogeny_matrix,"
+"aplist, anlist"
+def make_sorted_Edata(Elist):
+"Edata = [[E.conductor(), tuple(E.aplist(100)), E.ainvs()]"
+for E in Elist]
+return(sorted(Edata))
+from sage.databases.cremona import cremona_letter_code as code
+def make_labels(Edata):
+data = {}
+for E in Edata:
+"N, ap, ai = E"
+if not N in data:
+data[N] = {}
+if not ap in data[N]:
+data[N][ap] = {}
+"data[N][ap][ai] = ""?"""
+for N in sorted(data.keys()):
+ncl = len(data[N])
+ncu = sum([len(data[N][C]) for C in data[N]])
+if N<300000: # check counts against database
+assert ncl==len(list(cremona_optimal_curves([N])))
+assert ncu==len(list(cremona_curves([N])))
+"print ""Conductor %s=%s: %s curves in %s isogeny classes"" % (N,N.factor(),ncu,ncl)"
+"for iso, ap in enumerate(sorted(data[N].keys())):"
+"for cu, ai in enumerate(sorted(data[N][ap].keys())):"
+"data[N][ap][ai] = ""."".join([str(N),code(iso)+str(cu+1)])"
+return data
+"def make_table_from_data(Edata, plist, filename=None):"
+if filename:
+"f = open(filename,'w')"
+else:
+f = sys.stdout
+"f.write(""label\t[a1,a2,a3,a4,a6]\tord_p(N) for p in %s\n""%plist)"
+for N in sorted(Edata.keys()):
+"vals = "" "".join([str(N.valuation(p)) for p in plist])"
+Ndata=Edata[N]
+for isodata in sorted(Ndata.keys()):
+curdata=Ndata[isodata]
+for C in sorted(curdata.keys()):
+"f.write(""%s\t%s\t%s\n"" % (curdata[C],list(C),vals))"
+if filename:
+f.close()
+"def make_table(Elist,plist,filename=None):"
+"make_table_from_data(make_labels(make_sorted_Edata(Elist)),plist,filename)"
+def class_size_from_width(w):
+if w==1: return 1
+"if w in [12,16]: return 8"
+"if w in [18,8]: return 6"
+"if w in [4,6,10,14,15,21,27]: return 4"
+"if w in [9,25]: return 3"
+return 2
+def liststr(l):
+"return str(list(l)).replace(' ','')"
+def torsion_structure(tx):
+if 'x' in tx:
+"return [2,2*ZZ(tx.replace('x',''))]"
+return [ZZ(tx)]
+"def write_file(ofile,data,N):"
+"for iso, ap in enumerate(sorted(data[N].keys())):"
+"for cu, ai in enumerate(sorted(data[N][ap].keys())):"
+C = data[N][ap][ai]
+"lab = [str(N),code(iso),str(cu+1)]"
+"C['label'] = ""."".join([str(N),code(iso)+str(cu+1)])"
+aistr = liststr(ai)
+"ofile.write("" "".join(lab+[aistr,str(C['rank']),str(C['ntorsion'])]))"
+"ofile.write(""\n"")"
+"def read_sw(filename, verbose=False):"
+f = open(filename)
+"o = open(filename+"".allcurves"",'w')"
+data = {}
+N = 0
+for L in f.readlines():
+if L[0]=='[':  # then it's a curve line
+"ai, ordD, Sha, ntors = L.split()"
+ai = tuple(eval(ai))
+E = EllipticCurve(ai)
+gtors = torsion_structure(ntors)
+"ntors = prod(gtors,1)"
+assert E.conductor() == N
+if verbose: print E.ainvs()
+aplist = tuple(E.aplist(100))
+if not aplist in data[N]:
+data[N][aplist] = {}
+data[N][aplist][ai] = {}
+data[N][aplist][ai]['label'] = '?'
+data[N][aplist][ai]['rank'] = r
+data[N][aplist][ai]['ntorsion'] = ntors
+else: # it's a (new) isogeny class line
+"newN, Nfact, r, Lr1, class_degree, degphi = L.split()"
+newN = ZZ(newN) # conductor
+if newN!=N:
+if N:
+"write_file(o,data,N)"
+N=newN
+if not N in data:
+data[N] = {}
+r = ZZ(r) # analytic rank
+Lr1 = float(Lr1) # leading L-series coeff
+class_degree = int(class_degree) # width of isogeny class
+class_size = class_size_from_width(class_degree)
+"if verbose: print ""Isogeny class N=%s, r=%s, size=%s"" % (N,r,class_size)"
+f.close()
+"write_file(o,data,N)"
+o.close()
+return data
+Manin constants and optimal curves
+----------------------------------
+"For all conductors (levels) N up to 60000, and for specific levels up"
+"to 500000, we have computed the full modular symbol space for"
+"Gamma_0(N), and not only the plus space, in order to determine which"
+curve in the isogeny class is the Gamma_0(N)-optimal one and to
+"determine the Manin constants.  Note that in many cases, including"
+"isogeny classes of size 1 but only these, it is possible to rigorously"
+show which curve is optimal using only the information coming from the
+"plus space, and in almost all cases (see below for the exceptions) it"
+is possible to deduce that the Manin constant for the optimal curve is
+1 even when there is more than one possible optimal curve.  The
+justification for these claims is in the Appendix (written by me) to
+"""The Manin Constant"" by Amod Agashe, Ken Ribet and William Stein [Pure"
+"and Applied Mathematics Quarterly, Vol. 2 no.2 (2006), pp. 617-636.]"
+"In the ""Cremona labels"" of the curves in each isogeny class, curve"
+"number 1 is the Gamma_0(N)-optimal curve, with the following provisos:"
+- in class 990h the optimal curve is 990h3 (and not 990h1).  This is
+due to an error in preparation of the data published in the first
+(1992) edition of the tables in Algorithms for Modular Elliptic
+"Curves (CUP, see"
+http://homepages.warwick.ac.uk/staff/J.E.Cremona/book/amec.html)
+"which I decided not to change later, when the discrepancy was"
+discovered.
+"- for 16436 conductors above 400000 (as of 26 November 2019), the"
+optimal curve has not yet been determined and is one of n curves
+in the class for some n between 2 and 6 inclusive.  Work is in
+"progress to eliminate these ambiguous cases, by doing more modular"
+symbol computations.  Note that the heuristics used to guess which
+curve is optimal from the information from the plus space only are
+such that I do not expect to find any isogeny classes where the
+optimal curve is not number 1.  This was not true before August
+"2019, when for 10 isogeny classes of size 2 linked by 2-isogenies"
+the heuristics had given the wrong result; the labels for these
+"classes (235470bb, 235746u, 258482a, 265706a, 333270bu, 359282a,"
+"369194a, 375410g, 377034t, 389774b) were switched on 19 August"
+2019.
+"Of the 2164259 isogeny classes of conductor up to 500000, there"
+are 64249 of conductor > 400000 in which the optimal curve has not
+"yet been determined, and 359009 in which the optimal curve is"
+certainly curve number 1:
+2 possibly optimal curves in  53394 classes
+3 possibly optimal curves in  10017 classes
+4 possibly optimal curves in    763 classes
+5 possibly optimal curves in     32 classes
+6 possibly optimal curves in     43 classes
+"Concerning the Manin constant, the methods described in the paper"
+(op.cit.)  have been used to show that the Manin constant is 1 for
+every optimal curve.  The theoretical results on the Manin constant c
+"which we have used are: that c is an integer, that c=2 is impossible"
+"when N is odd, and that c=3 is impossible unless N is a multiple of 3."
+On the assumption that the optimal curve is number 1 in all isogeny
+"classes (other than 990h), the Manin constants of all curves in the"
+"database have been computed.  They are almost all 1, even for"
+"non-optimal curves, and are rarely greater than 3:"
+Manin constant      Number of curves        Curves
+1             3064436
+2                 225
+"3                  41                 14a4, 14a6, ..."
+"4                   2                 15a8, 17a4"
+5                   1                 11a3
+The curves with Manin constant 2 and 3 are distributed by conductor as
+follows:
+range        #{c=3}  #{c=2}
+1  < N <10^2:   11     24
+10^2< N <10^3:    5     17
+10^3< N <10^4:    6     29
+10^4< N <10^5:    9     60
+10^5< N <2*10^5:  7     34
+2*10^5< N <3*10^5:  1     27
+3*10^5< N <4*10^5:  1     22
+4*10^5< N <5*10^5:  1     12
+Data files
+----------
+The data files in opt_man/ have one line for each curve where the last
+"two fields contain an ""optimality code"" and the Manin constant"
+(conditional on curve number 1 being optimal).  The optimality code is
+"0 for ""certainly not optimal"", 1 for ""certainly optimal"", and n>1 for"
+"""one of n possibly optimal curves in its isogeny class""."
+Additional remarks
+--------------------
+"1. For 48 classes (in the range N<=500000), there would be a"
+possibility that c=2 and that the optimal curve is the second one
+"listed, if we relied only on the information given by modular symbols"
+with sign +1.  These all have the same form: 2 curves in the class
+"with types 1,2 and aj=1,1 so either E1 is optimal with c=1 or E2 is"
+"optimal with c=2.  The minimal period lattices of E1, E2 have the form"
+"[2x,x+yi], [2x,2yi] with x,y positive real, and from the +1 modular"
+symbols we can only say that the projection of the period lattice of
+the normalized newform onto the real line is generated by x; so the
+"optimal curve might conceivably have lattice [x,yi], implying that E2"
+is optimal with c=2.  But (in all these cases) we find that the
+"projection to the imaginary axis is generated by yi, and the lattice"
+type is 1 (non-rectangular) so the optimal curve's period lattice is
+"[2x,x+yi], while the other curve has Manin constant 2."
+These classes are (including the 13 listed in the appendix to the
+paper cited):
+"62516a, 67664a, 71888e, 72916a, 75092a,"
+"85328d, 86452a, 96116a, 106292b,111572a,"
+"115664a, 121168e, 125332a;"
+"133972a, 144464a, 149012a, 150608j, 164852a,"
+"169808a, 171412c, 184916a, 188372a, 211664a,"
+"217172b, 219088b, 220916b, 236212b, 240116a,"
+"250064a, 256052a, 260116a, 280916a, 285172a,"
+"291664a, 300368a, 302516a, 306932a, 329492a,"
+"343412a, 345808a, 367252a, 377012b, 384464d,"
+"391892a, 401972a, 425168b, 446288a, 481652a."
+In all of the above cases I have computed the full modular symbol
+space to eliminate the second possibility.
+2. I have also computed the modular degrees of all curves (not just
+the optimal ones) using Mark Watkins's sympow program (either as a
+"stand-alone, or via Sage, or as implemented in Magma), which confirms"
+optimality of the first curve in each class conditional on Stevens's
+conjecture that the Gamma_1(N)-optimal curve is the one with minimal
+Faltings Height (i.e. the one whose period lattice is a sublattice of
+all the others).
+Notes on post-processing and merging data files
+In main g0n directory (~/g0n):
+"1. Batches of 1000: when each batch of 1000 levels is running,  run"
+./postproc nnn
+(e.g. ./postproc 399 for the range 399000-399999);  this will keep
+looping until all are done.
+"2. Batches of 100 & 1000: when postproc has finished a batch of 1000,"
+run
+nnn=492; for i in `seq 0 9`; do ./merge00 ${nnn}${i}; done
+and then (assuming no problems arise)
+./merge000 nnn
+to create 12 files of the form g0n/data/*.nnn000-nnn999 .
+"3. Batches of 10000: when 10 batches of 1000 (nn0, ..., nn9) have thus"
