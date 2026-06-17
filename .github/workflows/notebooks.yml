@@ -7,12 +7,13 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   execute-notebooks:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      packages: write
     container:
       image: sagemath/sagemath:latest
       options: --user root --memory=4g
@@ -51,26 +52,31 @@ jobs:
       - name: Clear Python cache
         run: rm -rf __pycache__ */__pycache__ */*/__pycache__
 
-      - name: Add src to PYTHONPATH
+      - name: Execute notebooks
         run: |
-          echo "PYTHONPATH=/__w/S.T.A.R.-Program/S.T.A.R.-Program/src:${PYTHONPATH}" >> $GITHUB_ENV
-
-      - name: Execute All Notebooks and Commit Outputs
-        run: |
-          mkdir -p examples/exports
-          echo "=== Executing all notebooks in examples/ ==="
-
+          mkdir -p results exports
           for nb in examples/*.ipynb; do
+            echo "Running $nb"
+            sage -python -m jupyter nbconvert \
+              --to notebook \
+              --execute "$nb" \
+              --output "$(basename $nb .ipynb)-executed.ipynb" \
+              --ExecutePreprocessor.timeout=7200 \
+              --ExecutePreprocessor.kernel_name=python3
+            # Clear memory between notebooks
+            sleep 5
+          done
+        env:
+          JUPYTER_ENABLE_LAB: "yes"
+          PYTHONUNBUFFERED: "1"
+
+      - name: Export HTML and PDF
+        run: |
+          mkdir -p exports
+          for nb in examples/*-executed.ipynb; do
             base=$(basename "$nb" .ipynb)
-            output="examples/exports/${base}-executed.ipynb"
-            
-            echo "→ Running $nb ..."
-            
-            # Use full Sage Python module path
-            timeout 480s sage -python -m jupyter nbconvert --to notebook --execute \
-              --ExecutePreprocessor.timeout=360 \
-              --ExecutePreprocessor.kernel_name=sage \
-              --output="$output" "$nb" || echo " $nb timed out or failed (continuing)"
+            sage -python -m jupyter nbconvert --to html "$nb" --output-dir exports --output "${base}.html"
+            sage -python -m jupyter nbconvert --to pdf  "$nb" --output-dir exports --output "${base}.pdf"
           done
 
           echo "=== Notebook execution completed ==="
@@ -89,19 +95,6 @@ jobs:
             git push || echo "Push skipped (may need permissions)"
             echo "Successfully committed executed notebooks to examples/exports/"
           fi
-
-        env:
-          JUPYTER_ENABLE_LAB: "yes"
-          PYTHONUNBUFFERED: "1"
-
-      - name: Export HTML and PDF
-        run: |
-          mkdir -p exports
-          for nb in examples/*-executed.ipynb; do
-            base=$(basename "$nb" .ipynb)
-            sage -python -m jupyter nbconvert --to html "$nb" --output-dir exports --output "${base}.html"
-            sage -python -m jupyter nbconvert --to pdf  "$nb" --output-dir exports --output "${base}.pdf"
-          done
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v6
