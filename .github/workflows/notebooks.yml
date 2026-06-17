@@ -29,7 +29,7 @@ jobs:
           fetch-depth: 0
           submodules: recursive
 
-      - name: Install Python dependencies in Sage environment
+      - name: Install Python dependencies for notebooks
         run: |
           sage -python -m pip install --upgrade pip
           sage -python -m pip install --no-cache-dir \
@@ -54,8 +54,9 @@ jobs:
             
             echo "→ Running $nb ..."
             
-            timeout 420s jupyter nbconvert --to notebook --execute \
-              --ExecutePreprocessor.timeout=300 \
+            # Use full Sage Python module path
+            timeout 480s sage -python -m jupyter nbconvert --to notebook --execute \
+              --ExecutePreprocessor.timeout=360 \
               --ExecutePreprocessor.kernel_name=sage \
               --output="$output" "$nb" || echo " $nb timed out or failed (continuing)"
           done
