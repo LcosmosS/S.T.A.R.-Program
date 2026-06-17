@@ -4,11 +4,12 @@ on:
   push:
     branches: [ main, master ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, master ]
   workflow_dispatch:
 
 permissions:
   contents: write
+  packages: write
 
 jobs:
   execute-notebooks:
@@ -27,20 +28,10 @@ jobs:
           git --version
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
-          submodules: 'true'
           fetch-depth: 0
-
-      - name: Setup Miniforge3
-        uses: conda-incubator/setup-miniconda@v3
-        with:
-          auto-update-conda: true
-          python-version: "3.12"
-          environment-file: environment.yml
-          activate-environment: star-env
-          channels: conda-forge
-          use-mamba: true
+          submodules: recursive
 
       - name: Debug paths
         run: |
@@ -59,10 +50,6 @@ jobs:
           sage -python -m pip install --no-cache-dir \
             numpy pandas tqdm plotly==5.18.0 corner ripser persim \
             nbconvert nbclient ipykernel nest_asyncio
-
-      - name: Add src to PYTHONPATH
-        shell: bash -l {0}
-        run: echo "PYTHONPATH=${GITHUB_WORKSPACE}/src:${PYTHONPATH}" >> $GITHUB_ENV
 
       - name: Execute All Notebooks and Commit Outputs
         shell: bash -l {0}
