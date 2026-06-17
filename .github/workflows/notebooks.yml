@@ -18,7 +18,7 @@ jobs:
       options: --user root --memory=6g
 
     steps:
-      - name: Install Git and system tools
+      - name: Install system tools
         run: |
           apt-get update
           apt-get install -y git pandoc texlive texlive-latex-extra texlive-xetex
@@ -29,13 +29,14 @@ jobs:
           fetch-depth: 0
           submodules: recursive
 
-      - name: Setup Sage Environment
+      - name: Install Python dependencies in Sage environment
         run: |
           sage -python -m pip install --upgrade pip
           sage -python -m pip install --no-cache-dir \
-            nbconvert nbclient ipykernel nest_asyncio tqdm plotly corner ripser persim
+            numpy pandas matplotlib plotly corner ripser persim tqdm \
+            nbconvert nbclient ipykernel nest_asyncio
 
-          # Register Sage kernel for Jupyter
+          # Register Sage kernel
           sage -python -m ipykernel install --user --name sage --display-name "SageMath"
 
       - name: Add src to PYTHONPATH
@@ -53,8 +54,7 @@ jobs:
             
             echo "→ Running $nb ..."
             
-            # Run with reasonable timeouts
-            timeout 420s sage -python -m jupyter nbconvert --to notebook --execute \
+            timeout 420s jupyter nbconvert --to notebook --execute \
               --ExecutePreprocessor.timeout=300 \
               --ExecutePreprocessor.kernel_name=sage \
               --output="$output" "$nb" || echo " $nb timed out or failed (continuing)"
@@ -62,7 +62,7 @@ jobs:
 
           echo "=== Notebook execution completed ==="
 
-          # Fix git ownership and commit outputs
+          # Commit outputs
           git config --global --add safe.directory /__w/S.T.A.R.-Program/S.T.A.R.-Program
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
