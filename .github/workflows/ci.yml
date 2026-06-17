@@ -96,36 +96,48 @@ jobs:
         run: |
           pytest -q
 
-      - name: Generate CI subset from ecdata submodule (Clean)
+      - name: Generate CI subset from ecdata submodule (Final Robust)
         shell: bash -l {0}
         run: |
           mkdir -p data/raw results
-          echo "=== Generating clean CI subset ==="
+          echo "=== Generating clean CI subset from ecdata ==="
 
           cat > generate_ci_subset.sage << 'EOF'
           from sage.all import *
           import csv
           import os
 
-          print("Generating clean CI subset...")
+          print("Generating clean CI subset from ecdata submodule...")
 
           ecdata_path = "data/ecdata"
           labels = []
 
-          # Read from alllabels if available
-          alllabels_file = os.path.join(ecdata_path, "alllabels")
-          if os.path.exists(alllabels_file):
-              with open(alllabels_file) as f:
-                  for line in f:
-                      label = line.strip()
-                      if label and not label.startswith('#'):
-                          labels.append(label)
-                      if len(labels) >= 600:
-                          break
+          # Walk the ecdata directory to find label files
+          print("Walking ecdata directory...")
+          for root, dirs, files in os.walk(ecdata_path):
+              for file in files:
+                  if file.endswith((".txt", ".csv")) or "label" in file.lower() or "alllabels" in file.lower():
+                      filepath = os.path.join(root, file)
+                      try:
+                          with open(filepath) as f:
+                              for line in f:
+                                  label = line.strip()
+                                  if label and not label.startswith('#') and len(label) > 2:
+                                      labels.append(label)
+                                  if len(labels) >= 600:
+                                      break
+                          if len(labels) >= 600:
+                              break
+                      except:
+                          continue
+              if len(labels) >= 600:
+                  break
 
-          # Hard fallback if needed
+          print(f"Collected {len(labels)} labels dynamically.")
+
+          # Hardcoded fallback if nothing found
           if len(labels) == 0:
-              print("Using hardcoded fallback")
+              print("WARNING: Using hardcoded fallback labels")
               labels = ["11a1","14a1","15a1","17a1","19a1","20a1","21a1","24a1","26a1","37a1","37b1","43a1"]
 
           # Write clean CSV with proper header
@@ -135,8 +147,8 @@ jobs:
               for label in labels:
                   writer.writerow([label])
 
-          print(f"Written {len(labels)} labels to ci_subset.csv")
-          print("First 10:", labels[:10])
+          print("CI subset written successfully.")
+          print("First 10 labels:", labels[:10])
           EOF
 
                     sage generate_ci_subset.sage
