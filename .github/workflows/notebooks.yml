@@ -12,56 +12,39 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      packages: write
+
     container:
       image: sagemath/sagemath:latest
-      options: --user root --memory=4g
-    env:
-      DEBIAN_FRONTEND: noninteractive
+      options: --user root --memory=6g
 
     steps:
-      - name: Install Git inside container 
+      - name: Install Git and system tools
         run: |
           apt-get update
-          apt-get install -y git
-          git --version
+          apt-get install -y git pandoc texlive texlive-latex-extra texlive-xetex
 
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: recursive
 
-      - name: Debug paths
-        run: |
-          echo "PWD: $(pwd)"
-          echo "Listing /__w:"
-          ls -R /__w || true      
-
-      - name: Install system tools
-        run: |
-          apt-get update
-          apt-get install -y pandoc texlive texlive-latex-extra texlive-xetex
-
-      - name: Install Python dependencies
+      - name: Setup Sage Environment
         run: |
           sage -python -m pip install --upgrade pip
           sage -python -m pip install --no-cache-dir \
-            numpy pandas tqdm plotly==5.18.0 corner ripser persim \
-            nbconvert nbclient ipykernel nest_asyncio
+            nbconvert nbclient ipykernel nest_asyncio tqdm plotly corner ripser persim
 
-      - name: Clear Python cache
-        run: rm -rf __pycache__ */__pycache__ */*/__pycache__
+          # Register Sage kernel for Jupyter
+          sage -python -m ipykernel install --user --name sage --display-name "SageMath"
 
       - name: Add src to PYTHONPATH
-        shell: bash -l {0}
-        run: echo "PYTHONPATH=${GITHUB_WORKSPACE}/src:${PYTHONPATH}" >> $GITHUB_ENV
+        run: |
+          echo "PYTHONPATH=/__w/S.T.A.R.-Program/S.T.A.R.-Program/src:${PYTHONPATH}" >> $GITHUB_ENV
 
       - name: Execute All Notebooks and Commit Outputs
-        shell: bash -l {0}
         run: |
           mkdir -p examples/exports
-
           echo "=== Executing all notebooks in examples/ ==="
 
           for nb in examples/*.ipynb; do
@@ -70,16 +53,17 @@ jobs:
             
             echo "→ Running $nb ..."
             
-            # Execute with timeout and continue on error
-            timeout 300s jupyter nbconvert --to notebook --execute \
-              --ExecutePreprocessor.timeout=180 \
+            # Run with reasonable timeouts
+            timeout 420s sage -python -m jupyter nbconvert --to notebook --execute \
+              --ExecutePreprocessor.timeout=300 \
               --ExecutePreprocessor.kernel_name=sage \
               --output="$output" "$nb" || echo " $nb timed out or failed (continuing)"
           done
 
           echo "=== Notebook execution completed ==="
 
-          # Commit executed notebooks
+          # Fix git ownership and commit outputs
+          git config --global --add safe.directory /__w/S.T.A.R.-Program/S.T.A.R.-Program
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
@@ -90,5 +74,5 @@ jobs:
           else
             git commit -m "ci: update executed notebook outputs [skip ci]"
             git push || echo "Push skipped (may need permissions)"
-            echo " Successfully committed executed notebooks to examples/exports/"
+            echo "Successfully committed executed notebooks to examples/exports/"
           fi
