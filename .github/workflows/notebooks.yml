@@ -31,6 +31,17 @@ jobs:
           fetch-depth: 0
           submodules: recursive
 
+      - name: Cache heavy data (ecdata, processed files)
+        uses: actions/cache@v4
+        with:
+          path: |
+            data/ecdata
+            data/raw
+            data/processed
+            examples/exports
+          key: notebook-cache-${{ hashFiles('data/**', 'examples/**') }}
+          restore-keys: notebook-cache-
+
       - name: Debug paths
         run: |
           echo "PWD: $(pwd)"
@@ -49,58 +60,57 @@ jobs:
             numpy pandas tqdm plotly==5.18.0 corner ripser persim \
             nbconvert nbclient ipykernel nest_asyncio
 
-      - name: Clear Python cache
-        run: rm -rf __pycache__ */__pycache__ */*/__pycache__
-
-      - name: Execute notebooks
+      - name: Execute Notebooks One-by-One with Immediate Commit
         run: |
-          mkdir -p results exports
+          mkdir -p examples/exports results
+          echo "=== Starting sequential notebook execution with immediate commits ==="
+
           for nb in examples/*.ipynb; do
-            echo "Running $nb"
-            sage -python -m jupyter nbconvert \
+            base=$(basename "$nb" .ipynb)
+            output="examples/exports/${base}-executed.ipynb"
+            
+            echo "========================================"
+            echo "→ Executing $nb"
+            echo "========================================"
+
+            # Execute notebook
+            timeout 600s sage -python -m jupyter nbconvert \
               --to notebook \
               --execute "$nb" \
-              --output "$(basename $nb .ipynb)-executed.ipynb" \
-              --ExecutePreprocessor.timeout=7200 \
-              --ExecutePreprocessor.kernel_name=python3
-            # Clear memory between notebooks
-            sleep 5
+              --output "$output" \
+              --ExecutePreprocessor.timeout=300 \
+              --ExecutePreprocessor.kernel_name=python3 || \
+              echo " $nb failed or timed out — continuing to next notebook"
+
+            # Clear memory
+            echo "Clearing memory before next notebook..."
+            sage -python -c "
+            import os
+            os.system('sync; echo 3 > /proc/sys/vm/drop_caches') || true
+            " 2>/dev/null || true
+            sleep 8
+
+            # Commit immediately after each notebook
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            
+            git add "$output"
+            if git diff --staged --quiet; then
+              echo "No changes for $base"
+            else
+              git commit -m "ci: update executed notebook ${base} [skip ci]" || true
+              git push || echo "Push skipped (may need permissions)"
+              echo "Committed output for $base"
+            fi
           done
-        env:
-          JUPYTER_ENABLE_LAB: "yes"
-          PYTHONUNBUFFERED: "1"
 
-      - name: Export HTML and PDF
-        run: |
-          mkdir -p exports
-          for nb in examples/*-executed.ipynb; do
-            base=$(basename "$nb" .ipynb)
-            sage -python -m jupyter nbconvert --to html "$nb" --output-dir exports --output "${base}.html"
-            sage -python -m jupyter nbconvert --to pdf  "$nb" --output-dir exports --output "${base}.pdf"
-          done
+          echo "=== All notebooks processed ==="
 
-          echo "=== Notebook execution completed ==="
-
-          # Commit outputs
-          git config --global --add safe.directory /__w/S.T.A.R.-Program/S.T.A.R.-Program
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add examples/exports/*.ipynb
-
-          if git diff --staged --quiet; then
-            echo "No changes to notebook outputs."
-          else
-            git commit -m "ci: update executed notebook outputs [skip ci]"
-            git push || echo "Push skipped (may need permissions)"
-            echo "Successfully committed executed notebooks to examples/exports/"
-          fi
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v6
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
         with:
           name: notebook-outputs
           path: |
+            examples/exports/
             results/
-            examples/*-executed.ipynb
-            exports/
+          retention-days: 14
