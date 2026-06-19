@@ -18,8 +18,10 @@
 
 This repository is the **primary research archive** for the **S.T.A.R. Program** — the *Symbolic–Topological–Arithmetic–Relativity Model* — a proposed theoretical physics framework that couples:
 
-- **ACSC** — *Arithmetic–Cosmic Structure Conjecture* *(See [/docs/The_Arithmetic–Cosmic_Structure_Conjecture_(ACSC)_Monograph.pdf](/docs/The_Arithmetic–Cosmic_Structure_Conjecture_(ACSC)_Monograph.pdf))*
-- **ECC** — *Entropy Cohomology Conjecture*  *( [/docs/The_Entropy_Cohomology_Conjecture_(ECC).pdf](/docs/The_Entropy_Cohomology_Conjecture_(ECC).pdf))*
+- **ACSC** — *Arithmetic–Cosmic Structure Conjecture*
+    - *(See [/docs/The_Arithmetic–Cosmic_Structure_Conjecture_(ACSC)_Monograph.pdf](/docs/The_Arithmetic–Cosmic_Structure_Conjecture_(ACSC)_Monograph.pdf) for complete comjecture and construction logic)*
+- **ECC** — *Entropy Cohomology Conjecture*
+    - *([/docs/The_Entropy_Cohomology_Conjecture_(ECC).pdf](/docs/The_Entropy_Cohomology_Conjecture_(ECC).pdf))*
 
 Together, these form a dual‑layer architecture:
 
