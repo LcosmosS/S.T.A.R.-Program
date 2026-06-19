@@ -143,7 +143,7 @@ We are standing at the threshold of a new synthesis: one that dares to merge the
 
 *Why does this matter?* Because modern cosmology, for all its empirical success, lacks an axiomatic backbone. And number theory, for all its elegance, has remained observationally distant. This book proposes a bridge—one that can be tested, coded, visualized, and refined. In an era of increasing data abundance, this model gives us a symbolic scaffold for interpretation. It provides a way to organize galaxy distributions, predict star formation rates, and model topological curvature using logically grounded mappings.
 
-Moreover, it rekindles a deeper question: What is the universe really made of? Particles? Fields? Or perhaps... patterns?
+Moreover, it rekindles a deeper question: *What is the universe really made of?*
 This project matters because it offers a new lens, one that doesn't replace our scientific frameworks but enriches them; connecting computation, observation, and symbolic insight into a unified structure that can evolve alongside our deepest inquiries into the nature of reality.
 
 ## On the Vision: Merging Number Theory and Cosmology
