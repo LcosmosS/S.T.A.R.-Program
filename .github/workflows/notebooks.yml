@@ -18,6 +18,9 @@ jobs:
       image: sagemath/sagemath:latest
       options: --user root --memory=4g
 
+    env:
+      DEBIAN_FRONTEND: noninteractive
+
     steps:
       - name: Install Git inside container 
         run: |
