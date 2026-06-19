@@ -52,10 +52,12 @@ jobs:
       - name: Clear Python cache
         run: rm -rf __pycache__ */__pycache__ */*/__pycache__
 
-      - name: Execute Notebooks One-by-One with Immediate Commit
+      - name: Execute Notebooks Sequentially + Commit After Each
         run: |
           mkdir -p examples/exports results
-          echo "=== Starting sequential notebook execution with immediate commits ==="
+          cd /__w/S.T.A.R.-Program/S.T.A.R.-Program   # Ensure correct working directory
+
+          echo "=== Starting sequential notebook execution ==="
 
           for nb in examples/*.ipynb; do
             base=$(basename "$nb" .ipynb)
@@ -66,23 +68,23 @@ jobs:
             echo "========================================"
 
             # Execute notebook
-            timeout 600s sage -python -m jupyter nbconvert \
+            timeout 10000s sage -python -m jupyter nbconvert \
               --to notebook \
               --execute "$nb" \
               --output "$output" \
-              --ExecutePreprocessor.timeout=300 \
+              --ExecutePreprocessor.timeout=10000 \
               --ExecutePreprocessor.kernel_name=python3 || \
-              echo " $nb failed or timed out — continuing to next notebook"
+              echo " $nb failed or timed out — continuing"
 
-            # Clear memory
-            echo "Clearing memory before next notebook..."
+            # Aggressive memory clear
+            echo "Clearing memory..."
             sage -python -c "
             import os
             os.system('sync; echo 3 > /proc/sys/vm/drop_caches') || true
             " 2>/dev/null || true
-                        sleep 8
+                        sleep 10
 
-            # Commit immediately after each notebook
+            # Commit immediately
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             
@@ -92,12 +94,12 @@ jobs:
             else
               git commit -m "ci: update executed notebook ${base} [skip ci]" || true
               git push || echo "Push skipped (may need permissions)"
-              echo " Committed output for $base"
+              echo " Committed $base"
             fi
           done
 
           echo "=== All notebooks processed ==="
-
+      
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
