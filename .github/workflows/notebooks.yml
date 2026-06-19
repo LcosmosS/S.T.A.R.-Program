@@ -55,7 +55,6 @@ jobs:
       - name: Execute Notebooks Sequentially + Commit After Each
         run: |
           mkdir -p examples/exports results
-          cd /__w/S.T.A.R.-Program/S.T.A.R.-Program   # Ensure correct working directory
 
           echo "=== Starting sequential notebook execution ==="
 
@@ -68,21 +67,23 @@ jobs:
             echo "========================================"
 
             # Execute notebook
-            timeout 10000s sage -python -m jupyter nbconvert \
+            timeout 120000s sage -python -m jupyter nbconvert \
               --to notebook \
               --execute "$nb" \
               --output "$output" \
-              --ExecutePreprocessor.timeout=10000 \
+              --ExecutePreprocessor.timeout=120000 \
               --ExecutePreprocessor.kernel_name=python3 || \
               echo " $nb failed or timed out — continuing"
 
-            # Aggressive memory clear
-            echo "Clearing memory..."
+            # Memory clear
+            echo "Clearing memory before next notebook..."
             sage -python -c "
+            import gc
+            gc.collect()
             import os
             os.system('sync; echo 3 > /proc/sys/vm/drop_caches') || true
             " 2>/dev/null || true
-                        sleep 10
+            sleep 10
 
             # Commit immediately
             git config user.name "github-actions[bot]"
@@ -99,7 +100,7 @@ jobs:
           done
 
           echo "=== All notebooks processed ==="
-      
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -108,7 +109,7 @@ jobs:
             examples/exports/
             results/
           retention-days: 14
-
+        
       - name: Export HTML and PDF
         run: |
           mkdir -p exports
