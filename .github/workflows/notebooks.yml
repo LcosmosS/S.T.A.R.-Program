@@ -60,7 +60,7 @@ jobs:
 
           for nb in examples/*.ipynb; do
             base=$(basename "$nb" .ipynb)
-            output="examples/exports/${base}-executed.ipynb"
+            output="exports/${base}-executed.ipynb"
             
             echo "========================================"
             echo "→ Executing $nb"
