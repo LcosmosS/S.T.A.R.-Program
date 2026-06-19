@@ -31,17 +31,6 @@ jobs:
           fetch-depth: 0
           submodules: recursive
 
-      - name: Cache heavy data (ecdata, processed files)
-        uses: actions/cache@v4
-        with:
-          path: |
-            data/ecdata
-            data/raw
-            data/processed
-            examples/exports
-          key: notebook-cache-${{ hashFiles('data/**', 'examples/**') }}
-          restore-keys: notebook-cache-
-
       - name: Debug paths
         run: |
           echo "PWD: $(pwd)"
@@ -59,6 +48,9 @@ jobs:
           sage -python -m pip install --no-cache-dir \
             numpy pandas tqdm plotly==5.18.0 corner ripser persim \
             nbconvert nbclient ipykernel nest_asyncio
+
+      - name: Clear Python cache
+        run: rm -rf __pycache__ */__pycache__ */*/__pycache__
 
       - name: Execute Notebooks One-by-One with Immediate Commit
         run: |
@@ -88,7 +80,7 @@ jobs:
             import os
             os.system('sync; echo 3 > /proc/sys/vm/drop_caches') || true
             " 2>/dev/null || true
-            sleep 8
+                        sleep 8
 
             # Commit immediately after each notebook
             git config user.name "github-actions[bot]"
@@ -100,7 +92,7 @@ jobs:
             else
               git commit -m "ci: update executed notebook ${base} [skip ci]" || true
               git push || echo "Push skipped (may need permissions)"
-              echo "Committed output for $base"
+              echo " Committed output for $base"
             fi
           done
 
@@ -114,3 +106,12 @@ jobs:
             examples/exports/
             results/
           retention-days: 14
+
+      - name: Export HTML and PDF
+        run: |
+          mkdir -p exports
+          for nb in examples/*-executed.ipynb; do
+            base=$(basename "$nb" .ipynb)
+            sage -python -m jupyter nbconvert --to html "$nb" --output-dir exports --output "${base}.html"
+            sage -python -m jupyter nbconvert --to pdf  "$nb" --output-dir exports --output "${base}.pdf"
+          done
