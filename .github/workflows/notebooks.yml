@@ -52,11 +52,23 @@ jobs:
             numpy pandas tqdm plotly==5.18.0 corner ripser persim \
             nbconvert nbclient ipykernel nest_asyncio
 
-      - name: Clear Python cache
-        run: rm -rf __pycache__ */__pycache__ */*/__pycache__
+      - name: Cache heavy data
+        uses: actions/cache@v4
+        with:
+          path: |
+            data/ecdata
+            data/raw
+            data/processed
+            examples/exports
+          key: notebook-cache-${{ hashFiles('data/**', 'examples/**') }}
+          restore-keys: notebook-cache-
 
       - name: Execute Notebooks Sequentially + Commit After Each
         run: |
+          
+          # Set correct working directory inside container
+          cd /__w/S.T.A.R.-Program/S.T.A.R.-Program
+
           mkdir -p examples/exports results
 
           echo "=== Starting sequential notebook execution ==="
@@ -70,7 +82,7 @@ jobs:
             echo "========================================"
 
             # Execute notebook
-            timeout 120000s sage -python -m jupyter nbconvert \
+             sage -python -m jupyter nbconvert \
               --to notebook \
               --execute "$nb" \
               --output "$output" \
@@ -79,7 +91,7 @@ jobs:
               echo " $nb failed or timed out — continuing"
 
             # Memory clear
-            echo "Clearing memory before next notebook..."
+            echo "Clearing memory..."
             sage -python -c "
             import gc
             gc.collect()
@@ -98,15 +110,11 @@ jobs:
             else
               git commit -m "ci: update executed notebook ${base} [skip ci]" || true
               git push || echo "Push skipped (may need permissions)"
-              echo " Committed $base"
+              echo "Committed $base"
             fi
           done
 
           echo "=== All notebooks processed ==="
-
-        env:
-          JUPYTER_ENABLE_LAB: "yes"
-          PYTHONUNBUFFERED: "1"
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
