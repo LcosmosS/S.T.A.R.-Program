@@ -75,11 +75,6 @@ jobs:
               --ExecutePreprocessor.timeout=7200 \
               --ExecutePreprocessor.kernel_name=python3
             # Clear memory between notebooks
-            import gc
-            gc.collect()
-            import os
-            os.system('sync; echo 3 > /proc/sys/vm/drop_caches') || true
-            " 2>/dev/null || true
             sleep 10
           done
         env:
