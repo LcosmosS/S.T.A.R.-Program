@@ -17,17 +17,40 @@ jobs:
     container:
       image: sagemath/sagemath:latest
       options: --user root --memory=8g
+      
+    env:
+      DEBIAN_FRONTEND: noninteractive
 
     steps:
-      - name: Install system tools
+      - name: Install Git inside container 
         run: |
-          apt-get update && apt-get install -y git pandoc texlive texlive-latex-extra texlive-xetex
+          apt-get update
+          apt-get install -y git
+          git --version
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           submodules: recursive
+
+      - name: Debug paths
+        run: |
+          echo "PWD: $(pwd)"
+          echo "Listing /__w:"
+          ls -R /__w || true      
+
+      - name: Install system tools
+        run: |
+          apt-get update
+          apt-get install -y pandoc texlive texlive-latex-extra texlive-xetex
+
+      - name: Install Python dependencies
+        run: |
+          sage -python -m pip install --upgrade pip
+          sage -python -m pip install --no-cache-dir \
+            numpy pandas tqdm plotly==5.18.0 corner ripser persim \
+            nbconvert nbclient ipykernel nest_asyncio
 
       - name: Cache heavy data
         uses: actions/cache@v4
@@ -40,50 +63,33 @@ jobs:
           key: notebook-cache-${{ hashFiles('data/**', 'examples/**') }}
           restore-keys: notebook-cache-
 
-      - name: Install Python dependencies
+      - name: Execute notebooks
         run: |
-          sage -python -m pip install --upgrade pip
-          sage -python -m pip install --no-cache-dir numpy pandas tqdm plotly corner ripser persim nbconvert nbclient ipykernel nest_asyncio
-
-      - name: Execute Notebooks Sequentially + Commit After Each
-        run: |
-          mkdir -p examples/exports results
-          
-          # Set correct git working directory
-          REPO_ROOT="/__w/S.T.A.R.-Program/S.T.A.R.-Program"
-          cd $REPO_ROOT
-
-          echo "=== Starting sequential notebook execution ==="
-
+          mkdir -p results exports
           for nb in examples/*.ipynb; do
-            base=$(basename "$nb" .ipynb)
-            output="exports/${base}-executed.ipynb"
-            
-            echo "========================================"
-            echo "→ Executing $nb"
-            echo "========================================"
-
-            # Execute notebook
-            timeout 600s sage -python -m jupyter nbconvert \
+            echo "Running $nb"
+            sage -python -m jupyter nbconvert \
               --to notebook \
               --execute "$nb" \
-              --output "$output" \
-              --ExecutePreprocessor.timeout=240 \
-              --ExecutePreprocessor.kernel_name=python3 || \
-              echo "$nb failed or timed out — continuing"
-
-            # Memory clear
-            echo "Clearing memory..."
-            sage -python -c "
+              --output "$(basename $nb .ipynb)-executed.ipynb" \
+              --ExecutePreprocessor.timeout=7200 \
+              --ExecutePreprocessor.kernel_name=python3
+            # Clear memory between notebooks
             import gc
             gc.collect()
             import os
             os.system('sync; echo 3 > /proc/sys/vm/drop_caches') || true
             " 2>/dev/null || true
             sleep 10
+          done
+        env:
+          JUPYTER_ENABLE_LAB: "yes"
+          PYTHONUNBUFFERED: "1"
 
-            # Commit with explicit git directory
-            git config user.name "github-actions[bot]"
+      - name: Commit CI Executed Notebooks to Repo
+        shell: bash -l {0}
+        run: |
+          git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             
             GIT_DIR=$REPO_ROOT/.git git --git-dir=$REPO_ROOT/.git --work-tree=$REPO_ROOT add "$output"
@@ -104,15 +110,15 @@ jobs:
           mkdir -p exports
           for nb in examples/*-executed.ipynb; do
             base=$(basename "$nb" .ipynb)
-            sage -python -m jupyter nbconvert --to html "$nb" --output-dir exports --output "exports/${base}.html"
-            sage -python -m jupyter nbconvert --to pdf  "$nb" --output-dir exports --output "exports/${base}.pdf"
+            sage -python -m jupyter nbconvert --to html "$nb" --output-dir exports --output "${base}.html"
+            sage -python -m jupyter nbconvert --to pdf  "$nb" --output-dir exports --output "${base}.pdf"
           done
 
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v6
         with:
           name: notebook-outputs
           path: |
-            examples/exports/
             results/
-          retention-days: 14
+            examples/*-executed.ipynb
+            exports/
