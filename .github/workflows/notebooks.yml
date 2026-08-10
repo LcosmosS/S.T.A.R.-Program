@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: sagemath/sagemath:latest
-      options: --user root --memory=8g
+      options: --user root --memory=16g
       
     env:
       DEBIAN_FRONTEND: noninteractive
